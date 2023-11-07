@@ -1,7 +1,3 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.scss";
-
 function App() {
   console.log("REACT_APP_BASE_URL", process.env.REACT_APP_BASE_URL);
   return (
