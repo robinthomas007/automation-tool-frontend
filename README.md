@@ -8,4 +8,5 @@
 
 ## 1. Production docker setup:
 
-- `WIP`
+- `docker build -t automation-tool-frontend .`
+- `docker compose up -d`
