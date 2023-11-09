@@ -1,4 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
+// Auth Router
+import AuthLayout from "./Auth/AuthLayout";
+import Login from "./Auth/pages/Login";
+
 // Main Router
 import MainLayout from "./Main/MainLayout";
 import Dashboard from "./Main/pages/Dashboard";
@@ -24,11 +28,11 @@ const MainRouter = createBrowserRouter([
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <AuthLayout />,
     children: [
       {
         path: "",
-        element: <Dashboard />,
+        element: <Login />,
       },
       {
         path: "/step",
