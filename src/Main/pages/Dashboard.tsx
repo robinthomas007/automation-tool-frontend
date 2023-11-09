@@ -2,8 +2,9 @@ const Dashboard = () => {
   return (
     <div>
       <p>Dashboard</p>
-      <p>Projects</p>
-      <p>select project below</p>
+      <div className="flex items-center">
+        <img className="w-auto" src="flow.png" alt="Your Company" />
+      </div>
     </div>
   );
 };
