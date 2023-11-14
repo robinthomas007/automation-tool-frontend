@@ -111,7 +111,7 @@ export default function Example() {
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-center">
                       <img
-                        className="h-8 w-auto"
+                        className="h-16 w-full mt-2 rounded-md"
                         src="https://www.google.com/u/2/ac/images/logo.gif?uid=104625288658739303984&service=google_gsuite"
                         alt="Your Company"
                       />
@@ -198,7 +198,7 @@ export default function Example() {
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
               <img
-                className="h-8 w-auto"
+                className="h-16 w-full mt-2 rounded-md"
                 src="https://www.google.com/u/2/ac/images/logo.gif?uid=104625288658739303984&service=google_gsuite"
                 alt="Your Company"
               />
@@ -275,8 +275,8 @@ export default function Example() {
           </div>
         </div>
 
-        <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="lg:pl-72 bg-indigo-100">
+          <div className="lg:hidden sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button
               type="button"
               className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -286,13 +286,12 @@ export default function Example() {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
 
-            {/* Separator */}
             <div
               className="h-6 w-px bg-gray-900/10 lg:hidden"
               aria-hidden="true"
             />
 
-            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            {/* <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <form className="relative flex flex-1" action="#" method="GET">
                 <label htmlFor="search-field" className="sr-only">
                   Search
@@ -318,13 +317,11 @@ export default function Example() {
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 
-                {/* Separator */}
                 <div
                   className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
                   aria-hidden="true"
                 />
 
-                {/* Profile dropdown */}
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
@@ -375,10 +372,10 @@ export default function Example() {
                   </Transition>
                 </Menu>
               </div>
-            </div>
+            </div> */}
           </div>
 
-          <main className="py-10">
+          <main className="py-10 min-h-screen">
             <div className="px-4 sm:px-6 lg:px-8">
               <Outlet />
             </div>

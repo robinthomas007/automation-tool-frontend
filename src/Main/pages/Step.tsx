@@ -19,6 +19,7 @@ function UserPage() {
   }
   return (
     <div>
+      <div>This is Test page for now ignore this page</div>
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
       {users?.map((user) => (

@@ -3,7 +3,11 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
-    extend: {},
+    extend: {
+      primary: "#3490dc", // Replace with your desired color code
+      secondary: "#ccc",
+      danger: "#e3342f",
+    },
   },
   plugins: [],
 };
