@@ -21,11 +21,11 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "", icon: HomeIcon, current: true },
-  { name: "Element", href: "element", icon: UsersIcon, current: false },
   { name: "Resource", href: "resource", icon: UsersIcon, current: false },
-  { name: "Page Action", href: "page-action", icon: UsersIcon, current: false },
-  { name: "Step", href: "step", icon: UsersIcon, current: false },
-  { name: "Test", href: "test", icon: UsersIcon, current: false },
+  // { name: "Element", href: "element", icon: UsersIcon, current: false },
+  // { name: "Page Action", href: "page-action", icon: UsersIcon, current: false },
+  // { name: "Step", href: "step", icon: UsersIcon, current: false },
+  // { name: "Test", href: "test", icon: UsersIcon, current: false },
 ];
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },

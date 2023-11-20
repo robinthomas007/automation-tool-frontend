@@ -14,11 +14,13 @@ export interface Resources {
 export interface ResourcesState {
   loading: boolean;
   resources: Array<Resources>;
+  selectedResources: Resources | any;
   error: string | undefined;
 }
 const initialState: ResourcesState = {
   loading: false,
   resources: [],
+  selectedResources: {},
   error: undefined,
 };
 export const fetchResources = createAsyncThunk(
@@ -32,13 +34,15 @@ const resourcesSlice = createSlice({
     builder.addCase(fetchResources.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(
-      fetchResources.fulfilled,
-      (state, action: PayloadAction<Array<Resources>>) => {
-        state.loading = false;
-        state.resources = action.payload;
+    builder.addCase(fetchResources.fulfilled, (state, { payload }) => {
+      const data: PayloadAction<Array<Resources>> = payload.data;
+      state.loading = false;
+      state.resources = payload.data;
+      console.log("payload.data[0]", payload.data[0]);
+      if (payload.data.length) {
+        state.selectedResources = payload.data[0];
       }
-    );
+    });
     builder.addCase(fetchResources.rejected, (state, action) => {
       state.loading = false;
       state.resources = [];
@@ -47,9 +51,12 @@ const resourcesSlice = createSlice({
   },
   reducers: {
     removeUserFromList: (state, action) => {},
+    selectResources: (state, action) => {
+      state.selectedResources = action.payload;
+    },
   },
 });
 
-export const { removeUserFromList } = resourcesSlice.actions;
-export const userSelector = (state: RootState) => state.resources;
+export const { selectResources } = resourcesSlice.actions;
+export const resourcesSelector = (state: RootState) => state.resources;
 export default resourcesSlice.reducer;

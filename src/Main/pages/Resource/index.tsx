@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   closeModal,
@@ -5,12 +6,24 @@ import {
   modalSelector,
 } from "../../../redux/Slice/commonModalSlice";
 import Modal from "../../../Components/Modal";
-import Resources from "./Resources";
+import ResourcesComponent from "./Resources";
 import ResourceAction from "./ResourceAction";
 import Elements from "./Elements";
+
+import {
+  // Resources,
+  fetchResources,
+  resourcesSelector,
+} from "../../../redux/Slice/resourcesSlice";
+
 const Resource = () => {
   const modal = useAppSelector(modalSelector);
+  const { resources, selectedResources } = useAppSelector(resourcesSelector);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchResources());
+  }, []);
 
   const renderModalContent = () => {
     if (modal.key === "resource") {
@@ -76,9 +89,9 @@ const Resource = () => {
   return (
     <div className="flex flex-row">
       {renderModal()}
-      <Resources />
-      <ResourceAction />
-      <Elements />
+      <ResourcesComponent />
+      {selectedResources.ID ? <ResourceAction /> : null}
+      {selectedResources.ID ? <Elements /> : null}
     </div>
   );
 };

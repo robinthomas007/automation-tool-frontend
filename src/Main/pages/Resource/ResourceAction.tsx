@@ -5,10 +5,18 @@ import {
   modalSelector,
 } from "../../../redux/Slice/commonModalSlice";
 import Modal from "../../../Components/Modal";
+import ListItem from "../../../Components/ListItem";
+
+import {
+  resourcesSelector,
+  selectResources,
+} from "../../../redux/Slice/resourcesSlice";
 
 const ResourceAction = () => {
   const modal = useAppSelector(modalSelector);
   const dispatch = useAppDispatch();
+  const { resources, selectedResources } = useAppSelector(resourcesSelector);
+
   return (
     <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6 w-96 ml-10">
       <div className="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
@@ -29,6 +37,13 @@ const ResourceAction = () => {
           </button>
         </div>
       </div>
+      {selectedResources?.actions?.length
+        ? selectedResources.actions.map((item: any) => (
+            <ListItem handleDelete={console.log} handleEdit={console.log}>
+              <p>{item.name}</p>
+            </ListItem>
+          ))
+        : ""}
     </div>
   );
 };
