@@ -1,387 +1,205 @@
-import { Fragment, useState } from "react";
-import { Outlet, Link } from "react-router-dom";
 
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Bars3Icon,
-  BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+  MenuUnfoldOutlined,
+  HomeOutlined,
+  ExperimentOutlined,
+  RocketOutlined,
+  DatabaseOutlined,
+  StepForwardOutlined,
+  ProjectOutlined
+} from '@ant-design/icons';
+import { Outlet, Link, useParams } from "react-router-dom";
+import { Layout, Menu, theme, Popover, Button } from 'antd';
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { fetchProjects, projectsSelector, selectProjects } from "../redux/Slice/projectsSlice";
+import { fetchMe, meSelector } from "../redux/Slice/meSlice";
+import { useLocation } from 'react-router-dom';
+import { Select } from 'antd';
+import { useAuth } from './../Context/authContext'
+import './main.css'
+import Logo from './../Images/logo.svg'
+import { clearCookie } from './../Lib/auth'
+import CreateModal from './pages/Projects/CreateModal';
+import { useNavigate } from "react-router-dom";
 
-const navigation = [
-  { name: "Dashboard", href: "", icon: HomeIcon, current: true },
-  { name: "Resource", href: "resource", icon: UsersIcon, current: false },
-  // { name: "Element", href: "element", icon: UsersIcon, current: false },
-  // { name: "Page Action", href: "page-action", icon: UsersIcon, current: false },
-  // { name: "Step", href: "step", icon: UsersIcon, current: false },
-  // { name: "Test", href: "test", icon: UsersIcon, current: false },
-];
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-];
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+const { Header, Sider, Content } = Layout;
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function Example() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  return (
-    <>
-      {/*
-          This example requires updating your template:
+const MainLayout: React.FC = () => {
+  const { id } = useParams();
+  const location = useLocation();
+  const [pathName, setPathName] = useState("") ;
+  useEffect(() => {
+    if(location) {
+        let tmp = location.pathname.slice(location.pathname.lastIndexOf("/") , location.pathname.length) ;
+        setPathName(tmp) ;
+    }
+}, [location])
+  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
   
-          ```
-          <html class="h-full bg-white">
-          <body class="h-full">
-          ```
-        */}
-      <div>
-        <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-50 lg:hidden"
-            onClose={setSidebarOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-gray-900/80" />
-            </Transition.Child>
+  const [openCreate, setOpenCreate] = useState<boolean>(false)
+  const navigate = useNavigate();
+  
+  const handleCancel = () => {
+    setOpenCreate(false)
+  }
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
-            <div className="fixed inset-0 flex">
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-300"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                      <button
-                        type="button"
-                        className="-m-2.5 p-2.5"
-                        onClick={() => setSidebarOpen(false)}
-                      >
-                        <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </Transition.Child>
-                  {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4">
-                    <div className="flex h-16 shrink-0 items-center">
-                      <img
-                        className="h-16 w-full mt-2 rounded-md"
-                        src="https://www.google.com/u/2/ac/images/logo.gif?uid=104625288658739303984&service=google_gsuite"
-                        alt="Your Company"
-                      />
-                    </div>
-                    <nav className="flex flex-1 flex-col">
-                      <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                        <li>
-                          <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
-                              <li key={item.name}>
-                                <Link
-                                  to={item.href}
-                                  className={classNames(
-                                    item.current
-                                      ? "bg-indigo-700 text-white"
-                                      : "text-indigo-200 hover:text-white hover:bg-indigo-700",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                                  )}
-                                >
-                                  <item.icon
-                                    className={classNames(
-                                      item.current
-                                        ? "text-white"
-                                        : "text-indigo-200 group-hover:text-white",
-                                      "h-6 w-6 shrink-0"
-                                    )}
-                                    aria-hidden="true"
-                                  />
-                                  {item.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
-                        {/* <li>
-                          <div className="text-xs font-semibold leading-6 text-indigo-200">
-                            Your teams
-                          </div>
-                          <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {teams.map((team) => (
-                              <li key={team.name}>
-                                <a
-                                  href={team.href}
-                                  className={classNames(
-                                    team.current
-                                      ? "bg-indigo-700 text-white"
-                                      : "text-indigo-200 hover:text-white hover:bg-indigo-700",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                                  )}
-                                >
-                                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-400 bg-indigo-500 text-[0.625rem] font-medium text-white">
-                                    {team.initial}
-                                  </span>
-                                  <span className="truncate">{team.name}</span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </li> */}
-                        <li className="mt-auto">
-                          <a
-                            href="#"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
-                          >
-                            <Cog6ToothIcon
-                              className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
-                              aria-hidden="true"
-                            />
-                            Settings
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition.Root>
+  const dispatch = useAppDispatch();
 
-        {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center">
-              <img
-                className="h-16 w-full mt-2 rounded-md"
-                src="https://www.google.com/u/2/ac/images/logo.gif?uid=104625288658739303984&service=google_gsuite"
-                alt="Your Company"
-              />
-            </div>
-            <nav className="flex flex-1 flex-col">
-              <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                <li>
-                  <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
-                      <li key={item.name}>
-                        <Link
-                          to={item.href}
-                          className={classNames(
-                            item.current
-                              ? "bg-indigo-700 text-white"
-                              : "text-indigo-200 hover:text-white hover:bg-indigo-700",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                          )}
-                        >
-                          <item.icon
-                            className={classNames(
-                              item.current
-                                ? "text-white"
-                                : "text-indigo-200 group-hover:text-white",
-                              "h-6 w-6 shrink-0"
-                            )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-                {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-indigo-200">
-                    Your teams
-                  </div>
-                  <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current
-                              ? "bg-indigo-700 text-white"
-                              : "text-indigo-200 hover:text-white hover:bg-indigo-700",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                          )}
-                        >
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-400 bg-indigo-500 text-[0.625rem] font-medium text-white">
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
-                <li className="mt-auto">
-                  <a
-                    href="#"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
-                  >
-                    <Cog6ToothIcon
-                      className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
-                      aria-hidden="true"
-                    />
-                    Settings
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+  const { projects, selectedProjects } = useAppSelector(projectsSelector);
+  useEffect(()=>{
+    const iid = parseInt(id?id:'')
+    console.log(iid)
+    if(iid>0)
+      dispatch(selectProjects(projects.find(p=>p.id==iid)))
+    else {
+      dispatch(selectProjects(projects[0]))
+    }
+  },[projects,id])
+  const navigation = useCallback(()=>[
+    { label: "Dashboard", href: `/project/${selectedProjects?.id}/`, icon: <HomeOutlined />, key: '1', },
+    { label: "Suites", href: `/project/${selectedProjects?.id}/suites`, icon: <RocketOutlined />, key: '3', },
+    { label: "Tests", href: `/project/${selectedProjects?.id}/tests`, icon: <ExperimentOutlined />, key: '4', },
+    { label: "Steps", href: `/project/${selectedProjects?.id}/steps`, icon: <StepForwardOutlined />, key: '5', },
+    { label: "Resources", href: `/project/${selectedProjects?.id}/resources`, icon: <DatabaseOutlined />, key: '6', },
+    { label: "Runs", href: `/project/${selectedProjects?.id}/runs`, icon: <MenuUnfoldOutlined />, key: '7', },
+    { label: "Data Profiles", href: `/project/${selectedProjects?.id}/data_profiles`, icon: <MenuUnfoldOutlined />, key: '8', },
+  ],[selectedProjects]);
+  const { me, selectedOrgs } = useAppSelector(meSelector);
+  const auth = useAuth()
+  useEffect(()=>{
+    if (auth?.user && !auth.user.perm) {
+      navigate(`/login`)
+    }
+  },[auth])
+  useEffect(() => {
+    if (me == null || me == undefined)
+      dispatch(fetchMe());
+    if (selectedOrgs != null && selectedOrgs !== undefined) {
+      dispatch(fetchProjects({ orgId: selectedOrgs!!.Org.id, searchTerm: '' }));
+    }
+  }, [me, selectedOrgs]);
+  useEffect(()=>{
+    if(selectedProjects){
+      console.log(pathName)
+      console.log(selectedProjects.id)
+      navigate(`/project/${selectedProjects.id}${pathName=='/project'?'/':pathName==`/${selectedProjects.id}`?"/":pathName}`)
+    }
+  },[selectedProjects,pathName])
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+  
+
+  const projectOptions = projects.map((project) => ({ label: project.name, value: project.id }));
+
+  const handleChange = (value: any) => {
+    if(value==="new"){
+      setOpenCreate(true)
+    } else {
+      let projectSelected = projects.find((project) => project.id === value)
+      dispatch(selectProjects(projectSelected))
+    }
+  }
+
+  const ProfileContent = (
+    <div style={{ cursor: 'pointer' }}>
+      {me?.orgs.map((o: any) => {
+        return <p>{o.Org.name}</p>
+      })}
+      <hr />
+      <p onClick={() => clearCookie()}>Logout</p>
+    </div>
+  );
+
+  
+  return (
+    <Layout>
+      <CreateModal open={openCreate} handleCancel={handleCancel} />
+      <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: '#fff' }} className='main-left-slider'>
+        <div className="demo-logo-vertical" />
+
+        <div className='logo-wrapper'>
+          <img src={Logo} alt="My Logo" onClick={() => setCollapsed(!collapsed)} className='logo' />
+          <h1 style={{ textTransform: 'capitalize' }}>{selectedOrgs?.Org.domain}</h1>
         </div>
 
-        <div className="lg:pl-72 bg-indigo-100">
-          <div className="lg:hidden sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <button
-              type="button"
-              className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-              onClick={() => setSidebarOpen(true)}
+
+        {!collapsed && <Select
+          size={'large'}
+          value={selectedProjects ? { label: selectedProjects?.name, id: selectedProjects?.id } : undefined}
+          style={{ width: 270, margin: 5 }}
+          // options={projectOptions}
+          onChange={handleChange}
+          placeholder="Select a project"
+        >
+          {projectOptions.map(opt=><Select.Option value={opt.value}>{opt.label}</Select.Option>)}
+          <Select.Option value={"new"}><Button type="primary" style={{ width: '100%' }} onClick={() => setOpenCreate(true)}>New</Button>
+          </Select.Option>
+          </Select>}
+        <Menu
+          theme="light"
+          mode="inline"
+        // defaultSelectedKeys={['1']}
+        >
+          {navigation().map(({ label, href, icon, key }) => (
+            <Menu.Item key={key} icon={icon}>
+              <Link to={href}>{label}</Link>
+            </Menu.Item>
+          ))}
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{
+          background: colorBgContainer,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid',
+          borderBottomColor: '#ddd',
+          paddingLeft: 40,
+          paddingRight: 40
+        }}>
+          <h2>{selectedProjects?.name}</h2>
+          <div style={{ height: 50, width: 50, borderRadius: "50%" }}>
+            <Popover
+              content={ProfileContent}
+              title={me?.name}
+              trigger="click"
+              open={open}
+              onOpenChange={handleOpenChange}
+              style={{ border: '1px solid red' }}
+              overlayStyle={{ marginRight: '210px', color: 'red' }}
+              rootClassName="profile-menu"
             >
-              <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
+              <img style={{ height: 50, width: 50, borderRadius: "50%" }} width={'100%'} height={'100%'} src={me ? me.Picture : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="user" />
 
-            <div
-              className="h-6 w-px bg-gray-900/10 lg:hidden"
-              aria-hidden="true"
-            />
-
-            {/* <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <form className="relative flex flex-1" action="#" method="GET">
-                <label htmlFor="search-field" className="sr-only">
-                  Search
-                </label>
-                <MagnifyingGlassIcon
-                  className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <input
-                  id="search-field"
-                  className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                  placeholder="Search..."
-                  type="search"
-                  name="search"
-                />
-              </form>
-              <div className="flex items-center gap-x-4 lg:gap-x-6">
-                <button
-                  type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-
-                <div
-                  className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
-                  aria-hidden="true"
-                />
-
-                <Menu as="div" className="relative">
-                  <Menu.Button className="-m-1.5 flex items-center p-1.5">
-                    <span className="sr-only">Open user menu</span>
-                    <img
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                    <span className="hidden lg:flex lg:items-center">
-                      <span
-                        className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                        aria-hidden="true"
-                      >
-                        Tom Cook
-                      </span>
-                      <ChevronDownIcon
-                        className="ml-2 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? "bg-gray-50" : "",
-                                "block px-3 py-1 text-sm leading-6 text-gray-900"
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
-              </div>
-            </div> */}
+            </Popover>
           </div>
+        </Header>
+        <Content
+          style={{
+            // margin: '24px 16px',
+            // padding: 24,
+            minHeight: 280,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+          }}
+        >
+          <Outlet />
+        </Content>
 
-          <main className="py-10 min-h-screen">
-            <div className="px-4 sm:px-6 lg:px-8">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-      </div>
-    </>
+      </Layout>
+    </Layout>
   );
 }
+
+export default MainLayout;

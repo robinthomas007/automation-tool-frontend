@@ -1,13 +1,23 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 // ...
-import userReducer from "./Slice/userSlice";
+import meReducer from "./Slice/meSlice";
 import commonModalReducer from "./Slice/commonModalSlice";
 import resourcesReducer from "./Slice/resourcesSlice";
+import testsReducer from "./Slice/testsSlice";
+import stepsReducer from "./Slice/stepsSlice";
+import suitesReducer from "./Slice/suitesSlice";
+import projectsReducer from "./Slice/projectsSlice";
+import dataProfileReducer from "./Slice/dataProfileSlice";
 
 export const rootReducer = combineReducers({
-  users: userReducer,
+  me: meReducer,
   commonModal: commonModalReducer,
   resources: resourcesReducer,
+  tests: testsReducer,
+  steps: stepsReducer,
+  suites: suitesReducer,
+  projects: projectsReducer,
+  dataProfile: dataProfileReducer
 });
 
 const store = configureStore({

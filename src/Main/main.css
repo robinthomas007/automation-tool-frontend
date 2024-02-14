@@ -1,0 +1,55 @@
+.main-left-slider {
+    min-width: 300px !important;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.main-left-slider .ant-menu {
+    border-inline-end:none !important;
+}
+
+.login-right-slider {
+    min-width: 500px !important;
+}
+
+.main-right-slider {
+    min-width: 550px !important;
+}
+.ant-layout-sider-collapsed {
+    min-width: 80px !important;
+}
+body {
+    padding: 0;
+    margin: 0;
+}
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+.logo-wrapper .logo {
+    height: 40px;
+    margin-right: 12px;
+}
+.ant-list-header {
+    /* background:#1100e6 !important; */
+    /* color: #fff; */
+}
+
+.active-action {
+    color: rgb(165, 97, 255);
+    font-weight: bold;
+}
+
+.anticon svg {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold !important;
+}
+.close-icon-15 svg {
+    font-size: 15px;
+}
+.profile-menu .ant-popover-inner{
+    margin-right: 8px !important;
+}

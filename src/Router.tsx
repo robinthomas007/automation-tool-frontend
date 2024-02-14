@@ -1,67 +1,107 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 // Auth Router
 import AuthLayout from "./Auth/AuthLayout";
 import Login from "./Auth/pages/Login";
+import { ConfigProvider } from 'antd';
 
 // Main Router
 import MainLayout from "./Main/MainLayout";
 import Dashboard from "./Main/pages/Dashboard";
+import Projects from "./Main/pages/Projects/Projects";
 import Element from "./Main/pages/Element";
 import Resource from "./Main/pages/Resource";
 import PageAction from "./Main/pages/PageAction";
-import Step from "./Main/pages/Step";
-import Test from "./Main/pages/Test";
+import Steps from "./Main/pages/Step";
+import Tests from "./Main/pages/Test";
+import Suites from "./Main/pages/Suite";
+import LoginPage from "./Main/pages/Guest/Login";
+import DataProfile from './Main/pages/DataProfile'
 
-const MainRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      {
-        path: "",
-        element: <Dashboard />,
-      },
-      {
-        path: "/element",
-        element: <Element />,
-      },
-      {
-        path: "/resource",
-        element: <Resource />,
-      },
-      {
-        path: "/page-action",
-        element: <PageAction />,
-      },
-      {
-        path: "/step",
-        element: <Step />,
-      },
-      {
-        path: "/test",
-        element: <Test />,
-      },
-    ],
-  },
-]);
+// const MainRouter = createBrowserRouter([
+//   {
+//     path: "",
+//     element: <MainLayout />,
+//     children: [
+//       {
+//         path: ":id",
+//         element: <Dashboard />,
+//       },
+//       {
+//         path: "projects",
+//         element: <Projects />
+//       },
+//       {
+//         path: ":id/suites",
+//         element: <Suites />,
+//       },
+//       {
+//         path: ":id/tests",
+//         element: <Tests />,
+//       },
+//       {
+//         path: ":id/steps",
+//         element: <Steps />,
+//       },
+//       {
+//         path: ":id/resources",
+//         element: <Resource />,
+//       },
+//       {
+//         path: ":id/runs",
+//         element: <Resource />,
+//       },
+
+//     ],
+//   },
+// ], { basename: '/sedstartf' });
 
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
-    element: <AuthLayout />,
+    element: <LoginPage />
+  },
+  {
+    path: "/project",
+    element: <MainLayout />,
     children: [
       {
-        path: "",
-        element: <Login />,
+        path: "all",
+        element: <Projects />
       },
       {
-        path: "/step",
-        element: <Step />,
+        path: ":id",
+        element: <Dashboard />,
       },
+      {
+        path: ":id/suites",
+        element: <Suites />,
+      },
+      {
+        path: ":id/tests",
+        element: <Tests />,
+      },
+      {
+        path: ":id/steps",
+        element: <Steps />,
+      },
+      {
+        path: ":id/resources",
+        element: <Resource />,
+      },
+      {
+        path: ":id/runs",
+        element: <Resource />,
+      },
+      {
+        path: ":id/data_profiles",
+        element: <DataProfile />,
+      },
+
     ],
   },
-]);
+
+], { basename: '/sedstartf' });
 
 export default function Router() {
-  return MainRouter;
+  return AuthRouter;
 }

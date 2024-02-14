@@ -1,99 +1,32 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  closeModal,
-  openModal,
-  modalSelector,
-} from "../../../redux/Slice/commonModalSlice";
-import Modal from "../../../Components/Modal";
-import ResourcesComponent from "./Resources";
-import ResourceAction from "./ResourceAction";
-import Elements from "./Elements";
+import RightPanel from "../../../Components/RightPanel";
+import Resources from "./Resources";
+import { Layout, theme } from 'antd';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+const { Content } = Layout;
 
-import {
-  // Resources,
-  fetchResources,
-  resourcesSelector,
-} from "../../../redux/Slice/resourcesSlice";
+const Index = () => {
 
-const Resource = () => {
-  const modal = useAppSelector(modalSelector);
-  const { resources, selectedResources } = useAppSelector(resourcesSelector);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchResources());
-  }, []);
-
-  const renderModalContent = () => {
-    if (modal.key === "resource") {
-      return (
-        <div key={modal.key}>
-          <p>resource</p>
-        </div>
-      );
-    }
-
-    if (modal.key === "resource-action") {
-      return (
-        <div key={modal.key}>
-          <p>resource action</p>
-        </div>
-      );
-    }
-
-    if (modal.key === "elements") {
-      return (
-        <div key={modal.key}>
-          <p>elements</p>
-        </div>
-      );
-    }
-  };
-
-  const handleAction = (action: string) => {
-    if (modal.key === "resource" && action === "Save") {
-      dispatch(closeModal({ key: "", open: false }));
-    }
-
-    if (modal.key === "resource-action" && action === "Save") {
-      dispatch(closeModal({ key: "", open: false }));
-    }
-
-    if (modal.key === "elements" && action === "Save") {
-      dispatch(closeModal({ key: "", open: false }));
-    }
-
-    if (action === "Cancel") {
-      dispatch(closeModal({ key: "", open: false }));
-    }
-  };
-
-  const renderModal = () => {
-    return (
-      <Modal
-        open={
-          modal.open &&
-          (modal.key === "resource" ||
-            modal.key === "resource-action" ||
-            modal.key === "elements")
-        }
-        handleAction={handleAction}
-        actions={["Save", "Cancel"]}
-      >
-        {renderModalContent()}
-      </Modal>
-    );
-  };
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   return (
-    <div className="flex flex-row">
-      {renderModal()}
-      <ResourcesComponent />
-      {selectedResources.ID ? <ResourceAction /> : null}
-      {selectedResources.ID ? <Elements /> : null}
-    </div>
+    <Layout style={{ background: colorBgContainer }}>
+      <DndProvider backend={HTML5Backend}>
+        <Content style={{
+          margin: '24px 16px',
+          padding: 24,
+          minHeight: 280,
+          background: '#fff',
+          borderRadius: borderRadiusLG,
+        }}>
+          <Resources showSelected />
+        </Content>
+        <RightPanel type="resource" />
+      </DndProvider>
+    </Layout>
   );
 };
 
-export default Resource;
+export default Index;
