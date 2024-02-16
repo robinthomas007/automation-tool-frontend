@@ -8,53 +8,12 @@ import { ConfigProvider } from 'antd';
 import MainLayout from "./Main/MainLayout";
 import Dashboard from "./Main/pages/Dashboard";
 import Projects from "./Main/pages/Projects/Projects";
-import Element from "./Main/pages/Element";
 import Resource from "./Main/pages/Resource";
-import PageAction from "./Main/pages/PageAction";
 import Steps from "./Main/pages/Step";
 import Tests from "./Main/pages/Test";
 import Suites from "./Main/pages/Suite";
 import LoginPage from "./Main/pages/Guest/Login";
 import DataProfile from './Main/pages/DataProfile'
-
-// const MainRouter = createBrowserRouter([
-//   {
-//     path: "",
-//     element: <MainLayout />,
-//     children: [
-//       {
-//         path: ":id",
-//         element: <Dashboard />,
-//       },
-//       {
-//         path: "projects",
-//         element: <Projects />
-//       },
-//       {
-//         path: ":id/suites",
-//         element: <Suites />,
-//       },
-//       {
-//         path: ":id/tests",
-//         element: <Tests />,
-//       },
-//       {
-//         path: ":id/steps",
-//         element: <Steps />,
-//       },
-//       {
-//         path: ":id/resources",
-//         element: <Resource />,
-//       },
-//       {
-//         path: ":id/runs",
-//         element: <Resource />,
-//       },
-
-//     ],
-//   },
-// ], { basename: '/sedstartf' });
-
 const AuthRouter = createBrowserRouter([
   {
     path: "/",

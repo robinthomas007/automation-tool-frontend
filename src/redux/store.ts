@@ -8,6 +8,7 @@ import stepsReducer from "./Slice/stepsSlice";
 import suitesReducer from "./Slice/suitesSlice";
 import projectsReducer from "./Slice/projectsSlice";
 import dataProfileReducer from "./Slice/dataProfileSlice";
+import runsReducer from "./Slice/runsSlice";
 
 export const rootReducer = combineReducers({
   me: meReducer,
@@ -17,7 +18,8 @@ export const rootReducer = combineReducers({
   steps: stepsReducer,
   suites: suitesReducer,
   projects: projectsReducer,
-  dataProfile: dataProfileReducer
+  dataProfile: dataProfileReducer,
+  runs: runsReducer
 });
 
 const store = configureStore({

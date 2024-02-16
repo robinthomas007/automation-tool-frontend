@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Suite from "./Suite";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchSuites, suitesSelector, selectSuites } from "./../../../redux/Slice/suitesSlice";
@@ -10,6 +10,7 @@ import SuiteRightPanel from "./SuiteRightPanel";
 import {
   PlayCircleOutlined
 } from '@ant-design/icons';
+import { createRun, updateRun } from "../../../redux/Slice/runsSlice";
 
 const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
@@ -26,6 +27,15 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const handleCancel = () => {
     setOpenCreate(false)
   }
+  const StartExecution=useCallback((id:number,profileId:number)=>{
+    dispatch(createRun({data:{
+      id:id,
+      profileId: profileId,
+      type:"suite"
+    },callback:(data)=>{
+      dispatch(updateRun(data))
+    }}))
+  },[])
 
   const onChange = (key: string | string[]) => {
     const index = key[key.length - 1]
@@ -36,7 +46,9 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
     <Collapse.Panel
       header={suit.name}
       key={index}
-      extra={<span onClick={(e) => e.stopPropagation()}><PlayCircleOutlined style={{ color: '#873cb7' }} /></span>}
+      extra={<span onClick={(e) => e.stopPropagation()}><PlayCircleOutlined style={{ color: '#873cb7' }} onClick={(e)=>{
+        StartExecution(suit.id,1)
+      }}/></span>}
     >
       <Suite suite={selectedSuites} />
     </Collapse.Panel>

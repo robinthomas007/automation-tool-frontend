@@ -4,7 +4,7 @@ import { RootState } from "../store";
 import { Suites, CreateSuites } from "../Services/suites";
 import { Test } from "./testsSlice";
 export interface Suite {
-  id: string;
+  id: number;
   name: string;
   desciption: string;
   CreatedAt: string;

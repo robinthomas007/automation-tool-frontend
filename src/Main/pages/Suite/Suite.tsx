@@ -1,5 +1,5 @@
 import { Suite as SuiteModel } from "./../../../redux/Slice/suitesSlice";
-import { Row, Col, List } from 'antd';
+import { Row, Col, List, Button } from 'antd';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { addTestToSuite } from "./../../../redux/Slice/suitesSlice";
@@ -26,8 +26,7 @@ const Suite = ({ suite }: { suite: SuiteModel }) => {
           renderItem={(item) => (
             <List.Item>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                <span>{item.name}</span>
-                <CloseCircleOutlined />
+                <span>{item.name}</span>                <CloseCircleOutlined />
               </div>
 
             </List.Item>
