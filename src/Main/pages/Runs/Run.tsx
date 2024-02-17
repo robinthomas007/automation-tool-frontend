@@ -25,6 +25,6 @@ const RunItem=({item}:{item:RunDataItem})=>{
       <RunItem item={i}/>
     </List.Item>
   )}
-/>):(<span>{item.name}</span>)
+/>):(<div><span>{item.name}</span>{item.screenshot&& item.screenshot.length>0 && <img src={item.screenshot}/>}</div>)
 }
 export default Run;

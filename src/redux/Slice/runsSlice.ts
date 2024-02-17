@@ -14,7 +14,8 @@ export interface RunDataItem{
   items: RunDataItem[],
   status: string,
   error: string,
-  name: string
+  name: string,
+  screenshot: string,
 }
 export interface CreateRunData{
   type: string,
