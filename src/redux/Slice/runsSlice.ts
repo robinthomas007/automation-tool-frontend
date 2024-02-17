@@ -4,14 +4,14 @@ import { RootState } from "../store";
 import { Runs, CreateRun } from "../Services/runs";
 export interface Run {
   id: number;
-  result: DataItem
+  result: RunDataItem
   CreatedAt: string;
   UpdatedAt: string;
 }
-export interface DataItem{
+export interface RunDataItem{
   id: number,
   type: string,
-  items: DataItem[],
+  items: RunDataItem[],
   status: string,
   error: string,
   name: string
@@ -30,7 +30,7 @@ export interface RunsState {
 const initialState: RunsState = {
   loading: false,
   runs: [],
-  selectedRuns: {},
+  selectedRuns: undefined,
   error: undefined,
 };
 export const fetchRuns = createAsyncThunk(
@@ -95,5 +95,5 @@ const runsSlice = createSlice({
 });
 
 export const { selectRuns,updateRun } = runsSlice.actions;
-export const runsSelector = (state: RootState) => state.steps;
+export const runsSelector = (state: RootState) => state.runs;
 export default runsSlice.reducer;

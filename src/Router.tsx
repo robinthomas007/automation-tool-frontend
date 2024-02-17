@@ -14,6 +14,7 @@ import Tests from "./Main/pages/Test";
 import Suites from "./Main/pages/Suite";
 import LoginPage from "./Main/pages/Guest/Login";
 import DataProfile from './Main/pages/DataProfile'
+import Runs from "./Main/pages/Runs";
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
@@ -49,7 +50,7 @@ const AuthRouter = createBrowserRouter([
       },
       {
         path: ":id/runs",
-        element: <Resource />,
+        element: <Runs/>,
       },
       {
         path: ":id/data_profiles",

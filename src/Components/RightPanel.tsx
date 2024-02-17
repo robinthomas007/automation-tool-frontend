@@ -16,6 +16,7 @@ import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
 import DataProfile from './../Main/pages/DataProfile/DataProfile'
 import { useAppDispatch, useAppSelector } from "./../redux/hooks";
 import { fetchTests, testsSelector, selectTests } from "./../redux/Slice/testsSlice";
+import Runs from '../Main/pages/Runs/Runs';
 
 const { Sider } = Layout;
 
@@ -61,6 +62,11 @@ const RightPanel = ({ type }: { type?: string }) => {
       Tab: <RocketOutlined />,
       Panel: <Suites showSelected={false} />,
       type: "suite"
+    },
+    {
+      Tab: <RocketOutlined />,
+      Panel: <Runs showSelected={false} />,
+      type: "run"
     },
     {
       Tab: <RocketOutlined />,
