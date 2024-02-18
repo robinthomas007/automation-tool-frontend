@@ -5,8 +5,8 @@ import { Runs, CreateRun } from "../Services/runs";
 export interface Run {
   id: number;
   result: RunDataItem
-  CreatedAt: string;
-  UpdatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 export interface RunDataItem{
   id: number,
@@ -25,13 +25,13 @@ export interface CreateRunData{
 export interface RunsState {
   loading: boolean;
   runs: Array<Run>;
-  selectedRuns: Run | any;
+  selectedRunId: number|undefined;
   error: string | undefined;
 }
 const initialState: RunsState = {
   loading: false,
   runs: [],
-  selectedRuns: undefined,
+  selectedRunId: undefined,
   error: undefined,
 };
 export const fetchRuns = createAsyncThunk(
@@ -54,7 +54,7 @@ const runsSlice = createSlice({
       state.runs = payload.data;
       console.log("payload.data[0]", payload.data[0]);
       if (payload.data.length) {
-        state.selectedRuns = payload.data[0];
+        state.selectedRunId = payload.data[0].id;
       }
     });
     builder.addCase(fetchRuns.rejected, (state, action) => {
@@ -78,7 +78,7 @@ const runsSlice = createSlice({
   },
   reducers: {
     selectRuns: (state, action) => {
-      state.selectedRuns = action.payload;
+      state.selectedRunId = action.payload;
     },
     updateRun: (state,action) =>{
       const runIndex = state.runs.findIndex(run => run.id === action.payload.id);

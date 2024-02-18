@@ -16,9 +16,9 @@ const RunsRightPanel = () => {
           dataSource={runs}
           renderItem={(item, index) => (
             <List.Item onClick={(e)=>{
-              dispatch(selectRuns(item))
+              dispatch(selectRuns(item.id))
             }}>
-              {item.result.name}
+              {new Date(item.created_at).toLocaleString()+"("+item.result.name+")"}
             </List.Item>
           )}
         />

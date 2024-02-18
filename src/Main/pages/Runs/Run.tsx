@@ -1,11 +1,5 @@
 import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
-import { Row, Col, List, Button } from 'antd';
-import { useDrop } from 'react-dnd';
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { addTestToSuite } from "../../../redux/Slice/suitesSlice";
-import {
-  CloseCircleOutlined,
-} from '@ant-design/icons';
+import { Row, Col, List } from 'antd';
 const Run = ({ run }: { run: RunModel }) => {
   return (
     <Row>

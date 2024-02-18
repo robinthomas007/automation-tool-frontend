@@ -7,7 +7,7 @@ import Run from './Run';
 import { useAppSelector } from '../../../redux/hooks';
 import { runsSelector } from '../../../redux/Slice/runsSlice';
 export default function Index(){
-    const {selectedRuns} = useAppSelector(runsSelector)
+    const {selectedRunId,runs} = useAppSelector(runsSelector)
     const {
         token: { colorBgContainer, borderRadiusLG },
       } = theme.useToken();
@@ -20,7 +20,7 @@ export default function Index(){
             background: '#fff',
             borderRadius: borderRadiusLG,
           }}>
-            {selectedRuns && <Run run={selectedRuns}/>}
+            {selectedRunId && runs.find(r=>r.id==selectedRunId) && <Run run={runs.find(r=>r.id==selectedRunId)!}/>}
           </Content>
           <RightPanel type="run" />
         </DndProvider>
