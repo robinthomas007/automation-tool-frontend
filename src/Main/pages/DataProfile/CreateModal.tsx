@@ -20,7 +20,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
+    }, 1000);
     dispatch(createProfile({ values, project_id: selectedProjects?.id }));
 
   };

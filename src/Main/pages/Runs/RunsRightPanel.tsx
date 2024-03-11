@@ -1,12 +1,18 @@
-import React from 'react'
-import { Run as RunModel, runsSelector, selectRuns } from "../../../redux/Slice/runsSlice";
+import React, { useEffect, useState } from 'react'
+import {  fetchRuns, runsSelector, selectRuns } from "../../../redux/Slice/runsSlice";
 import { Row, Col } from 'antd';
 import { List } from 'antd';
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-const RunsRightPanel = () => {
-  const { runs } = useAppSelector(runsSelector);
-  const dispatch = useAppDispatch();
+import { projectsSelector } from '../../../redux/Slice/projectsSlice';
 
+const RunsRightPanel = () => {
+  const { runs,selectedRunId } = useAppSelector(runsSelector);
+  const {  selectedProjects} = useAppSelector(projectsSelector);
+  const dispatch = useAppDispatch();
+  useEffect(()=>{
+    if (selectedProjects)
+      dispatch(fetchRuns({projectId:selectedProjects.id,searchTerm:''}))
+  },[selectedProjects])
   return (
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
@@ -15,10 +21,10 @@ const RunsRightPanel = () => {
           bordered
           dataSource={runs}
           renderItem={(item, index) => (
-            <List.Item onClick={(e)=>{
+            <List.Item onClick={(e) => {
               dispatch(selectRuns(item.id))
             }}>
-              {new Date(item.created_at).toLocaleString()+"("+item.result.name+")"}
+              <span className={selectedRunId === item.id ? 'activeRun' : ''}>  {new Date(item.created_at).toLocaleString() + "(" + item.result.name + ")"}</span>
             </List.Item>
           )}
         />

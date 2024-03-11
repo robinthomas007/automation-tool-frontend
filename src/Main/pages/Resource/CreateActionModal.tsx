@@ -1,30 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col, Space } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { resourcesSelector, createResourceAction } from "./../../../redux/Slice/resourcesSlice";
-
-import {
-  CloseCircleOutlined
-} from '@ant-design/icons';
-
+import { resourcesSelector, createResourceAction, updateResourceAction } from "./../../../redux/Slice/resourcesSlice";
 interface CreateModalProps {
   open: boolean;
-  handleCancel: () => void
+  handleCancel: () => void;
+  action?: any
 }
 
-const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
+const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, action }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [form] = Form.useForm()
+
   const dispatch = useAppDispatch();
   const { selectedResources } = useAppSelector(resourcesSelector);
 
+
+  useEffect(() => {
+    if (action && Object.keys(action).length !== 0) {
+      form.setFieldsValue({ id: action.id, name: action.name, description: action.description })
+    }
+  }, [action]);
+
   const onFinish = (values: any) => {
-    console.log(values, "Resource Actions--")
+    console.log(values, "Interactions--")
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
-    dispatch(createResourceAction({ resourceAction: values, resourceId: selectedResources?.id }));
+    }, 1000);
+    if (action && action.id)
+      dispatch(updateResourceAction({ resourceAction: values, resourceId: selectedResources?.id, actionId: action.id }));
+    else
+      dispatch(createResourceAction({ resourceAction: values, resourceId: selectedResources?.id }));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -34,7 +42,7 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel }) =
 
   return (
     <Modal
-      title="Create Action"
+      title="Create Interaction"
       open={open}
       width={600}
       confirmLoading={confirmLoading}
@@ -53,24 +61,24 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel }) =
         <Col span={24}>
           <Form
             name="createResourceAction"
-            // style={{ maxWidth: 600 }}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            // initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            form={form}
+            preserve={false}
           >
 
             <Form.Item
-              label="Action Name"
+              label="Interaction Name"
               name="name"
               rules={[{ required: true, message: 'Please input your Resource Name!' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              label="Action Description"
+              label="Interaction Description"
               name="description"
               rules={[{ required: true, message: 'Please input your Resource Description!' }]}
             >

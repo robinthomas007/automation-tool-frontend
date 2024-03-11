@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { Suites, CreateSuites } from "../Services/suites";
+import { Suites, CreateSuites, UpdateSuite, DeleteSuite } from "../Services/suites";
 import { Test } from "./testsSlice";
 export interface Suite {
   id: number;
@@ -23,18 +23,31 @@ const initialState: SuitesState = {
   selectedSuites: {},
   error: undefined,
 };
+
 export const fetchSuites = createAsyncThunk(
   "suites/fetchSuites",
   async ({ projectId, searchTerm }: { projectId: number, searchTerm: string }) => {
     return Suites(projectId, searchTerm)
   }
 );
+
 export const createSuites = createAsyncThunk(
   "suites/createSuites",
-  async ({projectId,suite}:{projectId:number,suite: Suite}) => {
-    return CreateSuites(projectId,suite)
+  async ({ projectId, suite }: { projectId: number, suite: Suite }) => {
+    return CreateSuites(projectId, suite)
   }
 );
+
+export const updateSuite = createAsyncThunk(
+  "suites/updateSuite",
+  async ({ suite }: { suite: Suite }) => UpdateSuite(suite)
+);
+
+export const deleteSuite = createAsyncThunk(
+  "suites/deleteSuite",
+  async ({ id }: { id: number }) => DeleteSuite(id)
+);
+
 const suitesSlice = createSlice({
   name: "suites",
   initialState,
@@ -43,10 +56,8 @@ const suitesSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchSuites.fulfilled, (state, { payload }) => {
-      // const data: PayloadAction<Array<Suite>> = payload.data;
       state.loading = false;
       state.suites = payload.data;
-      console.log("payload.data[0]", payload.data[0]);
       if (payload.data.length) {
         state.selectedSuites = payload.data[0];
       }
@@ -60,7 +71,6 @@ const suitesSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createSuites.fulfilled, (state, { payload }) => {
-      // const data: PayloadAction<Array<Suite>> = payload.data;
       state.loading = false;
       state.suites = [...state.suites, payload.data];
       if (payload.data.length) {
@@ -68,6 +78,40 @@ const suitesSlice = createSlice({
       }
     });
     builder.addCase(createSuites.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(updateSuite.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateSuite.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.selectedSuites = payload.data;
+      const stepIndex = state.suites.findIndex(suite => suite.id === state.selectedSuites.id);
+      if (stepIndex !== -1) {
+        const updatedSuites = [...state.suites];
+        updatedSuites[stepIndex] = {
+          ...state.selectedSuites
+        }
+        state.suites = updatedSuites;
+      }
+
+    });
+    builder.addCase(updateSuite.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(deleteSuite.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(deleteSuite.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.suites = state.suites.filter((item) => item.id !== payload.data.id)
+    });
+
+    builder.addCase(deleteSuite.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
@@ -102,10 +146,29 @@ const suitesSlice = createSlice({
         });
         state.suites = updatedSuites;
       }
-    }
+    },
+    removeTestFromSuite: (state, action) => {
+      const { id } = action.payload;
+
+      const updatedTests = state.selectedSuites.tests.filter(
+        (t: any) => t.id !== id
+      );
+
+      state.selectedSuites = {
+        ...state.selectedSuites,
+        tests: updatedTests,
+      };
+
+      state.suites = state.suites.map(s => {
+        if (s.id === state.selectedSuites.id) {
+          return { ...state.selectedSuites, tests: updatedTests };
+        }
+        return s;
+      });
+    },
   },
 });
 
-export const { selectSuites, addTestToSuite } = suitesSlice.actions;
+export const { selectSuites, addTestToSuite, removeTestFromSuite } = suitesSlice.actions;
 export const suitesSelector = (state: RootState) => state.suites;
 export default suitesSlice.reducer;

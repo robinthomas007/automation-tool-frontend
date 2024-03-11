@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col, Space } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchProjects, projectsSelector, selectProjects } from "./../../../redux/Slice/projectsSlice";
-import { createResource } from "./../../../redux/Slice/resourcesSlice";
+import { createResource, updateResource } from "./../../../redux/Slice/resourcesSlice";
 import {
   CloseCircleOutlined
 } from '@ant-design/icons';
@@ -10,23 +10,36 @@ import { Card } from 'antd';
 
 interface CreateModalProps {
   open: boolean;
-  handleCancel: () => void
+  handleCancel: () => void;
+  resource?: any
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
+const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [form] = Form.useForm()
+
   const { selectedProjects } = useAppSelector(projectsSelector);
 
+  useEffect(() => {
+    if (resource && Object.keys(resource).length !== 0) {
+      form.setFieldsValue({ id: resource.id, name: resource.name, description: resource.description, type: resource.type })
+    }
+  }, [resource]);
+
   const onFinish = (values: any) => {
-    console.log(values, "Resource--")
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
-    if(selectedProjects)
-      dispatch(createResource({ resource:values, projectId: selectedProjects?.id }));
+    }, 1000);
+    if (selectedProjects)
+      if (resource.id) {
+        dispatch(updateResource({ resource: values, resourceId: resource.id }));
+      } else {
+        dispatch(createResource({ resource: values, projectId: selectedProjects?.id }));
+      }
+
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -36,9 +49,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
 
   return (
     <Modal
-      title="Create Resource"
+      title="Create Object"
       open={open}
-      width={1000}
+      width={600}
       destroyOnClose
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
@@ -55,25 +68,25 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
         <Col span={24}>
           <Form
             name="createResource"
-            // style={{ maxWidth: 600 }}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            // initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            form={form}
+            preserve={false}
           >
             <Row justify="start">
-              <Col span={12}>
+              <Col span={24}>
                 <Form.Item
-                  label="Resource Name"
+                  label="Object Name"
                   name="name"
                   rules={[{ required: true, message: 'Please input your Resource Name!' }]}
                 >
                   <Input />
                 </Form.Item>
                 <Form.Item
-                  label="Resource Description"
+                  label="Object Description"
                   name="description"
                   rules={[{ required: true, message: 'Please input your Resource Description!' }]}
                 >
@@ -88,7 +101,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row justify="center">
+            {/* <Row justify="center">
               <Col span={12}>
                 <Form.List name="elements">
                   {(fields, { add, remove }) => (
@@ -159,7 +172,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
                           <Form.Item
                             {...restField}
                             name={[name, 'name']}
-                            label="Action Name"
+                            label="Interaction Name"
                             rules={[{ required: true, message: 'Please input action name!' }]}
                           >
                             <Input />
@@ -190,7 +203,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
                   )}
                 </Form.List>
               </Col>
-            </Row>
+            </Row> */}
           </Form>
         </Col>
       </Row>

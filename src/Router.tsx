@@ -5,7 +5,7 @@ import Login from "./Auth/pages/Login";
 import { ConfigProvider } from 'antd';
 
 // Main Router
-import MainLayout from "./Main/MainLayout";
+import ProjectsLayout from "./Main/ProjectsLayout";
 import Dashboard from "./Main/pages/Dashboard";
 import Projects from "./Main/pages/Projects/Projects";
 import Resource from "./Main/pages/Resource";
@@ -15,6 +15,9 @@ import Suites from "./Main/pages/Suite";
 import LoginPage from "./Main/pages/Guest/Login";
 import DataProfile from './Main/pages/DataProfile'
 import Runs from "./Main/pages/Runs";
+import Users from "./Main/pages/Users/Users";
+import OrgUsers from "./Main/pages/Users/OrgUsers";
+import OrgsLayout from "./Main/OrgsLayout";
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +25,7 @@ const AuthRouter = createBrowserRouter([
   },
   {
     path: "/project",
-    element: <MainLayout />,
+    element: <ProjectsLayout />,
     children: [
       {
         path: "all",
@@ -50,11 +53,26 @@ const AuthRouter = createBrowserRouter([
       },
       {
         path: ":id/runs",
-        element: <Runs/>,
+        element: <Runs />,
       },
       {
         path: ":id/data_profiles",
         element: <DataProfile />,
+      },
+      {
+        path: ":id/users",
+        element: <Users />,
+      },
+
+    ],
+  },
+  {
+    path: "/org",
+    element: <OrgsLayout />,
+    children: [
+      {
+        path: ":id/users",
+        element: <OrgUsers />,
       },
 
     ],

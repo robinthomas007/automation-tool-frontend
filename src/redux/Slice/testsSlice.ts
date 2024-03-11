@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { Tests, CreateTest, SaveTestStepData } from "../Services/tests";
+import { Tests, CreateTest, SaveTestStepData, UpdateTest, DeleteTest } from "../Services/tests";
 import { Step } from "./stepsSlice";
 import { Project } from "./projectsSlice";
 import { stat } from "fs";
@@ -48,11 +48,22 @@ export const createTest = createAsyncThunk(
 );
 
 export const saveTestStepData = createAsyncThunk(
-  "test/saveTestStepData",
+  "tests/saveTestStepData",
   async ({ steps, testId }: { steps: Array<Step>, testId: number }) => {
     return SaveTestStepData(steps, testId)
   }
 )
+
+export const updateTest = createAsyncThunk(
+  "tests/updateTest",
+  async ({ test }: { test: Test }) => UpdateTest(test)
+);
+
+export const deleteTest = createAsyncThunk(
+  "tests/deleteTest",
+  async ({ id }: { id: number }) => DeleteTest(id)
+);
+
 const testsSlice = createSlice({
   name: "tests",
   initialState,
@@ -63,7 +74,6 @@ const testsSlice = createSlice({
     builder.addCase(fetchTests.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.tests = payload.data;
-      console.log("payload.data[0]", payload.data[0]);
       if (payload.data.length) {
         state.selectedTests = payload.data[0];
       }
@@ -78,10 +88,8 @@ const testsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createTest.fulfilled, (state, { payload }) => {
-      // const data: PayloadAction<Array<Test>> = payload.data;
       state.loading = false;
       state.tests = [...state.tests, payload.data];
-      console.log("Created Test", payload.data[0]);
       if (payload.data.length) {
         state.selectedTests = payload.data[0];
       }
@@ -110,10 +118,46 @@ const testsSlice = createSlice({
       state.selectedStep = state.selectedTests.steps.find((step: any) => step.sequence_number === state.selectedStep.sequence_number)
 
     });
+
     builder.addCase(saveTestStepData.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
+    builder.addCase(updateTest.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateTest.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.selectedTests = payload.data;
+      const stepIndex = state.tests.findIndex(test => test.id === state.selectedTests.id);
+      if (stepIndex !== -1) {
+        const updatedTests = [...state.tests];
+        updatedTests[stepIndex] = {
+          ...state.selectedTests
+        }
+        state.tests = updatedTests;
+      }
+
+    });
+    builder.addCase(updateTest.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(deleteTest.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(deleteTest.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.tests = state.tests.filter((item) => item.id !== payload.data.id)
+    });
+
+    builder.addCase(deleteTest.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
   },
   reducers: {
     removeUserFromList: (state, action) => { },
@@ -163,10 +207,30 @@ const testsSlice = createSlice({
     addStepDataToTest: (state, action) => {
       const { item } = action.payload;
       state.selectedStep = item
-    }
+    },
+
+    removeStepFromTest: (state, action) => {
+      const { id, sequence_number } = action.payload;
+
+      const updatedSteps = state.selectedTests.steps.filter(
+        (t: any) => t.step.id !== id && t.sequence_number !== sequence_number
+      );
+
+      state.selectedTests = {
+        ...state.selectedTests,
+        steps: updatedSteps,
+      };
+
+      state.tests = state.tests.map(tes => {
+        if (tes.id === state.selectedTests.id) {
+          return { ...state.selectedTests, steps: updatedSteps };
+        }
+        return tes;
+      });
+    },
   },
 });
 
-export const { selectTests, addStepToTest, reOrderTestSteps, addStepDataToTest } = testsSlice.actions;
+export const { selectTests, addStepToTest, reOrderTestSteps, addStepDataToTest, removeStepFromTest } = testsSlice.actions;
 export const testsSelector = (state: RootState) => state.tests;
 export default testsSlice.reducer;

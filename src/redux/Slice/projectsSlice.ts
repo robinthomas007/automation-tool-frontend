@@ -15,8 +15,13 @@ export interface Project {
   tests: Array<Test>
   steps: Array<Step>
   suites: Array<Suite>
+  category_stats: Array<CategoryStat>
+  items_stats: Array<ItemStat>
   resources: Array<Resource>
 }
+export type CategoryStat={name: string,items:StatItem[]}
+export type ItemStat={name: string,items:CategoryStat[]}
+export type StatItem = {name:string,value:number, color: string}
 export interface ProjectsState {
   loading: boolean;
   projects: Array<Project>;

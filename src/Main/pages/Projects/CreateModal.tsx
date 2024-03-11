@@ -20,9 +20,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
+    }, 1000);
     if (selectedOrgs !== undefined) {
-      dispatch(createProjects({ orgId: selectedOrgs.Org.id, data: values }));
+      dispatch(createProjects({ orgId: selectedOrgs.org.id, data: values }));
     }
   }, [selectedOrgs]);
 

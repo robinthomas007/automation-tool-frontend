@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchSteps, stepsSelector, selectSteps } from "./../../../redux/Slice/stepsSlice";
+import { fetchSteps, stepsSelector, selectSteps, deleteStep } from "./../../../redux/Slice/stepsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Row, Col, Input, Button, Collapse } from 'antd';
-import StepResourceActions from './StepResourceActions'
+import Step from './Step'
 import CreateModal from './CreateModal'
 import StepsRightPanel from './StepsRightPanel'
+import {
+  EditTwoTone,
+  DeleteTwoTone
+} from '@ant-design/icons';
+import Loader from "../../../Components/Loader";
 
 const Steps = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
+  const [stepeEdit, setStepEdit] = useState({})
+  const [search, setSearch] = useState('')
 
   const dispatch = useAppDispatch();
-  const { steps, selectedSteps } = useAppSelector(stepsSelector);
+  const { steps } = useAppSelector(stepsSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
 
-  const items = steps.map((step, index) => ({ ...step, label: step.name, key: index, children: <StepResourceActions step={selectedSteps} /> }));
 
   const onChange = (key: string | string[]) => {
     if (key.length)
@@ -23,42 +29,69 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
 
   useEffect(() => {
     if (selectedProjects)
-      dispatch(fetchSteps({ projectId: selectedProjects?.id, searchTerm: '' }));
-  }, [selectedProjects]);
+      dispatch(fetchSteps({ projectId: selectedProjects?.id, searchTerm: search }));
+  }, [selectedProjects, search, dispatch]);
 
   const handleCancel = () => {
     setOpenCreate(false)
   }
 
+  const handleOpenEdit = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, step: any) => {
+    // e.stopPropagation()
+    setOpenCreate(true)
+    setStepEdit(step)
+  }
+
+  const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, step: any) => {
+    e.stopPropagation()
+    dispatch(deleteStep({ id: step.id }))
+  }
+
+  const handleChangeSteps = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputSearch = e.target.value
+    if (inputSearch.length >= 3) {
+      setSearch(inputSearch)
+    }
+    if (inputSearch.length === 0) {
+      setSearch('')
+    }
+  }
+
   const stepItems = steps.map((step, index) => (
     <Collapse.Panel
+      className="resource-panel"
       header={step.name}
       key={index}
+      extra={
+        <span className="resource-panel-extra">
+          <EditTwoTone onClick={(e) => handleOpenEdit(e, step)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
+          <DeleteTwoTone onClick={(e) => handleDelete(e, step)} className="delete-icon" />
+        </span>
+      }
     >
-      <StepResourceActions step={step} />
+      <Step step={step} />
     </Collapse.Panel>
   ));
 
   return (
-    showSelected ? <div>
+    <div>
       <Row>
         <Col span={12}>
-          <Input placeholder="Search Steps" />
+          <Input placeholder="Search Steps" onChange={handleChangeSteps} />
         </Col>
         <Col span={12} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Steps</Button>
-          <CreateModal open={openCreate} handleCancel={handleCancel} />
+          <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>
       </Row>
       <Row>
         <Col span={24}>
-          <Collapse onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
-            {stepItems}
-          </Collapse>
+          {steps.length === 0 ? <Loader /> :
+            <Collapse onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+              {stepItems}
+            </Collapse>}
         </Col>
       </Row>
-    </div> : <div>
-      <StepsRightPanel />
     </div>
   );
 };

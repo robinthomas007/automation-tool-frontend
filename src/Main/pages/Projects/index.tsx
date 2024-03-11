@@ -19,7 +19,7 @@ export default function CreateProjectCoponent() {
             content: <CreateProject next={next} />,
         },
         {
-            title: 'Create Resource',
+            title: 'Create Object',
             content: <CreateResource next={next} />,
         },
         {

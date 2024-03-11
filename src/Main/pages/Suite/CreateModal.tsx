@@ -1,19 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { createSuites } from "./../../../redux/Slice/suitesSlice";
+import { createSuites, updateSuite } from "./../../../redux/Slice/suitesSlice";
 
 interface CreateModalProps {
   open: boolean;
-  handleCancel: () => void
+  handleCancel: () => void,
+  suite: any
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
+const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
+  const [form] = Form.useForm()
 
   const onFinish = (values: any) => {
     console.log(values, "steps--")
@@ -21,10 +23,20 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
-    if(selectedProjects)
-    dispatch(createSuites({ suite:values, projectId: selectedProjects?.id }));
+    }, 1000);
+    if (selectedProjects)
+      if (suite.id) {
+        dispatch(updateSuite({ suite: { ...values, id: suite.id } }));
+      } else {
+        dispatch(createSuites({ suite: values, projectId: selectedProjects?.id }));
+      }
   };
+
+  useEffect(() => {
+    if (suite && Object.keys(suite).length !== 0) {
+      form.setFieldsValue({ id: suite.id, name: suite.name, description: suite.description })
+    }
+  }, [suite]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -55,6 +67,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            form={form}
+            preserve={false}
           >
             <Form.Item
               label="Suite Name"

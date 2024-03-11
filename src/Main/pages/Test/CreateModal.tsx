@@ -1,19 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { createTest } from "./../../../redux/Slice/testsSlice";
+import { createTest, updateTest } from "./../../../redux/Slice/testsSlice";
 
 interface CreateModalProps {
   open: boolean;
-  handleCancel: () => void
+  handleCancel: () => void,
+  test: any
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
+const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
+  const [form] = Form.useForm()
+
+
+  useEffect(() => {
+    if (test && Object.keys(test).length !== 0) {
+      form.setFieldsValue({ id: test.id, name: test.name, description: test.description })
+    }
+  }, [test]);
 
   const onFinish = (values: any) => {
     console.log(values, "test--")
@@ -21,9 +30,13 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
     setTimeout(() => {
       handleCancel()
       setConfirmLoading(false);
-    }, 2000);
-    if(selectedProjects)
-      dispatch(createTest({test:values,projectId: selectedProjects?.id }));
+    }, 1000);
+    if (selectedProjects)
+      if (test.id) {
+        dispatch(updateTest({ test: { ...values, id: test.id } }));
+      } else {
+        dispatch(createTest({ test: values, projectId: selectedProjects?.id }));
+      }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -55,6 +68,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            form={form}
+            preserve={false}
           >
             <Form.Item
               label="Test Name"

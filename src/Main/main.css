@@ -24,7 +24,7 @@ body {
 }
 .logo-wrapper {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     margin: 10px;
 }
 
@@ -52,4 +52,34 @@ body {
 }
 .profile-menu .ant-popover-inner{
     margin-right: 8px !important;
+}
+.activeRun {
+    color: blueviolet;
+}
+
+.edit-icon,.delete-icon {
+    visibility: hidden;
+}
+
+.resource-panel:hover .resource-panel-extra .edit-icon, .resource-panel:hover .resource-panel-extra .delete-icon,
+.resource-action-panel:hover .resource-action-panel-extra .edit-icon, .resource-action-panel:hover .resource-action-panel-extra .delete-icon,
+.element-panel:hover .edit-icon, .element-panel:hover .delete-icon {
+    visibility: visible !important;
+}
+
+ .ant-collapse-item-active{
+    background: #d6e1f5;
+}
+
+.ant-collapse-item-active>.ant-collapse-header {
+    color: #5c14b3a3 !important;
+    font-weight: bold;
+}
+
+.anticon-cloud-upload {
+    color: #1577ff;
+}
+
+.selected-step {
+    color: #6d03eee6 !important;
 }

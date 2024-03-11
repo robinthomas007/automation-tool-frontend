@@ -1,16 +1,19 @@
+import React, { useState } from 'react'
 import { Test as TestModel } from "./../../../redux/Slice/testsSlice";
-import { Row, Col, List } from 'antd';
+import { Row, Col, List, Button } from 'antd';
 import { useDrop, useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { addStepToTest, reOrderTestSteps, addStepDataToTest } from "./../../../redux/Slice/testsSlice";
+import { addStepToTest, reOrderTestSteps, addStepDataToTest, updateTest, removeStepFromTest } from "./../../../redux/Slice/testsSlice";
 import {
   HolderOutlined,
-  CheckOutlined,
-  CloseOutlined
+  CloseCircleOutlined,
+  CloudUploadOutlined
 } from '@ant-design/icons';
 import { fetchTests, testsSelector, selectTests } from "./../../../redux/Slice/testsSlice";
 
-const DraggableListItem = ({ item, type, index, moveItem, handleStepData }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, handleStepData, handleRemoveStep, selectedStep }: any) => {
+
+  const [hover, setHover] = useState(false)
 
   const [, drag] = useDrag({
     type,
@@ -28,23 +31,26 @@ const DraggableListItem = ({ item, type, index, moveItem, handleStepData }: any)
     },
   });
 
-
   return (
-    <div ref={(node) => drag(drop(node))} style={{ padding: 5, width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+    <div ref={(node) => drag(drop(node))}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className={selectedStep.step_id === item.step_id && selectedStep.sequence_number == item.sequence_number? 'selected-step' : ''}
+      style={{ padding: 5, width: '100%', display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <HolderOutlined style={{ marginRight: 8, cursor: 'move' }} />
         <span style={{ cursor: 'pointer' }} onClick={() => handleStepData(item)}> {item.step.name}</span>
       </div>
-      {/* <div>
-        {Number(item.id) % 2 === 0 ? <CheckOutlined style={{ color: '#98cf8c' }} /> : <CloseOutlined style={{ color: '#db3b3b' }} />}
-      </div> */}
+      <div>
+        <CloseCircleOutlined onClick={() => handleRemoveStep({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />
+      </div>
     </div>
   );
 };
 
 const Test = ({ test }: { test: TestModel }) => {
   const dispatch = useAppDispatch();
-  const { selectedTests } = useAppSelector(testsSelector);
+  const { selectedTests, selectedStep } = useAppSelector(testsSelector);
 
 
   const [, drop] = useDrop({
@@ -59,15 +65,21 @@ const Test = ({ test }: { test: TestModel }) => {
   };
 
   const handleStepData = (item: any) => {
-    console.log(item, 11)
     dispatch(addStepDataToTest({ item }));
   }
+
+  const handleRemoveStep = ({ id, sequence_number }: { id: number, sequence_number: number }) => {
+    dispatch(removeStepFromTest({ id, sequence_number }));
+  };
 
   return (
     <Row ref={drop}>
       <Col span={24}>
         <List
-          header={<div>Steps</div>}
+          header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>Steps</span>
+            <CloudUploadOutlined onClick={(e) => dispatch(updateTest({ test }))} title="save" />
+          </div>}
           bordered
           dataSource={test.steps ? test.steps : []}
           renderItem={(item, index) => (
@@ -78,6 +90,8 @@ const Test = ({ test }: { test: TestModel }) => {
                 index={index}
                 moveItem={moveItem}
                 handleStepData={handleStepData}
+                handleRemoveStep={handleRemoveStep}
+                selectedStep={selectedStep}
               />
 
             </List.Item>

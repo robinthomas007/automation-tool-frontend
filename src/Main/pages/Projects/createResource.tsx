@@ -32,7 +32,7 @@ export default function CreateResource({ next }: any) {
           autoComplete="off"
         >
 
-          <Form.List name="Resource" initialValue={[{}]}>
+          <Form.List name="Object" initialValue={[{}]}>
             {(fields, { add, remove }) => (
               <>
                 <Row justify="start">

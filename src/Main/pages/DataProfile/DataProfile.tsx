@@ -48,7 +48,7 @@ const DataProfile = ({ showSelected }: any) => {
       </Row>
       <Row>
         <Col span={24}>
-          {showSelected && <Collapse onChange={onChange} style={{ marginTop: 10 }}>
+          {showSelected && <Collapse onChange={onChange} accordion style={{ marginTop: 10 }}>
             {profle.map((profile: any, index: any) => (
               <Collapse.Panel
                 header={profile.name}

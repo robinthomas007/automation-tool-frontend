@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import {
+  InteractionOutlined,
+  ExperimentOutlined,
   RocketOutlined,
   DatabaseOutlined,
   StepForwardOutlined,
@@ -9,14 +11,20 @@ import {
 } from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
 import Steps from "./../Main/pages/Step/Steps";
+import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
 import Tests from "./../Main/pages/Test/Tests";
 import Resources from "./../Main/pages/Resource/Resources";
+import ResourcesRightPanel from "./../Main/pages/Resource/ResourceRightPanel";
 import Suites from "./../Main/pages/Suite/Suites";
+import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanel";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
+import TestRightPanel from './../Main/pages/Test/TestRightPanel'
 import DataProfile from './../Main/pages/DataProfile/DataProfile'
-import { useAppDispatch, useAppSelector } from "./../redux/hooks";
-import { fetchTests, testsSelector, selectTests } from "./../redux/Slice/testsSlice";
+import {  useAppSelector } from "./../redux/hooks";
+import {  testsSelector,  } from "./../redux/Slice/testsSlice";
 import Runs from '../Main/pages/Runs/Runs';
+import StepsRightPanelData from '../Main/pages/Step/StepsRightPanelData';
+import { stepsSelector } from '../redux/Slice/stepsSlice';
 
 const { Sider } = Layout;
 
@@ -25,6 +33,7 @@ const RightPanel = ({ type }: { type?: string }) => {
   const [activeTabKey, setActiveTabKey] = useState('1');
 
   const { selectedStep } = useAppSelector(testsSelector);
+  const { selectedResourceAction } = useAppSelector(stepsSelector);
 
   const handleTabChange = (key: string) => {
     setActiveTabKey(key);
@@ -35,17 +44,27 @@ const RightPanel = ({ type }: { type?: string }) => {
       setActiveTabKey('2')
     }
   }, [selectedStep])
+  useEffect(() => {
+    if (selectedResourceAction) {
+      setActiveTabKey('2')
+    }
+  }, [selectedResourceAction])
 
 
   const tabs = [
     {
+      Tab: <InteractionOutlined />,
+      Panel: <StepsRightPanel />,
+      type: "step"
+    },
+    {
       Tab: <DatabaseOutlined />,
-      Panel: <Steps showSelected={false} />,
+      Panel: <StepsRightPanelData />,
       type: "step"
     },
     {
       Tab: <StepForwardOutlined />,
-      Panel: <Tests showSelected={false} />,
+      Panel: <TestRightPanel />,
       type: "tests"
     },
     {
@@ -55,12 +74,12 @@ const RightPanel = ({ type }: { type?: string }) => {
     },
     {
       Tab: <DatabaseOutlined />,
-      Panel: <Resources showSelected={false} />,
+      Panel: <ResourcesRightPanel />,
       type: "resource"
     },
     {
-      Tab: <RocketOutlined />,
-      Panel: <Suites showSelected={false} />,
+      Tab: <ExperimentOutlined/>,
+      Panel: <SuitesRightPanel />,
       type: "suite"
     },
     {

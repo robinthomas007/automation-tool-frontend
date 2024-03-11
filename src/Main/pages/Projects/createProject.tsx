@@ -9,7 +9,7 @@ export default function CreateProject({ next }: any) {
   const dispatch = useAppDispatch();
   const onFinish = useCallback((values: any) => {
     if (selectedOrgs !== undefined) {
-      dispatch(createProjects({ orgId: selectedOrgs.Org.id, data: values }));
+      dispatch(createProjects({ orgId: selectedOrgs.org.id, data: values }));
       next()
     } else {
       next()

@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Form } from 'antd';
 import { List, Input, Button } from 'antd';
-import { HolderOutlined, PlusCircleTwoTone } from '@ant-design/icons';
-import { useDrag } from 'react-dnd';
-import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { testsSelector, saveTestStepData } from "./../../../redux/Slice/testsSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { saveStepActionData, stepsSelector } from '../../../redux/Slice/stepsSlice';
+import { SaveStepActionData } from '../../../redux/Services/steps';
 
-const TestsRightPanelData = () => {
+const StepsRightPanelData = () => {
   const dispatch = useAppDispatch();
   const [data,setData] = useState<any[]>([])
 
-  const { selectedStep, selectedTests } = useAppSelector(testsSelector);
+  const { selectedSteps,selectedResourceAction  } = useAppSelector(stepsSelector);
   useEffect(()=>{
-    setData(selectedStep?.data ? selectedStep?.data : [])
-  },[selectedStep])
+    setData(selectedResourceAction?.data ? selectedResourceAction?.data : [])
+  },[selectedResourceAction])
   const onFinish = (values: any) => {
-    const stepIndex = selectedTests.steps.findIndex((step: any) => step.step_id==selectedStep.step_id && step.sequence_number === selectedStep.sequence_number);
-    const updatedSteps = [...selectedTests.steps];
-    updatedSteps[stepIndex] = {
-      ...updatedSteps[stepIndex],
+    const raIndex = selectedSteps.resource_actions.findIndex((ra: any) => ra.resource_action_id==selectedResourceAction.resource_action_id && ra.sequence_number === selectedResourceAction.sequence_number);
+    console.log(raIndex,"RA Index")
+    const updatedActions = [...selectedSteps.resource_actions];
+    updatedActions[raIndex] = {
+      ...updatedActions[raIndex],
       data: Object.entries(values).map(([name, expression]) => ({ name, expression }))
     }
-    dispatch(saveTestStepData({ steps: updatedSteps, testId: selectedTests?.id }))
+    dispatch(saveStepActionData({ actions: updatedActions, stepId: selectedSteps?.id }))
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -31,7 +31,7 @@ const TestsRightPanelData = () => {
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
         <Form
-          name="actiondata"
+          name="interactiondata"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -39,9 +39,9 @@ const TestsRightPanelData = () => {
         >
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Steps Actions Data</span>
+              <span>Interactions Data</span>
             </div>}
-            footer={<div style={{ textAlign: 'right' }}><Button form="actiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
+            footer={<div style={{ textAlign: 'right' }}><Button form="interactiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
             bordered
             dataSource={data}
             renderItem={(item: any, index: number) => (
@@ -50,7 +50,6 @@ const TestsRightPanelData = () => {
                   <Form.Item
                     label={item.name}
                     name={item.name}
-                    rules={[{ required: true, message: `Please input your ${item.label}!` }]}
                     initialValue={item.expression}
                   >
                     <Input />
@@ -64,4 +63,4 @@ const TestsRightPanelData = () => {
     </Row>
   )
 }
-export default TestsRightPanelData
+export default StepsRightPanelData
