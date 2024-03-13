@@ -7,10 +7,13 @@ const { Title } = Typography
 
 const Run = ({ run }: { run: RunModel }) => {
   const constructTreeNodes = (data: any, parentKey: string) => {
+    if (!data) {
+      return null
+    }
     return data.items.map((item: any, index: any) => ({
       title: (
         <span>
-          <span>{item.error != "" && item.type == 'ResourceElementAction' ? "Expected:" : ""}{item.name}{item.error != "" && item.type == 'ResourceElementAction' ? ", Actual: " + item.error : ""} ({item.time}) </span>
+          <span>{item.error !== "" && item.type === 'ResourceElementAction' ? "Expected:" : ""}{item.name}{item.error !== "" && item.type === 'ResourceElementAction' ? ", Actual: " + item.error : ""} ({item.time}) </span>
           {item.screenshot && <span style={{ display: 'block', padding: 10 }}>
             <img src={item.screenshot} alt="Screenshot" style={{ maxWidth: '100%', marginTop: 10, marginBottom: 10, border: '1px solid #ddd' }} />
           </span>}
@@ -22,9 +25,9 @@ const Run = ({ run }: { run: RunModel }) => {
     }));
   };
 
-  const newTreeData = constructTreeNodes(run.result, '');
+  const newTreeData = run?.result ? constructTreeNodes(run?.result, '') : constructTreeNodes(null, '')
 
-  const updatedTreeData = newTreeData.map((node: any, index: any) => {
+  const updatedTreeData = newTreeData && newTreeData.map((node: any, index: any) => {
     if (newTreeData[index]) {
       return {
         ...node,
@@ -37,8 +40,8 @@ const Run = ({ run }: { run: RunModel }) => {
   return (
     <Row>
       <Col span={24}>
-        <Title level={2}><CheckCircleFilled style={{ color: 'green' }} /> {`${run.result?.name}(${run.result.time})`}</Title>
-        <RunItem item={run.result} treeData={updatedTreeData} />
+        <Title level={2}><CheckCircleFilled style={{ color: 'green' }} /> {`${run?.result?.name}(${run?.result.time})`}</Title>
+        {run && <RunItem item={run.result} treeData={updatedTreeData} />}
       </Col>
     </Row>
   );

@@ -25,12 +25,14 @@ export interface CreateRunData {
 }
 export interface RunsState {
   loading: boolean;
+  fetchLoading: boolean;
   runs: Array<Run>;
   selectedRunId: number | undefined;
   error: string | undefined;
 }
 const initialState: RunsState = {
   loading: false,
+  fetchLoading: false,
   runs: [],
   selectedRunId: undefined,
   error: undefined,
@@ -49,13 +51,17 @@ const runsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchRuns.pending, (state) => {
       state.loading = true;
+      state.fetchLoading = true
     });
     builder.addCase(fetchRuns.fulfilled, (state, { payload }) => {
       state.loading = false;
+      state.fetchLoading = false
       state.runs = payload.data;
+      state.selectedRunId = payload?.data.length ? payload.data[0].id : undefined;
     });
     builder.addCase(fetchRuns.rejected, (state, action) => {
       state.loading = false;
+      state.fetchLoading = false
       state.runs = [];
       state.error = action.error.message;
     });
@@ -79,12 +85,11 @@ const runsSlice = createSlice({
     },
     updateRun: (state, action) => {
       const runIndex = state.runs.findIndex(run => run.id === action.payload.id);
-      if (state.selectedRunId==undefined)
-      {
+      if (state.selectedRunId == undefined) {
         state.selectedRunId = action.payload.id
       } else {
-        const currentlySelectedRun = state.runs.find(r=>r.id==state.selectedRunId)!
-        if (currentlySelectedRun.result.status=="PASS" || currentlySelectedRun.result.status=="FAIL"){
+        const currentlySelectedRun = state.runs.find(r => r.id == state.selectedRunId)!
+        if (currentlySelectedRun.result.status == "PASS" || currentlySelectedRun.result.status == "FAIL") {
           state.selectedRunId = action.payload.id
         }
       }

@@ -72,6 +72,12 @@ const stepsSlice = createSlice({
     builder.addCase(updateStep.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.selectedSteps = payload.data;
+      state.steps = state.steps.map(step => {
+        if (step.id === payload.data.id) {
+          return payload.data
+        }
+        return step
+      })
     });
     builder.addCase(updateStep.rejected, (state, action) => {
       state.loading = false;
@@ -111,7 +117,7 @@ const stepsSlice = createSlice({
       state.loading = false;
       state.selectedSteps = payload.data
       const stepIndex = state.steps.findIndex(step => step.id === state.selectedSteps.id);
-      console.log(stepIndex,"StepIndex")
+      console.log(stepIndex, "StepIndex")
       if (stepIndex !== -1) {
         const updatedSteps = [...state.steps];
         updatedSteps[stepIndex] = {
@@ -134,6 +140,7 @@ const stepsSlice = createSlice({
       state.selectedSteps = action.payload;
     },
     selectResourceAction: (state, action) => {
+      console.log(action.payload, "action.payloadaction.payloadaction.payload")
       state.selectedResourceAction = action.payload;
     },
     addActionDataToStep: (state, action) => {
@@ -147,7 +154,7 @@ const stepsSlice = createSlice({
         ...state.selectedSteps,
         resource_actions: [
           ...state.selectedSteps.resource_actions,
-          { resource_action: item, sequence_number: state.selectedSteps.resource_actions.length + 1, data:item.required_variables.map((rv:string)=>({name:rv,expression:''})) }
+          { resource_action: item, sequence_number: state.selectedSteps.resource_actions.length + 1, data: item.required_variables.map((rv: string) => ({ name: rv, expression: '' })) }
         ]
       }
 
@@ -224,6 +231,6 @@ const stepsSlice = createSlice({
   },
 });
 
-export const { selectSteps, addResActToStep, reOrderStepsActions, updateSelectedStepAction, removeActionFromResource, selectResourceAction,addActionDataToStep } = stepsSlice.actions;
+export const { selectSteps, addResActToStep, reOrderStepsActions, updateSelectedStepAction, removeActionFromResource, selectResourceAction, addActionDataToStep } = stepsSlice.actions;
 export const stepsSelector = (state: RootState) => state.steps;
 export default stepsSlice.reducer;

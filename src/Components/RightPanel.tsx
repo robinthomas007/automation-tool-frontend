@@ -19,9 +19,10 @@ import Suites from "./../Main/pages/Suite/Suites";
 import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanel";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
 import TestRightPanel from './../Main/pages/Test/TestRightPanel'
+import RunsRightPanel from './../Main/pages/Runs/RunsRightPanel'
 import DataProfile from './../Main/pages/DataProfile/DataProfile'
-import {  useAppSelector } from "./../redux/hooks";
-import {  testsSelector,  } from "./../redux/Slice/testsSlice";
+import { useAppSelector } from "./../redux/hooks";
+import { testsSelector, } from "./../redux/Slice/testsSlice";
 import Runs from '../Main/pages/Runs/Runs';
 import StepsRightPanelData from '../Main/pages/Step/StepsRightPanelData';
 import { stepsSelector } from '../redux/Slice/stepsSlice';
@@ -44,9 +45,12 @@ const RightPanel = ({ type }: { type?: string }) => {
       setActiveTabKey('2')
     }
   }, [selectedStep])
+
   useEffect(() => {
-    if (selectedResourceAction) {
+    if (Object.keys(selectedResourceAction).length !== 0) {
       setActiveTabKey('2')
+    } else {
+      setActiveTabKey('1')
     }
   }, [selectedResourceAction])
 
@@ -78,13 +82,13 @@ const RightPanel = ({ type }: { type?: string }) => {
       type: "resource"
     },
     {
-      Tab: <ExperimentOutlined/>,
+      Tab: <ExperimentOutlined />,
       Panel: <SuitesRightPanel />,
       type: "suite"
     },
     {
       Tab: <RocketOutlined />,
-      Panel: <Runs showSelected={false} />,
+      Panel: <RunsRightPanel />,
       type: "run"
     },
     {

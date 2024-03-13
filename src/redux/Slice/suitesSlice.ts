@@ -16,12 +16,14 @@ export interface SuitesState {
   suites: Array<Suite>;
   selectedSuites: Suite | any;
   error: string | undefined;
+  fetchLoading: boolean
 }
 const initialState: SuitesState = {
   loading: false,
   suites: [],
   selectedSuites: {},
   error: undefined,
+  fetchLoading: false
 };
 
 export const fetchSuites = createAsyncThunk(
@@ -54,9 +56,12 @@ const suitesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchSuites.pending, (state) => {
       state.loading = true;
+      state.fetchLoading = true
+      state.suites = [];
     });
     builder.addCase(fetchSuites.fulfilled, (state, { payload }) => {
       state.loading = false;
+      state.fetchLoading = false
       state.suites = payload.data;
       if (payload.data.length) {
         state.selectedSuites = payload.data[0];
@@ -64,6 +69,7 @@ const suitesSlice = createSlice({
     });
     builder.addCase(fetchSuites.rejected, (state, action) => {
       state.loading = false;
+      state.fetchLoading = false
       state.suites = [];
       state.error = action.error.message;
     });

@@ -75,28 +75,32 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
             <Form.Item
               label="Element Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your Element Name!' }]}
+              rules={[{ required: true, message: 'Please input your Element Name!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Element Locator"
               name="locator"
-              rules={[{ required: true, message: 'Please input your Element Locator!' }]}
+              rules={[{ required: true, message: 'Please input your Element Locator!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Element type"
               name="type"
-              rules={[{ required: true, message: 'Please input your Element type!' }]}
+              rules={[{ required: true, message: 'Please input your Element type!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Element Description"
               name="description"
-              rules={[{ required: true, message: 'Please input your Element Description!' }]}
+              rules={[{ required: true, message: 'Please input your Element Description!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <TextArea rows={4} placeholder="Description" />
 

@@ -38,10 +38,10 @@ const DataProfile = ({ showSelected }: any) => {
   return (
     showSelected ? <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Profile" />
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        </Col> */}
+        <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Profile </Button>
           <CreateModal open={openCreate} handleCancel={handleCancel} />
         </Col>
@@ -53,7 +53,6 @@ const DataProfile = ({ showSelected }: any) => {
               <Collapse.Panel
                 header={profile.name}
                 key={index}
-              // extra={<span onClick={(e) => e.stopPropagation()}></span>}
               >
                 <Variable variables={profile.variables} profileId={profile.id} />
               </Collapse.Panel>

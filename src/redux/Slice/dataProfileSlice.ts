@@ -109,13 +109,11 @@ const dataProfileSlice = createSlice({
     addVariableToProfile: (state, action) => {
 
       const { item } = action.payload
-      console.log(item, "item")
-
       const isItemExist = state.selectedProfile.variables?.some((variable: any) => variable.id === item.id);
       if (!isItemExist) {
         state.selectedProfile = {
           ...state.selectedProfile,
-          variables: [...state.selectedProfile.variables, {variable:item,value:""}]
+          variables: [...state.selectedProfile.variables, { variable: item, value: "" }]
         }
 
         const profileIndex = state.profle.findIndex(profile => profile.id === state.selectedProfile.id);
@@ -124,15 +122,38 @@ const dataProfileSlice = createSlice({
           const updatedProfile = [...state.profle];
           updatedProfile[profileIndex] = {
             ...state.selectedProfile,
-            varibles: [...state.selectedProfile.variables, {variable:item,value:""}]
+            varibles: [...state.selectedProfile.variables, { variable: item, value: "" }]
           }
           state.profle = updatedProfile
+        }
+      }
+    },
+    RemoveVariable: (state, action) => {
+      const { id } = action.payload;
+      const variableIndex = state.selectedProfile.variables.findIndex((variable: any) => variable.id === id);
+
+      if (variableIndex !== -1) {
+        const updatedVariables = state.selectedProfile.variables.filter((_: any, index: any) => index !== variableIndex);
+
+        state.selectedProfile = {
+          ...state.selectedProfile,
+          variables: updatedVariables
+        };
+
+        const profileIndex = state.profle.findIndex(profile => profile.id === state.selectedProfile.id);
+        if (profileIndex !== -1) {
+          const updatedProfile = [...state.profle];
+          updatedProfile[profileIndex] = {
+            ...state.selectedProfile,
+            variables: updatedVariables
+          };
+          state.profle = updatedProfile;
         }
       }
     }
   }
 })
 
-export const { setSelectedProfile, addVariableToProfile } = dataProfileSlice.actions
+export const { setSelectedProfile, addVariableToProfile, RemoveVariable } = dataProfileSlice.actions
 export const dataProfileSelector = (state: RootState) => state.dataProfile;
 export default dataProfileSlice.reducer;

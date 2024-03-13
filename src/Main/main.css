@@ -83,3 +83,11 @@ body {
 .selected-step {
     color: #6d03eee6 !important;
 }
+
+.variable-item .close-icon {
+    visibility: hidden;
+  }
+  
+  .variable-item:hover .close-icon {
+    visibility: visible;
+  }

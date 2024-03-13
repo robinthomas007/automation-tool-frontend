@@ -66,6 +66,8 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
     value: item.name
   }));
 
+  console.log(commandObj?.template, "commandObj?.templatecommandObj?.template")
+
   const template: string = commandObj?.template
   let rs = reactStringReplace(template, '$(Command)', (match, i) => (
     <div key={`command-${i}`}>
@@ -83,7 +85,7 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
     }} />}
   </div>))
 
-  rs = reactStringReplace(rs, '$(Element)', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
+  rs = reactStringReplace(rs, '$(Element)s', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
     <span >{item.name}</span>
   </div>))
 
@@ -231,7 +233,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
         </div>}
       >
         {selectedActionElements.element_actions && selectedActionElements.element_actions.map((item: any, index: number) => (
-          <List.Item style={{ padding: 0 }} key={item.element_id+"-"+item.sequence_number}>
+          <List.Item style={{ padding: 0 }} key={item.element_id + "-" + item.sequence_number}>
             <DraggableListItem
               item={item}
               type={ItemTypes.ELEMENT}

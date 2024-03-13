@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchSuites, suitesSelector, selectSuites, deleteSuite } from "./../../../redux/Slice/suitesSlice";
 import { TextInput } from "flowbite-react";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Row, Col, Input, Button, Collapse, Dropdown } from 'antd';
+import { Row, Col, Input, Button, Collapse, Dropdown, Empty } from 'antd';
 import CreateModal from './CreateModal'
 import SuiteRightPanel from "./SuiteRightPanel";
 import {
@@ -25,7 +25,7 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const [SuiteEdit, setSuiteEdit] = useState({})
 
   const dispatch = useAppDispatch();
-  const { suites, selectedSuites } = useAppSelector(suitesSelector);
+  const { suites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { profle } = useAppSelector(dataProfileSelector);
   const navigate = useNavigate();
@@ -142,20 +142,24 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   return (
     <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Suite" />
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        </Col> */}
+        <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Suite </Button>
           <CreateModal suite={SuiteEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>
       </Row>
       <Row>
         <Col span={24}>
-          {suites.length === 0 && <Loader />}
-          <Collapse onChange={onChange} accordion style={{ marginTop: 10 }}>
+          {fetchLoading && <Loader />}
+
+          {suites.length > 0 && <Collapse onChange={onChange} accordion style={{ marginTop: 10 }}>
             {suitItems}
-          </Collapse>
+          </Collapse>}
+          {suites.length === 0 && !fetchLoading && <div className="my-40">
+            <Empty />
+          </div>}
         </Col>
       </Row>
     </div>

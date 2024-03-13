@@ -98,10 +98,10 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
   return (
     <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Test" />
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        </Col> */}
+        <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Tests </Button>
           <CreateModal test={testeEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>

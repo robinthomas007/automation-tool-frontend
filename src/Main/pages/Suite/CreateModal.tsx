@@ -73,14 +73,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
             <Form.Item
               label="Suite Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your step name!' }]}
+              rules={[{ required: true, message: 'Please input your suite name!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Suite Description"
               name="description"
-              rules={[{ required: true, message: 'Please input your step description!' }]}
+              rules={[{ required: true, message: 'Please input your suite description!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
             </Form.Item>

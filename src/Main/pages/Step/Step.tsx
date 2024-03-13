@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { Step as StepModel, updateStep } from "./../../../redux/Slice/stepsSlice";
+import React, { useState, useEffect } from 'react'
+import { Step as StepModel, updateStep, selectResourceAction } from "./../../../redux/Slice/stepsSlice";
 import { useDrag, useDrop } from 'react-dnd';
 import { Row, Col, List, Button, Checkbox, Input } from 'antd';
 import { useAppDispatch } from "./../../../redux/hooks";
-import { addResActToStep, addActionDataToStep,reOrderStepsActions, updateSelectedStepAction, removeActionFromResource } from "./../../../redux/Slice/stepsSlice";
+import { addResActToStep, addActionDataToStep, reOrderStepsActions, updateSelectedStepAction, removeActionFromResource } from "./../../../redux/Slice/stepsSlice";
 import {
   ArrowDownOutlined,
   CloudUploadOutlined,
@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import EditableText from '../../../Components/EditableText';
 
-const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChange, handleRemoveAction,handleResourceActionData }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChange, handleRemoveAction, handleResourceActionData }: any) => {
 
   const [, drag] = useDrag({
     type,
@@ -32,6 +32,8 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
     },
   });
 
+  const data = item.data ? item.data : []
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 10, position: 'relative' }}>
       <div ref={(node) => drag(drop(node))} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} style={{
@@ -39,9 +41,11 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
         width: '100%', background: '#fff', color: '#6e707e'
 
       }}>
-        <span onClick={(e) => {e.stopPropagation()
-          handleResourceActionData(item)}}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({item.data.map((d:any)=>d.name+"="+(d.expression==""?"inherited":d.expression)).join(',')})</span>
-        <span style={{display:'flex',flexDirection: 'row',marginLeft:'auto'}}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled?item?.enabled:'true'} onChange={(value)=>{handleInputChange(value, item.id, item.sequence_number)}}/></span>
+        <span onClick={(e) => {
+          e.stopPropagation()
+          handleResourceActionData(item)
+        }}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression == "" ? "inherited" : d.expression)).join(',')})</span>
+        <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
         <CloseCircleOutlined onClick={() => handleRemoveAction({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />
       </div>
       {step?.resource_actions && step?.resource_actions[index + 1] && <ArrowDownOutlined style={{ position: 'absolute', top: 54 }} />}
@@ -58,6 +62,13 @@ export default function Step({ step }: { step: StepModel }) {
       dispatch(addResActToStep({ item }));
     }
   });
+
+  useEffect(() => {
+    return () => {
+      console.log("Remove")
+      dispatch(selectResourceAction({}))
+    }
+  }, []);
 
 
   const moveItem = (fromIndex: number, toIndex: number) => {

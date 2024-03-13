@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import {  fetchRuns, runsSelector, selectRuns } from "../../../redux/Slice/runsSlice";
+import { fetchRuns, runsSelector, selectRuns } from "../../../redux/Slice/runsSlice";
 import { Row, Col } from 'antd';
 import { List } from 'antd';
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { projectsSelector } from '../../../redux/Slice/projectsSlice';
 
 const RunsRightPanel = () => {
-  const { runs,selectedRunId } = useAppSelector(runsSelector);
-  const {  selectedProjects} = useAppSelector(projectsSelector);
+  const { runs, selectedRunId } = useAppSelector(runsSelector);
+  const { selectedProjects } = useAppSelector(projectsSelector);
   const dispatch = useAppDispatch();
-  useEffect(()=>{
+  useEffect(() => {
     if (selectedProjects)
-      dispatch(fetchRuns({projectId:selectedProjects.id,searchTerm:''}))
-  },[selectedProjects])
+      dispatch(fetchRuns({ projectId: selectedProjects.id, searchTerm: '' }))
+  }, [selectedProjects])
   return (
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>

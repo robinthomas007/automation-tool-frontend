@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchSteps, stepsSelector, selectSteps, deleteStep } from "./../../../redux/Slice/stepsSlice";
+import { fetchSteps, stepsSelector, selectSteps, deleteStep, selectResourceAction } from "./../../../redux/Slice/stepsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Row, Col, Input, Button, Collapse } from 'antd';
 import Step from './Step'
@@ -30,6 +30,9 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
   useEffect(() => {
     if (selectedProjects)
       dispatch(fetchSteps({ projectId: selectedProjects?.id, searchTerm: search }));
+    return () => {
+      dispatch(selectSteps(null))
+    }
   }, [selectedProjects, search, dispatch]);
 
   const handleCancel = () => {
@@ -76,10 +79,10 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
   return (
     <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Steps" onChange={handleChangeSteps} />
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        </Col> */}
+        <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Steps</Button>
           <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>

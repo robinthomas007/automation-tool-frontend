@@ -91,10 +91,10 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
   return (
     <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Resource" onChange={handleChangeResource} />
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        </Col> */}
+        <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Object</Button>
           {openCreate && <CreateModal open={openCreate} handleCancel={handleCancel} resource={resourceEdit} />}
           {openCreateAction && <CreateActionModal open={openCreateAction} handleCancel={handleCancelCreateAction} />}

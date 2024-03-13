@@ -7,15 +7,15 @@ import { SaveStepActionData } from '../../../redux/Services/steps';
 
 const StepsRightPanelData = () => {
   const dispatch = useAppDispatch();
-  const [data,setData] = useState<any[]>([])
+  const [data, setData] = useState<any[]>([])
 
-  const { selectedSteps,selectedResourceAction  } = useAppSelector(stepsSelector);
-  useEffect(()=>{
+  const { selectedSteps, selectedResourceAction } = useAppSelector(stepsSelector);
+  useEffect(() => {
     setData(selectedResourceAction?.data ? selectedResourceAction?.data : [])
-  },[selectedResourceAction])
+  }, [selectedResourceAction])
   const onFinish = (values: any) => {
-    const raIndex = selectedSteps.resource_actions.findIndex((ra: any) => ra.resource_action_id==selectedResourceAction.resource_action_id && ra.sequence_number === selectedResourceAction.sequence_number);
-    console.log(raIndex,"RA Index")
+    const raIndex = selectedSteps.resource_actions.findIndex((ra: any) => ra.resource_action_id == selectedResourceAction.resource_action_id && ra.sequence_number === selectedResourceAction.sequence_number);
+    console.log(raIndex, "RA Index")
     const updatedActions = [...selectedSteps.resource_actions];
     updatedActions[raIndex] = {
       ...updatedActions[raIndex],
@@ -41,7 +41,9 @@ const StepsRightPanelData = () => {
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Interactions Data</span>
             </div>}
-            footer={<div style={{ textAlign: 'right' }}><Button form="interactiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
+            footer={<div style={{ textAlign: 'right' }}>
+              <Button disabled={data.length === 0} form="interactiondata" key="submit" htmlType="submit" type='primary'> Save</Button>
+            </div>}
             bordered
             dataSource={data}
             renderItem={(item: any, index: number) => (

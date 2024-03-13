@@ -1,12 +1,11 @@
 import { Row, Col, List, Button, Input, Form } from 'antd';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch } from "./../../../redux/hooks";
-import { addVariableToProfile, createProfileVariable } from "./../../../redux/Slice/dataProfileSlice";
+import { addVariableToProfile, createProfileVariable, RemoveVariable } from "./../../../redux/Slice/dataProfileSlice";
 import {
-  HolderOutlined,
-  CheckOutlined,
-  CloseOutlined
+  CloseCircleOutlined
 } from '@ant-design/icons';
+import { useState } from 'react';
 
 const Variable = ({ variables, profileId }: { variables: any, profileId: number }) => {
   const dispatch = useAppDispatch();
@@ -37,17 +36,21 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
     console.log('Failed:', errorInfo);
   };
 
+  const handleRemoveVariable = ({ id }: { id: number }) => {
+    dispatch(RemoveVariable({ id }));
+  };
 
   return (
     <Row ref={drop}>
       <Col span={24}>
         <Form
           name="createProfileVariable"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          // labelCol={{ span: 12 }}
+          // wrapperCol={{ span: 24 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
+          labelAlign="right"
         >
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Variables</span>
@@ -55,7 +58,7 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
             bordered
             dataSource={variables ? variables : []}
             renderItem={(item: any, index) => (
-              <List.Item>
+              <List.Item className="variable-item">
                 <Form.Item
                   label={item.variable.name}
                   name={['variables', index, `variable_${item.variable.id}`]} // Ensure the name follows the correct structure
@@ -64,6 +67,8 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
                 >
                   <Input placeholder="Variable Value" />
                 </Form.Item>
+                <CloseCircleOutlined className="close-icon" onClick={() => handleRemoveVariable({ id: item.id })} style={{ marginLeft: 10 }} />
+
               </List.Item>
             )}
           />
