@@ -40,7 +40,7 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-
+  // WebElement
 
   return (
     <Modal
@@ -70,6 +70,7 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
             autoComplete="off"
             form={form}
             preserve={false}
+            initialValues={{ type: 'WebElement' }}
           >
 
             <Form.Item
@@ -94,7 +95,7 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
               rules={[{ required: true, message: 'Please input your Element type!' },
               { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
-              <Input />
+              <Input value={'WebElement'} disabled />
             </Form.Item>
             <Form.Item
               label="Element Description"

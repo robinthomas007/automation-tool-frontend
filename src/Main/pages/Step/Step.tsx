@@ -44,8 +44,8 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
         <span onClick={(e) => {
           e.stopPropagation()
           handleResourceActionData(item)
-        }}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression == "" ? "inherited" : d.expression)).join(',')})</span>
-        <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
+        }}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')})</span>
+        <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', width: '80%', overflowWrap: 'break-word' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
         <CloseCircleOutlined onClick={() => handleRemoveAction({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />
       </div>
       {step?.resource_actions && step?.resource_actions[index + 1] && <ArrowDownOutlined style={{ position: 'absolute', top: 54 }} />}

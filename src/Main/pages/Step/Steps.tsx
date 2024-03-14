@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchSteps, stepsSelector, selectSteps, deleteStep, selectResourceAction } from "./../../../redux/Slice/stepsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Row, Col, Input, Button, Collapse } from 'antd';
+import { Row, Col, Input, Button, Collapse, Empty } from 'antd';
 import Step from './Step'
 import CreateModal from './CreateModal'
 import StepsRightPanel from './StepsRightPanel'
@@ -18,7 +18,7 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
   const [search, setSearch] = useState('')
 
   const dispatch = useAppDispatch();
-  const { steps } = useAppSelector(stepsSelector);
+  const { steps, fetchLoading } = useAppSelector(stepsSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
 
 
@@ -47,7 +47,9 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, step: any) => {
     e.stopPropagation()
-    dispatch(deleteStep({ id: step.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteStep({ id: step.id }))
   }
 
   const handleChangeSteps = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,10 +91,15 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
       </Row>
       <Row>
         <Col span={24}>
-          {steps.length === 0 ? <Loader /> :
+          {fetchLoading && <Loader />}
+
+          {steps.length > 0 &&
             <Collapse onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
               {stepItems}
             </Collapse>}
+          {steps.length === 0 && !fetchLoading && <div className="my-40">
+            <Empty />
+          </div>}
         </Col>
       </Row>
     </div>

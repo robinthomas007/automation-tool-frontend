@@ -8,14 +8,14 @@ import { testsSelector, saveTestStepData } from "./../../../redux/Slice/testsSli
 
 const TestsRightPanelData = () => {
   const dispatch = useAppDispatch();
-  const [data,setData] = useState<any[]>([])
+  const [data, setData] = useState<any[]>([])
 
   const { selectedStep, selectedTests } = useAppSelector(testsSelector);
-  useEffect(()=>{
+  useEffect(() => {
     setData(selectedStep?.data ? selectedStep?.data : [])
-  },[selectedStep])
+  }, [selectedStep])
   const onFinish = (values: any) => {
-    const stepIndex = selectedTests.steps.findIndex((step: any) => step.step_id==selectedStep.step_id && step.sequence_number === selectedStep.sequence_number);
+    const stepIndex = selectedTests.steps.findIndex((step: any) => step.step_id == selectedStep.step_id && step.sequence_number === selectedStep.sequence_number);
     const updatedSteps = [...selectedTests.steps];
     updatedSteps[stepIndex] = {
       ...updatedSteps[stepIndex],

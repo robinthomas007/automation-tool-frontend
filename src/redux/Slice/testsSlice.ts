@@ -22,6 +22,7 @@ export interface TestStep {
 }
 export interface TestsState {
   loading: boolean;
+  fetchLoading: boolean;
   tests: Array<Test>;
   selectedTests: Test | any;
   error: string | undefined;
@@ -33,6 +34,7 @@ const initialState: TestsState = {
   selectedTests: {},
   selectedStep: {},
   error: undefined,
+  fetchLoading: false
 };
 export const fetchTests = createAsyncThunk(
   "tests/fetchTests",
@@ -70,9 +72,13 @@ const testsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchTests.pending, (state) => {
       state.loading = true;
+      state.fetchLoading = true;
+      state.tests = []
+      state.selectedTests = {}
     });
     builder.addCase(fetchTests.fulfilled, (state, { payload }) => {
       state.loading = false;
+      state.fetchLoading = false;
       state.tests = payload.data;
       if (payload.data.length) {
         state.selectedTests = payload.data[0];
@@ -80,6 +86,7 @@ const testsSlice = createSlice({
     });
     builder.addCase(fetchTests.rejected, (state, action) => {
       state.loading = false;
+      state.fetchLoading = false;
       state.tests = [];
       state.error = action.error.message;
     });

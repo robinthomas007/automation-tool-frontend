@@ -1,9 +1,10 @@
-import { Card, Col, Layout, Row, Statistic, theme } from "antd";
+import { Card, Col, Empty, Layout, Row, Statistic, theme } from "antd";
 import { CategoryStat } from "../redux/Slice/projectsSlice";
 import { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { Chart } from "chart.js";
 type Props = {
   stat: CategoryStat
+  data: any
 }
 
 export default function StatChart({ stat }: { stat: CategoryStat }) {
@@ -16,13 +17,17 @@ export default function StatChart({ stat }: { stat: CategoryStat }) {
   const data = stat.items.map(i => i.value)
   const backgroundColors = stat.items.map(i => i.color);
   const ChartSummary = forwardRef((props: Props, ref: ForwardedRef<HTMLCanvasElement>) => {
+    const sum = props.data.reduce((acc: number, val: number) => acc + val, 0);
+
+    console.log(sum, "sumsumsum")
+
     return (
       <Row gutter={16}>
         <Col span={23}>
           <Card bordered={true} title={props.stat.name}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ height: 200, display: 'flex', justifyContent: 'center' }}>
-                <canvas ref={ref} id="myDonutChart" width="200" height="200"></canvas>
+                {sum > 0 ? <canvas ref={ref} id="myDonutChart" width="200" height="200"></canvas> : <Empty />}
               </div>
               <div>
                 {props.stat.items.map(i => (
@@ -79,7 +84,7 @@ export default function StatChart({ stat }: { stat: CategoryStat }) {
   return (
     <Col span={8}>
       <div className="">
-        <ChartSummary ref={chartRef} stat={stat} />
+        <ChartSummary ref={chartRef} stat={stat} data={data} />
       </div>
     </Col>
   );

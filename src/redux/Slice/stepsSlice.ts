@@ -12,6 +12,7 @@ export interface Step {
 }
 export interface StepsState {
   loading: boolean;
+  fetchLoading: boolean;
   steps: Array<Step>;
   selectedSteps: Step | any;
   selectedResourceAction: any | any;
@@ -23,6 +24,7 @@ const initialState: StepsState = {
   selectedSteps: {},
   selectedResourceAction: {},
   error: undefined,
+  fetchLoading: false
 };
 export const fetchSteps = createAsyncThunk(
   "steps/fetchSteps",
@@ -53,9 +55,13 @@ const stepsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchSteps.pending, (state) => {
       state.loading = true;
+      state.fetchLoading = true
+      state.steps = []
+      state.selectedSteps = {}
     });
     builder.addCase(fetchSteps.fulfilled, (state, { payload }) => {
       state.loading = false;
+      state.fetchLoading = false
       state.steps = payload.data;
       if (payload.data.length) {
         state.selectedSteps = payload.data[0];
@@ -63,6 +69,7 @@ const stepsSlice = createSlice({
     });
     builder.addCase(fetchSteps.rejected, (state, action) => {
       state.loading = false;
+      state.fetchLoading = false
       state.steps = [];
       state.error = action.error.message;
     });

@@ -40,6 +40,7 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
 
   const handleCancel = () => {
     setOpenCreate(false)
+    setResourceEdit({})
   }
   const handleCancelCreateAction = () => {
     setOpenCreateAction(false)
@@ -53,7 +54,10 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, resource: any) => {
     e.stopPropagation()
-    dispatch(deleteResource({ id: resource.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+
+    isConfirmed && dispatch(deleteResource({ id: resource.id }))
   }
 
   const resource = resources.map((resource, index) => (

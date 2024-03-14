@@ -64,7 +64,9 @@ const StepsRightPanel = () => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, action: any) => {
     e.stopPropagation()
-    dispatch(deleteAction({ id: action.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteAction({ id: action.id }))
   }
 
   return (

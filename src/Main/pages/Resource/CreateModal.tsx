@@ -75,6 +75,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
             autoComplete="off"
             form={form}
             preserve={false}
+            initialValues={{ type: 'PAGE' }}
           >
             <Row justify="start">
               <Col span={24}>
@@ -100,7 +101,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
                   rules={[{ required: true, message: 'Please input your Type!' },
                   { min: 2, message: 'Resource type must be minimum 2 characters.' }]}
                 >
-                  <Input />
+                  <Input disabled value={'PAGE'} />
                 </Form.Item>
               </Col>
             </Row>

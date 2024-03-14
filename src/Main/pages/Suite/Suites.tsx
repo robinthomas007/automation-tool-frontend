@@ -114,7 +114,9 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, suit: any) => {
     e.stopPropagation()
-    dispatch(deleteSuite({ id: suit.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteSuite({ id: suit.id }))
   }
 
   const suitItems = suites.map((suit, index) => (

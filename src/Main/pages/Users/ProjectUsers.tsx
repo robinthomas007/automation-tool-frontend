@@ -21,6 +21,7 @@ const options = [{
 export default function ProjectUsers() {
   const [selectedRole, setSelectedRole] = useState("execute")
   const [email, setEmail] = useState("")
+  const [error, setError] = useState(false)
 
   const dispatch = useAppDispatch();
   const { projectUsers } = useAppSelector(usersSelector)
@@ -32,14 +33,32 @@ export default function ProjectUsers() {
     }
   }, [selectedProjects])
 
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  const add = () => {
+    if (validateEmail(email))
+      dispatch(upsertProjectUser({ projectId: selectedProjects!!.id, data: { email, role: selectedRole } }))
+    else {
+      setError(true)
+    }
+  }
+
+
   return (<div>
     <List
       size="large"
-      footer={<div style={{ display: 'flex', width: '40%' }}>
-        <Select value={selectedRole} onChange={(value) => setSelectedRole(value)} options={options} style={{ width: 150 }} />
-        <Input value={email} style={{ margin: '0px 15px' }} onChange={(e) => setEmail(e.target.value)} />
-        <Button type="primary" onClick={() => dispatch(upsertProjectUser({ projectId: selectedProjects!!.id, data: { email, role: selectedRole } }))}>Add</Button>
-      </div>}
+      footer={
+        <div style={{ display: 'flex', width: '40%' }}>
+          <Select value={selectedRole} onChange={(value) => setSelectedRole(value)} options={options} style={{ width: 150 }} />
+          <div>
+            <Input value={email} style={{ margin: '0px 15px' }} onChange={(e) => { setError(false); setEmail(e.target.value) }} />
+            {error && <div className="text-red-600 flex-none ml-5">Invalid Email</div>}
+          </div>
+          <Button type="primary" onClick={() => add()}>Add</Button>
+        </div>
+      }
       bordered
       dataSource={projectUsers}
       renderItem={(project) =>
@@ -57,5 +76,6 @@ export default function ProjectUsers() {
           </div>
         </List.Item>}
     />
+
   </div>)
 }

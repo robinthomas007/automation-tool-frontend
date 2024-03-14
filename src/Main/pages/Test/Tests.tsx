@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchTests, testsSelector, selectTests, deleteTest } from "./../../../redux/Slice/testsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
-import { Row, Col, Input, Button, Collapse, Dropdown } from 'antd';
+import { Row, Col, Input, Button, Collapse, Dropdown, Empty } from 'antd';
 import CreateModal from './CreateModal'
 import {
   PlayCircleOutlined,
@@ -22,7 +22,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
   const [testeEdit, setTestEdit] = useState({})
 
   const dispatch = useAppDispatch();
-  const { tests } = useAppSelector(testsSelector);
+  const { tests, fetchLoading } = useAppSelector(testsSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { profle } = useAppSelector(dataProfileSelector);
   const navigate = useNavigate();
@@ -92,7 +92,9 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any) => {
     e.stopPropagation()
-    dispatch(deleteTest({ id: test.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteTest({ id: test.id }))
   }
 
   return (
@@ -108,9 +110,9 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
       </Row>
       <Row>
         <Col span={24}>
-          {tests.length === 0 && <Loader />}
+          {fetchLoading && <Loader />}
 
-          <Collapse accordion onChange={onChange} style={{ marginTop: 10 }}>
+          {tests.length > 0 && <Collapse accordion onChange={onChange} style={{ marginTop: 10 }}>
             {tests.map((test, index) => (
               <Collapse.Panel
                 header={test.name}
@@ -131,7 +133,10 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
                 <Test test={test} />
               </Collapse.Panel>
             ))}
-          </Collapse>
+          </Collapse>}
+          {tests.length === 0 && !fetchLoading && <div className="my-40">
+            <Empty />
+          </div>}
         </Col>
       </Row>
     </div>

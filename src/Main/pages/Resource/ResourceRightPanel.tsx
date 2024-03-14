@@ -8,7 +8,7 @@ import { useDrag } from 'react-dnd';
 import CreateElementModal from './CreateElementmodal'
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 
-const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete }: any) => {
+const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete, isEditable }: any) => {
 
   const [, drag] = useDrag({
     type,
@@ -22,10 +22,10 @@ const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete }: any) =>
           <HolderOutlined style={{ marginRight: 8 }} />
           {item.name}
         </span>
-        <span>
+        {isEditable && <span>
           <EditTwoTone onClick={(e) => handleOpenEdit(e, item)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
           <DeleteTwoTone onClick={(e) => handleDelete(e, item)} className="delete-icon" />
-        </span>
+        </span>}
       </div>
     </div>
   );
@@ -40,6 +40,7 @@ const ResourceRightPanel = () => {
 
   const handleCancel = () => {
     setOpenCreateElement(false)
+    setElementEdit({})
   }
 
   const handleOpenEdit = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, item: any) => {
@@ -50,8 +51,12 @@ const ResourceRightPanel = () => {
 
   const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, element: any) => {
     e.stopPropagation()
-    dispatch(deleteElement({ id: element.id }))
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteElement({ id: element.id }))
   }
+
+  const isEditable = selectedResources.type === 'BROWSER' ? false : true
 
   return (
     <Row style={{ marginTop: 20 }}>
@@ -60,7 +65,7 @@ const ResourceRightPanel = () => {
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>{selectedResources.name} Properties</span>
-            <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />
+            {isEditable && <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />}
           </div>}
           bordered
           dataSource={selectedResources.elements || []}
@@ -72,6 +77,7 @@ const ResourceRightPanel = () => {
                 item={item}
                 type="RESOURCE_ELEMENTS_TO_RESOURCE"
                 index={index}
+                isEditable={isEditable}
               />
             </List.Item>
           )}
