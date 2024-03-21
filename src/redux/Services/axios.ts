@@ -2,11 +2,12 @@ import axios from "axios";
 import { clearCookie } from './../../Lib/auth'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getCookie } from '../../Lib/auth'
 
 axios.interceptors.request.use(
   (config) => {
     // Modify config before request is sent
-    // config.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+    config.headers['Authorization'] = "Bearer "+getCookie('token');
     // return config;
     return config;
   },
