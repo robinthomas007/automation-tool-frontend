@@ -14,9 +14,13 @@ jobs:
       REACT_APP_GOOGLE_OAUTH_ENDPOINT: http://sedinqa.com
       REACT_APP_GOOGLE_OAUTH_REDIRECT: http://sedinqa.com/sedstart/sessions/oauth/google
       AWS_DEFAULT_REGION: 'us-east-2'
+      DISABLE_ESLINT_PLUGIN: 'true'
     steps:
-        - uses: actions/checkout@v1
-
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            
         - name: Install dependencies
           run: npm ci
 
