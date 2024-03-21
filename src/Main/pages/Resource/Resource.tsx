@@ -32,7 +32,7 @@ function cp(commands: any[], elements: any[]) {
   return res;
 }
 
-const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, handleRemoveElement, handleDropdownChange, handleInputChange, handleTimeoutChange }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, handleRemoveElement, handleDropdownChange, handleInputChange, handleTimeoutChange,handleNewTabChange }: any) => {
 
   const [hover, setHover] = useState(false)
 
@@ -98,7 +98,8 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
           {rs}
         </div>
       </div>
-      <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>timeout: <EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} /></span>
+      <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>tab: <EditableText defaultText="default" initialText={item.newtab} onChange={(value) => { handleNewTabChange(value, item.id, item.sequence_number) }} /></span>
+      <span style={{ display: 'flex', flexDirection: 'row'}}>timeout: <EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} /></span>
       <CloseCircleOutlined onClick={() => handleRemoveElement({ id: item.element_id, sequence_number: item.sequence_number })} style={{ padding: 2, marginLeft: 10, visibility: hover ? 'visible' : 'hidden' }} className="close-icon-15" />
     </div>
   );
@@ -169,6 +170,17 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
     const updatedItems = selectedActionElements.element_actions.map((item: any) => {
       if (item.id === itemId && item.sequence_number === sequence_number) {
         return { ...item, timeout: newValue };
+      }
+      return item;
+    });
+
+    dispatch(updateSelectedActionElements(updatedItems));
+  };
+  const handleNewTabChange = (e: string, itemId: number, sequence_number: number) => {
+    const newValue = e;
+    const updatedItems = selectedActionElements.element_actions.map((item: any) => {
+      if (item.id === itemId && item.sequence_number === sequence_number) {
+        return { ...item, newtab: newValue };
       }
       return item;
     });
@@ -247,6 +259,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
               handleRemoveElement={handleRemoveElement}
               handleInputChange={handleInputChange}
               handleTimeoutChange={handleTimeoutChange}
+              handleNewTabChange={handleNewTabChange}
             />
           </List.Item>
         ))}
