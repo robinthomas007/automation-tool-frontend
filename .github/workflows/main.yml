@@ -11,8 +11,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       REACT_APP_BASE_URL: http://api.qa.sedstart.sedinqa.com
       REACT_APP_GOOGLE_OAUTH_CLIENT_ID: 816888488209-slvqmt8n00l4jhmtlmjdbj10hfrubahj.apps.googleusercontent.com
-      REACT_APP_GOOGLE_OAUTH_ENDPOINT: http://api.qa.sedstart.sedinqa.com
-      REACT_APP_GOOGLE_OAUTH_REDIRECT: http://api.qa.sedstart.sedinqa.com/sessions/oauth/google
+      REACT_APP_GOOGLE_OAUTH_ENDPOINT: http://sedinqa.com/sedstart
+      REACT_APP_GOOGLE_OAUTH_REDIRECT: http://sedinqa.com/sedstart/sessions/oauth/google
       AWS_DEFAULT_REGION: 'us-east-2'
     steps:
         - uses: actions/checkout@v1
