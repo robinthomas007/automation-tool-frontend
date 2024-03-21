@@ -78,7 +78,7 @@ const AuthRouter = createBrowserRouter([
     ],
   },
 
-], { basename: '/sedstartf' });
+]);
 
 export default function Router() {
   return AuthRouter;
