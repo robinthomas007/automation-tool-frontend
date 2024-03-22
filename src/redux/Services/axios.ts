@@ -7,9 +7,7 @@ import { getCookie } from '../../Lib/auth'
 axios.interceptors.request.use(
   (config) => {
     // Modify config before request is sent
-    // config.headers['Authorization'] = "Bearer Token";
-
-    // config.headers['Authorization'] = "Bearer "+getCookie('token');
+    config.headers['Authorization'] = "Bearer "+getCookie('token');
     // return config;
     return config;
   },
