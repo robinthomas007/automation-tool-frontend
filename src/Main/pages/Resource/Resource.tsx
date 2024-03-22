@@ -86,8 +86,11 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
   </div>))
 
   rs = reactStringReplace(rs, '$(Element)s', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
-    <span >{item.name}</span>
+    <span >{item.name}s</span>
   </div>))
+  rs = reactStringReplace(rs, '$(Element)', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
+  <span >{item.name}</span>
+</div>))
 
   return (
     <div ref={(node) => drag(drop(node))} style={{ padding: 10, alignItems: 'center', display: 'flex', width: '100%', justifyContent: 'space-between' }}
