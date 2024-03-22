@@ -3,7 +3,7 @@ import { useAppDispatch } from "./../redux/hooks";
 import { updateRun } from "./../redux/Slice/runsSlice";
 import { Run } from './../redux/Slice/runsSlice'
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-
+import { getCookie } from '../Lib/auth';
 interface EventSourceContextType {
   runs: Run | null
   setRuns: any
@@ -24,6 +24,9 @@ export const EventSourceProvider = ({ children }: EventSourceProviderProps) => {
 
     await fetchEventSource(source, {
       method:"POST",
+      headers:{
+        "Authorization":"Bearer "+getCookie('token')
+      },
       body: JSON.stringify(data),
       onmessage(event) {
         const eventData = JSON.parse(event.data);
