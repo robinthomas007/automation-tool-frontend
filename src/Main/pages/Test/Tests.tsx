@@ -115,7 +115,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
           {tests.length > 0 && <Collapse accordion onChange={onChange} style={{ marginTop: 10 }}>
             {tests.map((test, index) => (
               <Collapse.Panel
-                header={test.name}
+                header={<div>{test.name}{test.lock!=""?` (lock: ${test.lock})`:""}</div>}
                 key={index}
                 className="resource-panel"
                 extra={<div>

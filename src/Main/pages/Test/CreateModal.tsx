@@ -20,7 +20,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
 
   useEffect(() => {
     if (test && Object.keys(test).length !== 0) {
-      form.setFieldsValue({ id: test.id, name: test.name, description: test.description })
+      form.setFieldsValue({ id: test.id, name: test.name, description: test.description,lock: test.lock })
     }
   }, [test]);
 
@@ -83,6 +83,14 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
               label="Test Description"
               name="description"
               rules={[{ required: true, message: 'Please input your test description!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Lock"
+              name="lock"
+              rules={[{ required: false },
               { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />

@@ -9,6 +9,7 @@ export interface Test {
   id: string;
   name: string;
   desciption: string;
+  lock: string;
   CreatedAt: string;
   UpdatedAt: string;
   steps: Array<TestStep>;
