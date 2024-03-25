@@ -32,7 +32,7 @@ function cp(commands: any[], elements: any[]) {
   return res;
 }
 
-const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, handleRemoveElement, handleDropdownChange, handleInputChange, handleTimeoutChange,handleNewTabChange }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, handleRemoveElement, handleDropdownChange, handleInputChange, handleTimeoutChange, handleNewTabChange }: any) => {
 
   const [hover, setHover] = useState(false)
 
@@ -89,8 +89,8 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
     <span >{item.name}s</span>
   </div>))
   rs = reactStringReplace(rs, '$(Element)', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
-  <span >{item.name}</span>
-</div>))
+    <span >{item.name}</span>
+  </div>))
 
   return (
     <div ref={(node) => drag(drop(node))} style={{ padding: 10, alignItems: 'center', display: 'flex', width: '100%', justifyContent: 'space-between' }}
@@ -102,7 +102,7 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
         </div>
       </div>
       <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>tab: <EditableText defaultText="default" initialText={item.newtab} onChange={(value) => { handleNewTabChange(value, item.id, item.sequence_number) }} /></span>
-      <span style={{ display: 'flex', flexDirection: 'row'}}>timeout: <EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} /></span>
+      <span style={{ display: 'flex', flexDirection: 'row' }}>timeout: <EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} /></span>
       <CloseCircleOutlined onClick={() => handleRemoveElement({ id: item.element_id, sequence_number: item.sequence_number })} style={{ padding: 2, marginLeft: 10, visibility: hover ? 'visible' : 'hidden' }} className="close-icon-15" />
     </div>
   );

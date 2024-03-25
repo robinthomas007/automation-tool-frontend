@@ -53,7 +53,7 @@ const DataProfileRightPanel = () => {
       <Row style={{ marginTop: 20 }}>
         <Col span={24}>
           <List
-            header={<div>Variables</div>}
+            header={<div className='font-semibold'>Variables</div>}
             bordered
             dataSource={variables}
             renderItem={(item, index) => (

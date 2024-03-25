@@ -64,7 +64,7 @@ const ResourceRightPanel = () => {
       <Col span={24}>
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>{selectedResources.name} Properties</span>
+            <span className='font-semibold'>{selectedResources.name} Properties</span>
             {isEditable && <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />}
           </div>}
           bordered

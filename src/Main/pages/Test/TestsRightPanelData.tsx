@@ -41,7 +41,7 @@ const TestsRightPanelData = () => {
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Steps Actions Data</span>
             </div>}
-            footer={<div style={{ textAlign: 'right' }}><Button form="actiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
+            footer={<div style={{ textAlign: 'right' }}><Button disabled={data.length === 0} form="actiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
             bordered
             dataSource={data}
             renderItem={(item: any, index: number) => (

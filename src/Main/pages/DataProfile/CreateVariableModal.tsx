@@ -71,7 +71,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
                 allowClear
               >
                 <Option value="string">String</Option>
-                <Option value="integer">Number</Option>
+                <Option value="integer">Integer</Option>
                 <Option value="boolean">Boolean</Option>
               </Select>
             </Form.Item>
