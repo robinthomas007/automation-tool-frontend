@@ -2,6 +2,7 @@ import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
 import { Row, Col, List, Typography } from 'antd';
 import { CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Tree } from 'antd';
+import ReactPlayer from "react-player";
 
 const { Title } = Typography
 const Icon = ({status}:{status:string})=>{
@@ -32,11 +33,14 @@ const Run = ({ run }: { run: RunModel }) => {
           {item.screenshot && <span style={{ display: 'block', padding: 10 }}>
             <img src={item.screenshot} alt="Screenshot" style={{ maxWidth: '100%', marginTop: 10, marginBottom: 10, border: '1px solid #ddd' }} />
           </span>}
+          {item.video && <span style={{ display: 'block', padding: 10 }}>
+          <ReactPlayer url={item.video} controls={true}/>
+          </span>}
         </span>
       ),
-      key: `${parentKey}-${item.type}-${item.id}-${index}`,
+      key: `${parentKey}-${item.id}-${item.sequence_number}`,
       icon: <Icon status={item.status}/>,
-      children: item.items.length > 0 ? constructTreeNodes(item, `${parentKey}-${item.type}-${item.id}-${index}`) : null,
+      children: item.items.length > 0 ? constructTreeNodes(item, `${parentKey}-${item.id}-${item.sequence_number}`) : null,
     }));
   };
 
@@ -57,6 +61,7 @@ const Run = ({ run }: { run: RunModel }) => {
       <Col span={24}>
         <Title level={2}><Icon status={run.result.status}/> {`${run?.result?.name}(${run?.result.time})`}</Title>
         {run && <RunItem item={run.result} treeData={updatedTreeData} />}
+        <ReactPlayer url={run.result.video} controls={true}/>
       </Col>
     </Row>
   );

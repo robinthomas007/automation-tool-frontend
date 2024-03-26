@@ -16,6 +16,7 @@ export interface RunDataItem {
   error: string,
   name: string,
   screenshot: string,
+  video: string,
   time: string
 }
 export interface CreateRunData {
