@@ -1,10 +1,25 @@
 import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
 import { Row, Col, List, Typography } from 'antd';
-import { CheckCircleFilled, CloseCircleFilled, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Tree } from 'antd';
 
 const { Title } = Typography
-
+const Icon = ({status}:{status:string})=>{
+  switch(status){
+    case 'PASS':
+      return <CheckCircleFilled style={{ color: 'green' }} />
+    case 'FAIL':
+      return <CloseCircleFilled style={{ color: 'red' }} />
+    case 'SKIPPED':
+      return <MinusCircleOutlined style={{ color: 'grey' }} /> 
+    case 'IN_PROGRESS':
+      return <LoadingOutlined style={{ color: 'blue' }} />
+    case 'SCHEDULED':
+      return <ClockCircleOutlined style={{ color: 'blue' }} />
+    default:
+      return <QuestionCircleOutlined style={{ color: 'red' }} />
+  }
+}
 const Run = ({ run }: { run: RunModel }) => {
   const constructTreeNodes = (data: any, parentKey: string) => {
     if (!data) {
@@ -20,7 +35,7 @@ const Run = ({ run }: { run: RunModel }) => {
         </span>
       ),
       key: `${parentKey}-${item.type}-${item.id}-${index}`,
-      icon: item.status === 'PASS' ? <CheckCircleFilled style={{ color: 'green' }} /> : item.status === 'FAIL' ? <CloseCircleFilled style={{ color: 'red' }} /> : item.status === 'SKIPPED' ? <MinusCircleOutlined style={{ color: 'grey' }} /> : <LoadingOutlined style={{ color: 'blue' }} />,
+      icon: <Icon status={item.status}/>,
       children: item.items.length > 0 ? constructTreeNodes(item, `${parentKey}-${item.type}-${item.id}-${index}`) : null,
     }));
   };
@@ -40,7 +55,7 @@ const Run = ({ run }: { run: RunModel }) => {
   return (
     <Row>
       <Col span={24}>
-        <Title level={2}><CheckCircleFilled style={{ color: 'green' }} /> {`${run?.result?.name}(${run?.result.time})`}</Title>
+        <Title level={2}><Icon status={run.result.status}/> {`${run?.result?.name}(${run?.result.time})`}</Title>
         {run && <RunItem item={run.result} treeData={updatedTreeData} />}
       </Col>
     </Row>
