@@ -33,9 +33,9 @@ const Run = ({ run }: { run: RunModel }) => {
           {item.screenshot && <span style={{ display: 'block', padding: 10 }}>
             <img src={item.screenshot} alt="Screenshot" style={{ maxWidth: '100%', marginTop: 10, marginBottom: 10, border: '1px solid #ddd' }} />
           </span>}
-          {item.video && <span style={{ display: 'block', padding: 10 }}>
-          <ReactPlayer url={item.video} controls={true}/>
-          </span>}
+          {item.video.map((vurl:string)=><span style={{ display: 'block', padding: 10 }}>
+          <ReactPlayer url={vurl} controls={true}/>
+          </span>)}
         </span>
       ),
       key: `${parentKey}-${item.id}-${item.sequence_number}`,
@@ -61,7 +61,7 @@ const Run = ({ run }: { run: RunModel }) => {
       <Col span={24}>
         <Title level={2}><Icon status={run.result.status}/> {`${run?.result?.name}(${run?.result.time})`}</Title>
         {run && <RunItem item={run.result} treeData={updatedTreeData} />}
-        <ReactPlayer url={run.result.video} controls={true}/>
+        {run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
       </Col>
     </Row>
   );
