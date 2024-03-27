@@ -42,9 +42,9 @@ const DataProfileRightPanel = () => {
   return (
     <div>
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Input placeholder="Search Test" />
-        </Col>
+        </Col> */}
         <Col span={12} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Variables </Button>
           <CreateVariableModal open={openCreate} handleCancel={handleCancel} />
