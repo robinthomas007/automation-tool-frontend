@@ -20,12 +20,12 @@ type Authype = {
 const AuthContext = createContext<Authype | any>(null)
 export const AuthProvider = ({ children }: AuthContextProps) => {
   const token = getCookie('token')
-
   let LoggedInUser = token ? jwtDecode(token) : {}
   const [user, setUser] = useState<any>(LoggedInUser || {})
-
-  const login = (user: any) => {
-    setUser(user)
+  const login = () => {
+  const token = getCookie('token')
+  let LoggedInUser = token ? jwtDecode(token) : {}
+    setUser(LoggedInUser)
   }
 
   return (

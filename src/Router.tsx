@@ -18,10 +18,15 @@ import Runs from "./Main/pages/Runs";
 import Users from "./Main/pages/Users/Users";
 import OrgUsers from "./Main/pages/Users/OrgUsers";
 import OrgsLayout from "./Main/OrgsLayout";
+import LogInStatus from "./Main/pages/LogInStatus";
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />
+  },
+  {
+    path:"/loginStatus",
+    element:<LogInStatus />
   },
   {
     path: "/project",

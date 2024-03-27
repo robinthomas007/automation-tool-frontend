@@ -23,7 +23,11 @@ export const getGoogleUrl = (from: string) => {
 export function getCookie(name: string) {
   return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 }
+export function setCookie(name: string,value: string) {
+  document.cookie = `${name}=${value};max-age=86400;domain=${window.location.hostname}`
 
+  return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+}
 
 export function clearCookie() {
   document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
