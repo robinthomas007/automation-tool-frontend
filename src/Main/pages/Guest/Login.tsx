@@ -12,7 +12,7 @@ const { Sider, Content } = Layout;
 
 export default function LoginPage() {
   const location = useLocation();
-  const from = ((location.state as any)?.from?.pathname as string) || '/profile';
+  const from = process.env.REACT_APP_STATE??'http://localhost:3000';
 
   const auth = useAuth()
   console.log(auth)
