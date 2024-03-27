@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col, Space } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchProjects, projectsSelector, selectProjects } from "./../../../redux/Slice/projectsSlice";
+import {  projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { createResource, updateResource } from "./../../../redux/Slice/resourcesSlice";
 import {
   CloseCircleOutlined

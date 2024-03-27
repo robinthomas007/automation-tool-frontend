@@ -25,7 +25,6 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
   }, [test]);
 
   const onFinish = (values: any) => {
-    console.log(values, "test--")
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()

@@ -19,7 +19,6 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
 
   const onFinish = (values: any) => {
     const { variables } = values;
-    console.log(variables, "variablesvariables", values)
     const formattedVariables = variables.map((item: any) => {
       const [key, value] = Object.entries(item)[0];
       const variable_id = parseInt(key.split('_')[1]);

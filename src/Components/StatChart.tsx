@@ -19,7 +19,6 @@ export default function StatChart({ stat }: { stat: CategoryStat }) {
   const ChartSummary = forwardRef((props: Props, ref: ForwardedRef<HTMLCanvasElement>) => {
     const sum = props.data.reduce((acc: number, val: number) => acc + val, 0);
 
-    console.log(sum, "sumsumsum")
 
     return (
       <Row gutter={16}>

@@ -65,7 +65,6 @@ export default function Step({ step }: { step: StepModel }) {
 
   useEffect(() => {
     return () => {
-      console.log("Remove")
       dispatch(selectResourceAction({}))
     }
   }, []);

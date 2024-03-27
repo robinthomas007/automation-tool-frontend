@@ -124,7 +124,6 @@ const stepsSlice = createSlice({
       state.loading = false;
       state.selectedSteps = payload.data
       const stepIndex = state.steps.findIndex(step => step.id === state.selectedSteps.id);
-      console.log(stepIndex, "StepIndex")
       if (stepIndex !== -1) {
         const updatedSteps = [...state.steps];
         updatedSteps[stepIndex] = {
@@ -147,7 +146,6 @@ const stepsSlice = createSlice({
       state.selectedSteps = action.payload;
     },
     selectResourceAction: (state, action) => {
-      console.log(action.payload, "action.payloadaction.payloadaction.payload")
       state.selectedResourceAction = action.payload;
     },
     addActionDataToStep: (state, action) => {

@@ -18,7 +18,6 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
   const [form] = Form.useForm()
 
   const onFinish = (values: any) => {
-    console.log(values, "steps--")
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()

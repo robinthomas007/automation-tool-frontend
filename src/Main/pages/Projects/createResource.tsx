@@ -4,7 +4,6 @@ import { Button, Checkbox, Form, Input, Row, Col, Space } from 'antd';
 export default function CreateResource({ next }: any) {
 
   const onFinish = (values: any) => {
-    console.log(values, "valuesvalues")
     next()
   };
 

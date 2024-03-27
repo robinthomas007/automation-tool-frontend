@@ -23,7 +23,6 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, act
   }, [action]);
 
   const onFinish = (values: any) => {
-    console.log(values, "Interactions--")
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()

@@ -65,7 +65,6 @@ const OrgsLayout: React.FC = () => {
     if (me == null || me == undefined)
       dispatch(fetchMe());
   }, [me, selectedOrgs]);
-  console.log(pathName)
 
   const hide = () => {
     setOpen(false);

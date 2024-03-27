@@ -14,7 +14,6 @@ const EditableText = ({ initialText,defaultText, onChange }: { defaultText:strin
   };
 
   const handleBlur = () => {
-    console.log("Blurred")
     setIsEditing(false);
   };
   useEffect(() => {

@@ -3,8 +3,8 @@ import { Layout, theme } from 'antd';
 import RightPanel from "../../../Components/RightPanel";
 import { Space, Table, Row, Col, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchProjects, projectsSelector, selectProjects } from "./../../../redux/Slice/projectsSlice";
+import {  useAppSelector } from "./../../../redux/hooks";
+import {  projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import CreateModal from './CreateModal'
 
 const { Content } = Layout;
@@ -15,7 +15,6 @@ export default function Projects() {
 
   const { projects } = useAppSelector(projectsSelector);
 
-  console.log(projects, "projectsprojects11")
 
 
   const columns: ColumnsType<any> = [

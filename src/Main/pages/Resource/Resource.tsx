@@ -53,7 +53,6 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
   });
 
   const onSearch = (value: string) => {
-    console.log('search:', value);
   };
 
   const commandObj = commands.find((command: any) => command.name === item.command);
@@ -66,7 +65,6 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
     value: item.name
   }));
 
-  console.log(commandObj?.template, "commandObj?.templatecommandObj?.template")
 
   const template: string = commandObj?.template
   let rs = reactStringReplace(template, '$(Command)', (match, i) => (

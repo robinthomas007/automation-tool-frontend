@@ -145,7 +145,6 @@ const Dashboard = () => {
     };
   }, [selectedProjects]);
 
-  console.log(selectedProjects, "selectedProjectsselectedProjects")
 
   return (
     <Layout style={{ background: colorBgContainer }}>
