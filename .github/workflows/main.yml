@@ -9,12 +9,12 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      REACT_APP_BASE_URL: http://api.qa.sedstart.sedinqa.com/sedstart
-      REACT_APP_STATE: http://qa.sedstart.sedinqa.com/loginStatus?token=%s
+      REACT_APP_BASE_URL: https://api-qa-sedstart.sedinqa.com/sedstart
+      REACT_APP_STATE: https://qa-sedstart-sedinqa.com/loginStatus?token=%s
       REACT_APP_GOOGLE_OAUTH_CLIENT_ID: 816888488209-slvqmt8n00l4jhmtlmjdbj10hfrubahj.apps.googleusercontent.com
-      REACT_APP_GOOGLE_OAUTH_ENDPOINT: http://api.qa.sedstart.sedinqa.com
-      REACT_APP_GOOGLE_OAUTH_REDIRECT: http://api.qa.sedstart.sedinqa.com/sedstart/sessions/oauth/google
-      AWS_DEFAULT_REGION: 'us-east-2'
+      REACT_APP_GOOGLE_OAUTH_ENDPOINT: https://api-qa-sedstart.sedinqa.com
+      REACT_APP_GOOGLE_OAUTH_REDIRECT: https://api-qa-sedstart.sedinqa.com/sedstart/sessions/oauth/google
+      AWS_DEFAULT_REGION: 'us-east-1'
       DISABLE_ESLINT_PLUGIN: 'true'
     steps:
         - uses: actions/checkout@v4
