@@ -13,7 +13,7 @@ jobs:
       REACT_APP_STATE: https://qa-sedstart-sedinqa.com/loginStatus?token=%s
       REACT_APP_GOOGLE_OAUTH_CLIENT_ID: 816888488209-slvqmt8n00l4jhmtlmjdbj10hfrubahj.apps.googleusercontent.com
       REACT_APP_GOOGLE_OAUTH_ENDPOINT: https://api-qa-sedstart.sedinqa.com
-      REACT_APP_GOOGLE_OAUTH_REDIRECT: https://api-qa-sedstart.sedinqa.com/sedstart/sessions/oauth/google
+      REACT_APP_GOOGLE_OAUTH_REDIRECT: https://api-qa-sedstart.sedinqa.com/sessions/oauth/google
       AWS_DEFAULT_REGION: 'us-east-1'
       DISABLE_ESLINT_PLUGIN: 'true'
     steps:
