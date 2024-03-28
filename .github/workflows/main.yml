@@ -9,7 +9,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      REACT_APP_BASE_URL: https://api-qa-sedstart.sedinqa.com/sedstart
+      REACT_APP_BASE_URL: https://api-qa-sedstart.sedinqa.com
       REACT_APP_STATE: https://qa-sedstart.sedinqa.com/loginStatus?token=%s
       REACT_APP_GOOGLE_OAUTH_CLIENT_ID: 816888488209-slvqmt8n00l4jhmtlmjdbj10hfrubahj.apps.googleusercontent.com
       REACT_APP_GOOGLE_OAUTH_ENDPOINT: https://api-qa-sedstart.sedinqa.com
