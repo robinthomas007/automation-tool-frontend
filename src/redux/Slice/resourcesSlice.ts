@@ -4,7 +4,7 @@ import { RootState } from "../store";
 import {
   Resources, CreateResources as CreateResource, GetElementsByAction, SaveElementsInAction, CreateResourcesAction,
   CreateResourcesElements, FetchResElCommands, UpdateResourcesAction, UpdateResource, UpdateResourcesElements,
-  DeleteResource, DeleteAction, DeleteElement
+  DeleteResource, DeleteAction, DeleteElement, FetchResElEvents
 } from "../Services/resources";
 export interface ResourceAction {
   id: string;
@@ -49,6 +49,7 @@ export interface ResourcesState {
   error: string | undefined;
   selectedActionElements: Resource | any;
   commands: Array<any>
+  events: Array<any>
 }
 const initialState: ResourcesState = {
   loading: false,
@@ -56,7 +57,8 @@ const initialState: ResourcesState = {
   selectedResources: {},
   error: undefined,
   selectedActionElements: {},
-  commands: []
+  commands: [],
+  events: [],
 };
 export const fetchResources = createAsyncThunk(
   "resources/fetchResources",
@@ -121,6 +123,10 @@ export const deleteElement = createAsyncThunk(
 export const fetchResElCommands = createAsyncThunk(
   "resources/fetchResElCommands",
   async () => FetchResElCommands()
+);
+export const fetchResElEvents = createAsyncThunk(
+  "resources/fetchResElEvents",
+  async () => FetchResElEvents()
 );
 
 
@@ -234,6 +240,22 @@ const resourcesSlice = createSlice({
     });
 
     builder.addCase(fetchResElCommands.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(fetchResElEvents.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(fetchResElEvents.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload && payload.data) {
+        state.events = payload.data
+      }
+    });
+
+    builder.addCase(fetchResElEvents.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
@@ -390,7 +412,7 @@ const resourcesSlice = createSlice({
 
       element_actions = element_actions ? element_actions : []
 
-      const updatedElemAction = [...element_actions, { element_id: item.id, name: item.name, sequence_number: element_actions.length + 1, type: item.type, command: command.name, assertion: "equal", data_source: "", timeout: "" }];
+      const updatedElemAction = [...element_actions, { element_id: item.id, name: item.name, sequence_number: element_actions.length + 1, type: item.type, command_id: command.id, assertion: "equal", data_source: "", timeout: "" , event_id:0}];
 
       state.selectedActionElements = {
         ...state.selectedActionElements,

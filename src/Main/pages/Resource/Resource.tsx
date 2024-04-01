@@ -32,7 +32,7 @@ function cp(commands: any[], elements: any[]) {
   return res;
 }
 
-const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, handleRemoveElement, handleDropdownChange, handleInputChange, handleTimeoutChange, handleNewTabChange }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, commands, handleRemoveElement, handleCommandDropdownChange, handleEventDropdownChange, handleInputChange, handleTimeoutChange, handleNewTabChange }: any) => {
 
   const [hover, setHover] = useState(false)
 
@@ -54,53 +54,82 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, commands, 
 
   const onSearch = (value: string) => {
   };
-
-  const commandObj = commands.find((command: any) => command.name === item.command);
+  const commandObj = commands.find((command: any) => command.id === item.command_id);
+  const eventObj = events.find((event: any) => event.id === item.event_id)
 
   const fiteredCommands = commands
+    .filter((cmd: any) => item.type === cmd.applicable_on)
+  const fiteredEvents = events
     .filter((cmd: any) => item.type === cmd.applicable_on)
 
   const filteredOptions = fiteredCommands.map((item: any) => ({
     label: item.name,
-    value: item.name
+    value: item.id
+  }));
+  const filteredEventOptions = fiteredEvents.map((item: any) => ({
+    label: item.name,
+    value: item.id
   }));
 
 
   const template: string = commandObj?.template
-  let rs = reactStringReplace(template, '$(Command)', (match, i) => (
+  let rs = reactStringReplace(template, ' ', (match, i) => (
+    <div key={`space-${i}`} style={{width:'5px'}}>
+    </div>
+  ))
+  rs = reactStringReplace(rs, '$(Command)', (match, i) => (
     <div key={`command-${i}`}>
       <EditableSelectableText
-        onChange={(e) => handleDropdownChange(e, item.id, item.sequence_number)}
-        value={item.command}
+        onChange={(e) => handleCommandDropdownChange(e, item.id, item.sequence_number)}
+        value={item.command_id}
         options={filteredOptions}
       />
     </div>
   ))
 
-  rs = reactStringReplace(rs, '$(Data)', (match, i) => (<div key={`data-${i}`} style={{ marginLeft: 'auto' }}>
+  rs = reactStringReplace(rs, '$(Data)', (match, i) => (<div key={`data-${i}`}>
     {commandObj?.requires_input && <EditableText initialText={item.data_source} defaultText="Enter value" onChange={(e) => {
       handleInputChange(e, item.id, item.sequence_number)
     }} />}
   </div>))
-
-  rs = reactStringReplace(rs, '$(Element)s', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
-    <span >{item.name}s</span>
+  rs = reactStringReplace(rs, '$(Element)', (match, i) => (<div key={`elem-${i}`}>
+    <span>'{item.name}'</span>
   </div>))
-  rs = reactStringReplace(rs, '$(Element)', (match, i) => (<div key={`elem-${i}`} style={{ marginLeft: 6, marginRight: 6 }}>
-    <span >{item.name}</span>
+  const eventTemplate: string = ", waiting for " + eventObj?.template
+  let ers = reactStringReplace(eventTemplate, ' ', (match, i) => (
+    <div key={`space-${i}`} style={{width:'5px'}}>
+    </div>
+  ))
+  ers = reactStringReplace(ers, '$(Event)', (match, i) => (
+    <div key={`event-${i}`}>
+      <EditableSelectableText
+        onChange={(e) => handleEventDropdownChange(e, item.id, item.sequence_number)}
+        value={item.event_id}
+        options={filteredEventOptions}
+      />
+    </div>
+  ))
+  ers = reactStringReplace(ers, '$(Data)', (match, i) => (<div key={`data-${i}`}>
+    {<EditableText initialText={item.event_data_source} defaultText="Enter value" onChange={(e) => {
+      handleNewTabChange(e, item.id, item.sequence_number)
+    }} />}
   </div>))
-
+  let trs:any=" with $(Timeout) as timeout";
+  trs = reactStringReplace(trs, ' ', (match, i) => (
+    <div key={`space-${i}`} style={{width:'5px'}}>
+    </div>
+  ))
+  trs = reactStringReplace(trs, '$(Timeout)', (match, i) => (<EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} />))
   return (
     <div ref={(node) => drag(drop(node))} style={{ padding: 10, alignItems: 'center', display: 'flex', width: '100%', justifyContent: 'space-between' }}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <HolderOutlined style={{ marginRight: 8, cursor: 'move' }} />
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          {rs}
-        </div>
+      <HolderOutlined style={{ cursor: 'move' }} />
+      <div style={{ display: 'flex', flexDirection: 'row' , flexWrap:'wrap', marginRight:'auto', marginLeft:'5px'}}>
+            {rs}
+            {filteredEventOptions.length>0?ers:""}
+            {trs}
       </div>
-      <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>tab: <EditableText defaultText="default" initialText={item.newtab} onChange={(value) => { handleNewTabChange(value, item.id, item.sequence_number) }} /></span>
-      <span style={{ display: 'flex', flexDirection: 'row' }}>timeout: <EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} /></span>
+      
       <CloseCircleOutlined onClick={() => handleRemoveElement({ id: item.element_id, sequence_number: item.sequence_number })} style={{ padding: 2, marginLeft: 10, visibility: hover ? 'visible' : 'hidden' }} className="close-icon-15" />
     </div>
   );
@@ -114,7 +143,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
   const [selectedActionTab, setSelectedActionTab] = useState<any>(resource?.actions[0]?.id)
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [actionEdit, setActionEdit] = useState({})
-  const { selectedActionElements, commands } = useAppSelector(resourcesSelector);
+  const { selectedActionElements, commands, events } = useAppSelector(resourcesSelector);
 
   const moveItem = (fromIndex: number, toIndex: number, type: string, resourceId: number) => {
     dispatch(reOrderActionElement({ fromIndex, toIndex }));
@@ -188,11 +217,22 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
 
     dispatch(updateSelectedActionElements(updatedItems));
   };
-  const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>, itemId: number, sequence_number: number) => {
+  const handleCommandDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>, itemId: number, sequence_number: number) => {
     const newValue = e;
     const updatedItems = selectedActionElements.element_actions.map((item: any) => {
       if (item.id === itemId && item.sequence_number == sequence_number) {
-        return { ...item, command: newValue };
+        return { ...item, command_id: newValue };
+      }
+      return item;
+    });
+
+    dispatch(updateSelectedActionElements(updatedItems));
+  };
+  const handleEventDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>, itemId: number, sequence_number: number) => {
+    const newValue = e;
+    const updatedItems = selectedActionElements.element_actions.map((item: any) => {
+      if (item.id === itemId && item.sequence_number == sequence_number) {
+        return { ...item, event_id: newValue };
       }
       return item;
     });
@@ -255,7 +295,9 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
               index={index}
               moveItem={moveItem}
               resourceId={resource.id}
-              handleDropdownChange={handleDropdownChange}
+              handleCommandDropdownChange={handleCommandDropdownChange}
+              handleEventDropdownChange={handleEventDropdownChange}
+              events={events}
               commands={commands}
               handleRemoveElement={handleRemoveElement}
               handleInputChange={handleInputChange}

@@ -23,7 +23,7 @@ const EditableText = ({ initialText,defaultText, onChange }: { defaultText:strin
   }, [isEditing])
 
   return (
-    <div onClick={handleClick} style={{ marginRight: 5, marginLeft: 5 }}>
+    <div onClick={handleClick}>
       {isEditing ? (
         <input
           type="text"
@@ -32,7 +32,7 @@ const EditableText = ({ initialText,defaultText, onChange }: { defaultText:strin
           onBlur={handleBlur}
         />
       ) : (
-        <a>{text === "" ? defaultText : text}</a>
+        <a>{text == ""||text==null ? defaultText : text}</a>
       )}{isEditing && <CheckSquareFilled style={{ color: 'green' }} onClick={(e) => {
         e.stopPropagation()
         handleBlur()

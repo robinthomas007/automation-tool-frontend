@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Resource from "./Resource";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchResources, resourcesSelector, selectResources, fetchResElCommands, deleteResource } from "./../../../redux/Slice/resourcesSlice";
+import { fetchResources, resourcesSelector, selectResources, fetchResElCommands, deleteResource, fetchResElEvents } from "./../../../redux/Slice/resourcesSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Input } from 'antd';
 import { Collapse, Row, Col, Button } from 'antd';
@@ -31,6 +31,7 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
 
   useEffect(() => {
     dispatch(fetchResElCommands());
+    dispatch(fetchResElEvents());
   }, [selectedProjects, dispatch])
 
   const onChange = (key: string | string[]) => {
