@@ -36,17 +36,20 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 10, position: 'relative' }}>
+      
       <div ref={(node) => drag(drop(node))} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} style={{
-        display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 10, border: "1px solid #ddd",
+        display: 'flex', flexDirection: 'row', padding: 10, border: "1px solid #ddd",
         width: '100%', background: '#fff', color: '#6e707e'
 
       }}>
+        <div style={{display: 'flex', flexDirection: 'row', flexWrap:'wrap', flexGrow:'1'}}>
         <span onClick={(e) => {
           e.stopPropagation()
           handleResourceActionData(item)
         }}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')})</span>
-        <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', width: '80%', overflowWrap: 'break-word' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
-        <CloseCircleOutlined onClick={() => handleRemoveAction({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />
+        <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
+      </div>
+      <CloseCircleOutlined onClick={() => handleRemoveAction({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />
       </div>
       {step?.resource_actions && step?.resource_actions[index + 1] && <ArrowDownOutlined style={{ position: 'absolute', top: 54 }} />}
     </div>
