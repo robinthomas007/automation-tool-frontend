@@ -32,7 +32,7 @@ function cp(commands: any[], elements: any[]) {
   return res;
 }
 
-const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, commands, handleRemoveElement, handleCommandDropdownChange, handleEventDropdownChange, handleInputChange, handleTimeoutChange, handleNewTabChange }: any) => {
+const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, commands, handleRemoveElement, handleCommandDropdownChange, handleEventDropdownChange, handleInputChange, handleTimeoutChange, handleEventDataSourceChange }: any) => {
 
   const [hover, setHover] = useState(false)
 
@@ -111,7 +111,7 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
   ))
   ers = reactStringReplace(ers, '$(Data)', (match, i) => (<div key={`data-${i}`}>
     {<EditableText initialText={item.event_data_source} defaultText="Enter value" onChange={(e) => {
-      handleNewTabChange(e, item.id, item.sequence_number)
+      handleEventDataSourceChange(e, item.id, item.sequence_number)
     }} />}
   </div>))
   let trs:any=" with $(Timeout) as timeout";
@@ -206,11 +206,11 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
 
     dispatch(updateSelectedActionElements(updatedItems));
   };
-  const handleNewTabChange = (e: string, itemId: number, sequence_number: number) => {
+  const handleEventDataSourceChange = (e: string, itemId: number, sequence_number: number) => {
     const newValue = e;
     const updatedItems = selectedActionElements.element_actions.map((item: any) => {
       if (item.id === itemId && item.sequence_number === sequence_number) {
-        return { ...item, newtab: newValue };
+        return { ...item, event_data_source: newValue };
       }
       return item;
     });
@@ -302,7 +302,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
               handleRemoveElement={handleRemoveElement}
               handleInputChange={handleInputChange}
               handleTimeoutChange={handleTimeoutChange}
-              handleNewTabChange={handleNewTabChange}
+              handleEventDataSourceChange={handleEventDataSourceChange}
             />
           </List.Item>
         ))}
