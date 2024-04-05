@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Resource as ResourceModel, deleteElement, resourcesSelector } from "./../../../redux/Slice/resourcesSlice";
 import { Row, Col } from 'antd';
 import { List } from 'antd';
@@ -8,7 +8,7 @@ import { useDrag } from 'react-dnd';
 import CreateElementModal from './CreateElementmodal'
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 
-const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete, isEditable }: any) => {
+const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete, isEditable}: any) => {
 
   const [, drag] = useDrag({
     type,
@@ -35,8 +35,10 @@ const ResourceRightPanel = () => {
 
   const [openCreateElement, setOpenCreateElement] = useState(false)
   const [elementEdit, setElementEdit] = useState({})
+  const [editable,setEditable] = useState(false)
+  const [allowedTypes,setAllowedTypes] = useState<string[]>([])
   const dispatch = useAppDispatch();
-  const { selectedResources } = useAppSelector(resourcesSelector);
+  const { selectedResources, resourceTypes } = useAppSelector(resourcesSelector);
 
   const handleCancel = () => {
     setOpenCreateElement(false)
@@ -55,17 +57,21 @@ const ResourceRightPanel = () => {
     const isConfirmed = confirm("Are you sure you want to delete this item?");
     isConfirmed && dispatch(deleteElement({ id: element.id }))
   }
-
-  const isEditable = selectedResources.type === 'BROWSER' ? false : true
-
+  useEffect(()=>{
+    if (resourceTypes && selectedResources && selectedResources.type){
+      setEditable(!resourceTypes[selectedResources.type].read_only)
+      setAllowedTypes(resourceTypes[selectedResources.type].applicable_elements)
+    }
+    
+  },[selectedResources,resourceTypes])
   return (
     <Row style={{ marginTop: 20 }}>
-      {openCreateElement && <CreateElementModal element={elementEdit} open={openCreateElement} handleCancel={handleCancel} />}
+      {openCreateElement && <CreateElementModal element={elementEdit} open={openCreateElement} handleCancel={handleCancel} allowedTypes={allowedTypes}/>}
       <Col span={24}>
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span className='font-semibold'>{selectedResources.name} Properties</span>
-            {isEditable && <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />}
+            {editable && <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />}
           </div>}
           bordered
           dataSource={selectedResources.elements || []}
@@ -77,7 +83,7 @@ const ResourceRightPanel = () => {
                 item={item}
                 type="RESOURCE_ELEMENTS_TO_RESOURCE"
                 index={index}
-                isEditable={isEditable}
+                isEditable={editable}
               />
             </List.Item>
           )}

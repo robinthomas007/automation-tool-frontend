@@ -4,7 +4,7 @@ import { RootState } from "../store";
 import {
   Resources, CreateResources as CreateResource, GetElementsByAction, SaveElementsInAction, CreateResourcesAction,
   CreateResourcesElements, FetchResElCommands, UpdateResourcesAction, UpdateResource, UpdateResourcesElements,
-  DeleteResource, DeleteAction, DeleteElement, FetchResElEvents
+  DeleteResource, DeleteAction, DeleteElement, FetchResElEvents,FetchResourceTypes
 } from "../Services/resources";
 export interface ResourceAction {
   id: string;
@@ -23,6 +23,13 @@ export interface ResourceActionPayload {
 export interface ResourceElementPayload {
   elements: ResourceAction[];
   id: string | undefined;
+}
+interface ResourceTypes {
+  [key: string]: ResourceType;
+}
+type ResourceType = {
+  read_only: boolean,
+  applicable_elements: string[]
 }
 export interface ResourceElement {
   id: string;
@@ -50,6 +57,7 @@ export interface ResourcesState {
   selectedActionElements: Resource | any;
   commands: Array<any>
   events: Array<any>
+  resourceTypes: undefined | ResourceTypes
 }
 const initialState: ResourcesState = {
   loading: false,
@@ -59,6 +67,7 @@ const initialState: ResourcesState = {
   selectedActionElements: {},
   commands: [],
   events: [],
+  resourceTypes: undefined
 };
 export const fetchResources = createAsyncThunk(
   "resources/fetchResources",
@@ -127,6 +136,9 @@ export const fetchResElCommands = createAsyncThunk(
 export const fetchResElEvents = createAsyncThunk(
   "resources/fetchResElEvents",
   async () => FetchResElEvents()
+);export const fetchResourceTypes = createAsyncThunk(
+  "resources/fetchResourceTypes",
+  async () => FetchResourceTypes()
 );
 
 
@@ -256,6 +268,21 @@ const resourcesSlice = createSlice({
     });
 
     builder.addCase(fetchResElEvents.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(fetchResourceTypes.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(fetchResourceTypes.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload && payload.data) {
+        state.resourceTypes = payload.data
+      }
+    });
+
+    builder.addCase(fetchResourceTypes.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

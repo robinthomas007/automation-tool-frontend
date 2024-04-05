@@ -69,3 +69,7 @@ export const FetchResElEvents = async () => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/event`);
   return res.data;
 };
+export const FetchResourceTypes = async () => {
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/resource/types`);
+  return res.data;
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col, Space } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, Space, Select } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { resourcesSelector, createResourcesElement, updateResourcesElement } from "./../../../redux/Slice/resourcesSlice";
 import {
@@ -9,10 +9,11 @@ const { TextArea } = Input;
 interface CreateModalProps {
   open: boolean;
   handleCancel: () => void,
-  element: any
+  element: any,
+  allowedTypes: string[]
 }
 
-const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, element }) => {
+const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, element , allowedTypes}) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { selectedResources } = useAppSelector(resourcesSelector);
@@ -70,7 +71,7 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
             autoComplete="off"
             form={form}
             preserve={false}
-            initialValues={{ type: 'WebElement' }}
+            initialValues={{ type: allowedTypes[0] }}
           >
 
             <Form.Item
@@ -95,7 +96,8 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
               rules={[{ required: true, message: 'Please input your Element type!' },
               { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
-              <Input value={'WebElement'} disabled />
+              <Select options={allowedTypes.map((at:string)=>({"label":at,"value":at}))}/>
+              {/* <Input value={'WebElement'} disabled /> */}
             </Form.Item>
             <Form.Item
               label="Element Description"
