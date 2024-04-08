@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Form } from 'antd';
 import { List, Input, Button } from 'antd';
-import { HolderOutlined, PlusCircleTwoTone } from '@ant-design/icons';
-import { useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { testsSelector, saveTestStepData } from "./../../../redux/Slice/testsSlice";
 
@@ -15,7 +13,7 @@ const TestsRightPanelData = () => {
     setData(selectedStep?.data ? selectedStep?.data : [])
   }, [selectedStep])
   const onFinish = (values: any) => {
-    const stepIndex = selectedTests.steps.findIndex((step: any) => step.step_id == selectedStep.step_id && step.sequence_number === selectedStep.sequence_number);
+    const stepIndex = selectedTests.steps.findIndex((step: any) => step.step_id === selectedStep.step_id && step.sequence_number === selectedStep.sequence_number);
     const updatedSteps = [...selectedTests.steps];
     updatedSteps[stepIndex] = {
       ...updatedSteps[stepIndex],
@@ -39,7 +37,7 @@ const TestsRightPanelData = () => {
         >
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Steps Actions Data</span>
+              <span className='font-semibold'>Steps Actions Data</span>
             </div>}
             footer={<div style={{ textAlign: 'right' }}><Button disabled={data.length === 0} form="actiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
             bordered

@@ -1,5 +1,5 @@
 import { Resource as ResourceModel } from "./../../../redux/Slice/resourcesSlice";
-import { Row, Col, Select, Button, Input, Collapse, AutoComplete } from 'antd';
+import { Row, Col, Select, Collapse } from 'antd';
 import { List } from 'antd';
 import CreateActionModal from "./CreateActionModal";
 
@@ -74,7 +74,7 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
 
   const template: string = commandObj?.template
   let rs = reactStringReplace(template, ' ', (match, i) => (
-    <div key={`space-${i}`} style={{width:'5px'}}>
+    <div key={`space-${i}`} style={{ width: '5px' }}>
     </div>
   ))
   rs = reactStringReplace(rs, '$(Command)', (match, i) => (
@@ -97,7 +97,7 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
   </div>))
   const eventTemplate: string = ", waiting for " + eventObj?.template
   let ers = reactStringReplace(eventTemplate, ' ', (match, i) => (
-    <div key={`space-${i}`} style={{width:'5px'}}>
+    <div key={`space-${i}`} style={{ width: '5px' }}>
     </div>
   ))
   ers = reactStringReplace(ers, '$(Event)', (match, i) => (
@@ -114,9 +114,9 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
       handleEventDataSourceChange(e, item.id, item.sequence_number)
     }} />}
   </div>))
-  let trs:any=" with $(Timeout) as timeout";
+  let trs: any = " with $(Timeout) as timeout";
   trs = reactStringReplace(trs, ' ', (match, i) => (
-    <div key={`space-${i}`} style={{width:'5px'}}>
+    <div key={`space-${i}`} style={{ width: '5px' }}>
     </div>
   ))
   trs = reactStringReplace(trs, '$(Timeout)', (match, i) => (<EditableText defaultText="auto" initialText={item.timeout} onChange={(value) => { handleTimeoutChange(value, item.id, item.sequence_number) }} />))
@@ -124,12 +124,12 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
     <div ref={(node) => drag(drop(node))} style={{ padding: 10, alignItems: 'center', display: 'flex', width: '100%', justifyContent: 'space-between' }}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} >
       <HolderOutlined style={{ cursor: 'move' }} />
-      <div style={{ display: 'flex', flexDirection: 'row' , flexWrap:'wrap', marginRight:'auto', marginLeft:'5px'}}>
-            {rs}
-            {filteredEventOptions.length>0?ers:""}
-            {trs}
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginRight: 'auto', marginLeft: '5px' }}>
+        {rs}
+        {filteredEventOptions.length > 0 ? ers : ""}
+        {trs}
       </div>
-      
+
       <CloseCircleOutlined onClick={() => handleRemoveElement({ id: item.element_id, sequence_number: item.sequence_number })} style={{ padding: 2, marginLeft: 10, visibility: hover ? 'visible' : 'hidden' }} className="close-icon-15" />
     </div>
   );

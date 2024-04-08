@@ -1,81 +1,88 @@
-import { useEffect, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { fetchProjectUsers, upsertProjectUser, usersSelector } from "../../../redux/Slice/usersSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
+import { Button, List, Input, Select, Form } from "antd";
 
-import { Button, List, Input, Select } from "antd";
+const { Option } = Select;
 
-const options = [{
-  label: "Manager",
-  value: "manage"
-},
-{
-  label: "Developer",
-  value: "develop"
-}, {
-  label: "Verifier",
-  value: "execute"
-}
-]
+const options = [
+  { label: "Manager", value: "manage" },
+  { label: "Developer", value: "develop" },
+  { label: "Verifier", value: "execute" }
+];
 
-export default function ProjectUsers() {
-  const [selectedRole, setSelectedRole] = useState("execute")
-  const [email, setEmail] = useState("")
-  const [error, setError] = useState(false)
+const ProjectUsers: React.FC = () => {
+  const [form] = Form.useForm();
 
   const dispatch = useAppDispatch();
-  const { projectUsers } = useAppSelector(usersSelector)
+  const { projectUsers } = useAppSelector(usersSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
 
   useEffect(() => {
     if (selectedProjects) {
-      dispatch(fetchProjectUsers({ projectId: selectedProjects.id }))
+      dispatch(fetchProjectUsers({ projectId: selectedProjects.id }));
     }
-  }, [selectedProjects])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProjects]);
 
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const onFinish = (values: any) => {
+    dispatch(upsertProjectUser({ projectId: selectedProjects!!.id, data: { email: values.email, role: values.role } }));
   }
 
-  const add = () => {
-    if (validateEmail(email))
-      dispatch(upsertProjectUser({ projectId: selectedProjects!!.id, data: { email, role: selectedRole } }))
-    else {
-      setError(true)
-    }
-  }
+  return (
+    <div>
+      <List
+        size="large"
+        bordered
+        dataSource={projectUsers}
+        className=""
+        renderItem={(project) => (
+          <List.Item>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '40%' }}>
+              <span style={{ color: '#1577ff' }}>{project.email}</span>
+              <Select style={{ width: 100 }} value={project.role} options={options} onChange={(value) => {
+                dispatch(upsertProjectUser({
+                  projectId: selectedProjects!!.id, data: {
+                    email: project.email,
+                    role: value
+                  }
+                }));
+              }} />
+            </div>
+          </List.Item>
+        )}
+      />
+      <div className="my-4">
+        <Form form={form} onFinish={onFinish} className="flex gap-2">
+          <Form.Item
+            name="role"
+            initialValue="execute"
+            rules={[{ required: true, message: 'Please select a role!' }]}
+          >
+            <Select style={{ width: 150 }}>
+              {options.map(option => (
+                <Option key={option.value} value={option.value}>{option.label}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, message: 'Please input an email!' },
+              { type: 'email', message: 'Please enter a valid email address!' }
+            ]}
+          >
+            <Input style={{ width: 300 }} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">Add</Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
+  );
+};
 
-
-  return (<div>
-    <List
-      size="large"
-      footer={
-        <div style={{ display: 'flex', width: '40%' }}>
-          <Select value={selectedRole} onChange={(value) => setSelectedRole(value)} options={options} style={{ width: 150 }} />
-          <div>
-            <Input value={email} style={{ margin: '0px 15px' }} onChange={(e) => { setError(false); setEmail(e.target.value) }} />
-            {error && <div className="text-red-600 flex-none ml-5">Invalid Email</div>}
-          </div>
-          <Button type="primary" onClick={() => add()}>Add</Button>
-        </div>
-      }
-      bordered
-      dataSource={projectUsers}
-      renderItem={(project) =>
-        <List.Item>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '40%' }}>
-            <span style={{ color: '#1577ff' }}>{project.email}</span>
-            <Select style={{ width: 100 }} value={project.role} options={options} onChange={(value) => {
-              dispatch(upsertProjectUser({
-                projectId: selectedProjects!!.id, data: {
-                  email: project.email,
-                  role: value
-                }
-              }))
-            }} />
-          </div>
-        </List.Item>}
-    />
-
-  </div>)
-}
+export default ProjectUsers;

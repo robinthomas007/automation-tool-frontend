@@ -10,12 +10,8 @@ import {
   DoubleRightOutlined
 } from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
-import Steps from "./../Main/pages/Step/Steps";
 import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
-import Tests from "./../Main/pages/Test/Tests";
-import Resources from "./../Main/pages/Resource/Resources";
 import ResourcesRightPanel from "./../Main/pages/Resource/ResourceRightPanel";
-import Suites from "./../Main/pages/Suite/Suites";
 import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanel";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
 import TestRightPanel from './../Main/pages/Test/TestRightPanel'
@@ -23,7 +19,6 @@ import RunsRightPanel from './../Main/pages/Runs/RunsRightPanel'
 import DataProfile from './../Main/pages/DataProfile/DataProfile'
 import { useAppSelector } from "./../redux/hooks";
 import { testsSelector, } from "./../redux/Slice/testsSlice";
-import Runs from '../Main/pages/Runs/Runs';
 import StepsRightPanelData from '../Main/pages/Step/StepsRightPanelData';
 import { stepsSelector } from '../redux/Slice/stepsSlice';
 

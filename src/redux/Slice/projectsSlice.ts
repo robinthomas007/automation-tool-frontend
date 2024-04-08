@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import { Projects, CreateProject } from "../Services/projects";
@@ -19,9 +19,9 @@ export interface Project {
   items_stats: Array<ItemStat>
   resources: Array<Resource>
 }
-export type CategoryStat={name: string,items:StatItem[]}
-export type ItemStat={name: string,items:CategoryStat[]}
-export type StatItem = {name:string,value:number, color: string}
+export type CategoryStat = { name: string, items: StatItem[] }
+export type ItemStat = { name: string, items: CategoryStat[] }
+export type StatItem = { name: string, value: number, color: string }
 export interface ProjectsState {
   loading: boolean;
   projects: Array<Project>;

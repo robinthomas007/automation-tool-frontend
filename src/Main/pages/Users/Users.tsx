@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Layout, theme, Card } from 'antd';
-import OrgUsers from "./OrgUsers";
 import ProjectUsers from "./ProjectUsers";
 
 const { Content } = Layout;

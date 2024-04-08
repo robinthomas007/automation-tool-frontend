@@ -60,7 +60,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
             <Form.Item
               label="Variable Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your profile name!' }]}
+              rules={[{ required: true, message: 'Please input your Variable name!' }, { min: 3, message: 'Please enter min 3 characters' }]}
             >
               <Input />
             </Form.Item>

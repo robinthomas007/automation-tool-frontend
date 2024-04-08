@@ -27,15 +27,16 @@ const TestRightPanel = () => {
 
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { steps } = useAppSelector(stepsSelector);
-  useEffect(()=>{
+  useEffect(() => {
     if (selectedProjects)
-      dispatch(fetchSteps({projectId:selectedProjects.id,searchTerm:''}))
-  },[selectedProjects])
+      dispatch(fetchSteps({ projectId: selectedProjects.id, searchTerm: '' }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProjects])
   return (
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
         <List
-          header={<div>Steps</div>}
+          header={<div className='font-semibold'>Steps</div>}
           bordered
           dataSource={steps}
           renderItem={(item, index) => (

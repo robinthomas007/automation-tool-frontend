@@ -1,4 +1,4 @@
-import { Card, Col, Empty, Layout, Row, Statistic, theme } from "antd";
+import { Card, Col, Empty, Row } from "antd";
 import { CategoryStat } from "../redux/Slice/projectsSlice";
 import { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { Chart } from "chart.js";
@@ -8,9 +8,7 @@ type Props = {
 }
 
 export default function StatChart({ stat }: { stat: CategoryStat }) {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart<"doughnut"> | null>(null);
   // const labels = stat.items.map(i => i.name);

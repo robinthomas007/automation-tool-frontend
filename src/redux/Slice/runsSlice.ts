@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import { Runs, /*CreateRun*/ } from "../Services/runs";
@@ -67,18 +67,6 @@ const runsSlice = createSlice({
       state.error = action.error.message;
     });
 
-    // builder.addCase(createRun.pending, (state) => {
-    //   state.loading = true;
-    // });
-    // builder.addCase(createRun.fulfilled, (state, { payload }) => {
-    //   // const data: PayloadAction<Array<Step>> = payload.data;
-    //   state.loading = false;
-    // });
-    // builder.addCase(createRun.rejected, (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.error.message;
-    // });
-
   },
   reducers: {
     selectRuns: (state, action) => {
@@ -86,11 +74,11 @@ const runsSlice = createSlice({
     },
     updateRun: (state, action) => {
       const runIndex = state.runs.findIndex(run => run.id === action.payload.id);
-      if (state.selectedRunId == undefined) {
+      if (state.selectedRunId === undefined) {
         state.selectedRunId = action.payload.id
       } else {
-        const currentlySelectedRun = state.runs.find(r => r.id == state.selectedRunId)!
-        if (currentlySelectedRun.result.status == "PASS" || currentlySelectedRun.result.status == "FAIL") {
+        const currentlySelectedRun = state.runs.find(r => r.id === state.selectedRunId)!
+        if (currentlySelectedRun.result.status === "PASS" || currentlySelectedRun.result.status === "FAIL") {
           state.selectedRunId = action.payload.id
         }
       }

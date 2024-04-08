@@ -1,7 +1,7 @@
 import RightPanel from "../../../Components/RightPanel";
 import Tests from "./Tests";
 import { Layout, theme } from 'antd';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const { Content } = Layout;

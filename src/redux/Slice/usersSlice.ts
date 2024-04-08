@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { GetOrgUsers,GetProjectUsers,UpsertOrgUser,UpsertProjectUser, UserRole } from "../Services/user";
+import { GetOrgUsers, GetProjectUsers, UpsertOrgUser, UpsertProjectUser, UserRole } from "../Services/user";
 export interface UserState {
   loading: boolean;
   projectUsers: UserRole[];
@@ -22,8 +22,8 @@ export const fetchOrgUsers = createAsyncThunk(
 );
 export const upsertOrgUser = createAsyncThunk(
   "users/upsertOrgUser",
-  async ({ orgId,data }: { orgId: number , data: UserRole}) => {
-    return UpsertOrgUser(orgId,data)
+  async ({ orgId, data }: { orgId: number, data: UserRole }) => {
+    return UpsertOrgUser(orgId, data)
   }
 );
 export const fetchProjectUsers = createAsyncThunk(
@@ -34,8 +34,8 @@ export const fetchProjectUsers = createAsyncThunk(
 );
 export const upsertProjectUser = createAsyncThunk(
   "users/upsertProjectUser",
-  async ({ projectId,data }: { projectId: number , data: UserRole}) => {
-    return UpsertProjectUser(projectId,data)
+  async ({ projectId, data }: { projectId: number, data: UserRole }) => {
+    return UpsertProjectUser(projectId, data)
   }
 );
 const usersSlice = createSlice({
@@ -79,16 +79,16 @@ const usersSlice = createSlice({
       upsertProjectUser.fulfilled,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
-        const index = state.projectUsers.findIndex(pu=>pu.email==action.payload.data.email)
-        if (index > -1){
-          state.projectUsers = state.projectUsers.map(pu=>{
-            if (pu.email == action.payload.data.email)
+        const index = state.projectUsers.findIndex(pu => pu.email === action.payload.data.email)
+        if (index > -1) {
+          state.projectUsers = state.projectUsers.map(pu => {
+            if (pu.email === action.payload.data.email)
               return action.payload.data
-            else 
+            else
               return pu
           })
         } else {
-          state.projectUsers = [...state.projectUsers,action.payload.data]
+          state.projectUsers = [...state.projectUsers, action.payload.data]
         }
       }
     );
@@ -105,16 +105,16 @@ const usersSlice = createSlice({
       upsertOrgUser.fulfilled,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
-        const index = state.orgUsers.findIndex(pu=>pu.email==action.payload.data.email)
-        if (index > -1){
-          state.orgUsers = state.orgUsers.map(ou=>{
-            if (ou.email == action.payload.data.email)
+        const index = state.orgUsers.findIndex(pu => pu.email === action.payload.data.email)
+        if (index > -1) {
+          state.orgUsers = state.orgUsers.map(ou => {
+            if (ou.email === action.payload.data.email)
               return action.payload.data
-            else 
+            else
               return ou
           })
         } else {
-          state.orgUsers = [...state.orgUsers,action.payload.data]
+          state.orgUsers = [...state.orgUsers, action.payload.data]
         }
       }
     );

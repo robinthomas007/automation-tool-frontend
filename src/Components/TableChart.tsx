@@ -1,10 +1,5 @@
-import { Card, Col, Grid, Layout, Row, Statistic, Table, theme } from "antd";
-import { CategoryStat, ItemStat, StatItem } from "../redux/Slice/projectsSlice";
-import { ForwardedRef, forwardRef, useEffect, useRef, useState } from "react";
-import { Chart } from "chart.js";
-type Props = {
-  stat: ItemStat
-}
+import { Card, Col, Table, } from "antd";
+import { ItemStat } from "../redux/Slice/projectsSlice";
 
 export default function TableChart({ data }: { data: ItemStat }) {
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Test as TestModel } from "./../../../redux/Slice/testsSlice";
-import { Row, Col, List, Button } from 'antd';
+import { Row, Col, List } from 'antd';
 import { useDrop, useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { addStepToTest, reOrderTestSteps, addStepDataToTest, updateTest, removeStepFromTest } from "./../../../redux/Slice/testsSlice";
@@ -9,7 +9,7 @@ import {
   CloseCircleOutlined,
   CloudUploadOutlined
 } from '@ant-design/icons';
-import { fetchTests, testsSelector, selectTests } from "./../../../redux/Slice/testsSlice";
+import { testsSelector } from "./../../../redux/Slice/testsSlice";
 
 const DraggableListItem = ({ item, type, index, moveItem, handleStepData, handleRemoveStep, selectedStep }: any) => {
 
@@ -35,7 +35,7 @@ const DraggableListItem = ({ item, type, index, moveItem, handleStepData, handle
     <div ref={(node) => drag(drop(node))}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className={selectedStep.step_id === item.step_id && selectedStep.sequence_number == item.sequence_number? 'selected-step' : ''}
+      className={selectedStep.step_id === item.step_id && selectedStep.sequence_number === item.sequence_number ? 'selected-step' : ''}
       style={{ padding: 5, width: '100%', display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <HolderOutlined style={{ marginRight: 8, cursor: 'move' }} />
@@ -50,8 +50,7 @@ const DraggableListItem = ({ item, type, index, moveItem, handleStepData, handle
 
 const Test = ({ test }: { test: TestModel }) => {
   const dispatch = useAppDispatch();
-  const { selectedTests, selectedStep } = useAppSelector(testsSelector);
-
+  const { selectedStep } = useAppSelector(testsSelector);
 
   const [, drop] = useDrop({
     accept: 'STEP_TO_TEST',

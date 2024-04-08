@@ -91,3 +91,13 @@ body {
   .variable-item:hover .close-icon {
     visibility: visible;
   }
+
+  ul.ant-list-items {
+    max-height: 600px;
+    overflow: scroll;
+}
+
+.ant-collapse.ant-collapse-icon-position-start.css-dev-only-do-not-override-17sses9 {
+    max-height: 600px;
+    overflow: scroll;
+}

@@ -1,10 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import { Tests, CreateTest, SaveTestStepData, UpdateTest, DeleteTest } from "../Services/tests";
 import { Step } from "./stepsSlice";
-import { Project } from "./projectsSlice";
-import { stat } from "fs";
 export interface Test {
   id: string;
   name: string;

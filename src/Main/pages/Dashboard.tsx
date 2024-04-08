@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, forwardRef, ForwardedRef } from 'react';
-import { Link } from "react-router-dom";
 import { projectsSelector } from "../../redux/Slice/projectsSlice";
 import { useAppSelector } from "../../redux/hooks";
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Statistic } from 'antd';
 
 import { Layout, theme } from 'antd';
@@ -13,81 +11,81 @@ import TableChart from '../../Components/TableChart';
 
 const { Content } = Layout;
 
-interface Props {
-  selectedProjects: any
-}
+// interface Props {
+//   selectedProjects: any
+// }
 
-const ProjectSummary = forwardRef((props: Props, ref: ForwardedRef<HTMLCanvasElement>) => {
-  return (
-    <Row gutter={16} style={{ alignItems: 'self-start' }}>
-      <Col span={8}>
-        <div style={{ height: 400, display: 'flex', justifyContent: 'center' }}>
-          <canvas ref={ref} id="myDonutChart" width="200" height="200"></canvas>
-        </div>
-      </Col>
-      <Col span={4}>
-        <Card bordered={true} style={{ marginBottom: 15 }}>
-          <Statistic
-            title="Suites"
-            value={props.selectedProjects?.suites.length}
-            valueStyle={{ color: '#FF6384' }}
-          />
-        </Card>
-      </Col>
-      <Col span={4}>
-        <Card bordered={true} style={{ marginBottom: 15 }}>
-          <Statistic
-            title="Tests"
-            value={props.selectedProjects?.tests.length}
-            valueStyle={{ color: '#36A2EB' }}
-          />
-        </Card>
-      </Col>
-      <Col span={4}>
-        <Card bordered={true} style={{ marginBottom: 15 }}>
-          <Statistic
-            title="Steps"
-            value={props.selectedProjects?.steps.length}
-            valueStyle={{ color: '#FFCE56' }}
-          />
-        </Card>
-      </Col>
-      <Col span={4}>
-        <Card bordered={true} style={{ marginBottom: 15 }}>
-          <Statistic
-            title="Objects"
-            value={props.selectedProjects?.resources.length}
-            valueStyle={{ color: '#1300f6' }}
-          />
-        </Card>
-      </Col>
-      {/* <Col span={8} push={8}>
-        <Card bordered={false}>
-          <Statistic
-            title="Active"
-            value={11.28}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
-            prefix={<ArrowUpOutlined />}
-            suffix="%"
-          />
-        </Card>
-      </Col>
-      <Col span={8} push={8}>
-        <Card bordered={false}>
-          <Statistic
-            title="Idle"
-            value={9.3}
-            precision={2}
-            valueStyle={{ color: '#cf1322' }}
-            prefix={<ArrowDownOutlined />}
-            suffix="%"
-          />
-        </Card>
-      </Col> */}
-    </Row>
-  )
-});
+// const ProjectSummary = forwardRef((props: Props, ref: ForwardedRef<HTMLCanvasElement>) => {
+//   return (
+//     <Row gutter={16} style={{ alignItems: 'self-start' }}>
+//       <Col span={8}>
+//         <div style={{ height: 400, display: 'flex', justifyContent: 'center' }}>
+//           <canvas ref={ref} id="myDonutChart" width="200" height="200"></canvas>
+//         </div>
+//       </Col>
+//       <Col span={4}>
+//         <Card bordered={true} style={{ marginBottom: 15 }}>
+//           <Statistic
+//             title="Suites"
+//             value={props.selectedProjects?.suites.length}
+//             valueStyle={{ color: '#FF6384' }}
+//           />
+//         </Card>
+//       </Col>
+//       <Col span={4}>
+//         <Card bordered={true} style={{ marginBottom: 15 }}>
+//           <Statistic
+//             title="Tests"
+//             value={props.selectedProjects?.tests.length}
+//             valueStyle={{ color: '#36A2EB' }}
+//           />
+//         </Card>
+//       </Col>
+//       <Col span={4}>
+//         <Card bordered={true} style={{ marginBottom: 15 }}>
+//           <Statistic
+//             title="Steps"
+//             value={props.selectedProjects?.steps.length}
+//             valueStyle={{ color: '#FFCE56' }}
+//           />
+//         </Card>
+//       </Col>
+//       <Col span={4}>
+//         <Card bordered={true} style={{ marginBottom: 15 }}>
+//           <Statistic
+//             title="Objects"
+//             value={props.selectedProjects?.resources.length}
+//             valueStyle={{ color: '#1300f6' }}
+//           />
+//         </Card>
+//       </Col>
+//       {/* <Col span={8} push={8}>
+//         <Card bordered={false}>
+//           <Statistic
+//             title="Active"
+//             value={11.28}
+//             precision={2}
+//             valueStyle={{ color: '#3f8600' }}
+//             prefix={<ArrowUpOutlined />}
+//             suffix="%"
+//           />
+//         </Card>
+//       </Col>
+//       <Col span={8} push={8}>
+//         <Card bordered={false}>
+//           <Statistic
+//             title="Idle"
+//             value={9.3}
+//             precision={2}
+//             valueStyle={{ color: '#cf1322' }}
+//             prefix={<ArrowDownOutlined />}
+//             suffix="%"
+//           />
+//         </Card>
+//       </Col> */}
+//     </Row>
+//   )
+// });
 
 const Dashboard = () => {
 

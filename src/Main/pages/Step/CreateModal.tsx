@@ -18,6 +18,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, step }) =
   const [form] = Form.useForm()
 
   useEffect(() => {
+    console.log(step, "==00")
     if (step && Object.keys(step).length !== 0) {
       form.setFieldsValue({ id: step.id, name: step.name, description: step.description })
     }

@@ -86,7 +86,7 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
         </Col> */}
         <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Steps</Button>
-          <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />
+          {openCreate && <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />}
         </Col>
       </Row>
       <Row>

@@ -19,11 +19,11 @@ const DraggableListItem = ({ item, type, handleOpenEdit, handleDelete }: any) =>
   return (
     <div ref={drag} style={{ cursor: 'move', padding: 15, width: '100%' }}>
       <div className='element-panel' style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>
+        <span className='flex items-center'>
           <HolderOutlined style={{ marginRight: 8 }} />
-          {item.resource.name} - {item.name}
+          <div>{item.resource.name} - {item.name}</div>
         </span>
-        <span>
+        <span className='flex'>
           <EditTwoTone onClick={(e) => handleOpenEdit(e, item)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
           <DeleteTwoTone onClick={(e) => handleDelete(e, item)} className="delete-icon" />
         </span>
@@ -75,7 +75,7 @@ const StepsRightPanel = () => {
       <Col span={24}>
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>Interactions</span>
+            <span className='font-semibold'>Interactions</span>
             <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />
           </div>}
           bordered

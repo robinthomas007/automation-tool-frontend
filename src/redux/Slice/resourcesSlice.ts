@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import {
   Resources, CreateResources as CreateResource, GetElementsByAction, SaveElementsInAction, CreateResourcesAction,
   CreateResourcesElements, FetchResElCommands, UpdateResourcesAction, UpdateResource, UpdateResourcesElements,
-  DeleteResource, DeleteAction, DeleteElement, FetchResElEvents,FetchResourceTypes
+  DeleteResource, DeleteAction, DeleteElement, FetchResElEvents, FetchResourceTypes
 } from "../Services/resources";
 export interface ResourceAction {
   id: string;
@@ -136,7 +136,7 @@ export const fetchResElCommands = createAsyncThunk(
 export const fetchResElEvents = createAsyncThunk(
   "resources/fetchResElEvents",
   async () => FetchResElEvents()
-);export const fetchResourceTypes = createAsyncThunk(
+); export const fetchResourceTypes = createAsyncThunk(
   "resources/fetchResourceTypes",
   async () => FetchResourceTypes()
 );
@@ -439,7 +439,7 @@ const resourcesSlice = createSlice({
 
       element_actions = element_actions ? element_actions : []
 
-      const updatedElemAction = [...element_actions, { element_id: item.id, name: item.name, sequence_number: element_actions.length + 1, type: item.type, command_id: command.id, assertion: "equal", data_source: "", timeout: "" , event_id:0}];
+      const updatedElemAction = [...element_actions, { element_id: item.id, name: item.name, sequence_number: element_actions.length + 1, type: item.type, command_id: command.id, assertion: "equal", data_source: "", timeout: "", event_id: 0 }];
 
       state.selectedActionElements = {
         ...state.selectedActionElements,
@@ -450,7 +450,7 @@ const resourcesSlice = createSlice({
     removeElementFromAction: (state, action) => {
       const { id, sequence_number } = action.payload;
       const updatedElements = state.selectedActionElements.element_actions.filter(
-        (element: any) => !(element.element_id == id && element.sequence_number == sequence_number)
+        (element: any) => !(element.element_id === id && element.sequence_number === sequence_number)
       );
 
       state.selectedActionElements = {

@@ -30,7 +30,7 @@ const SuiteRightPanel = () => {
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
         <List
-          header={<div>Tests</div>}
+          header={<div className='font-semibold'>Tests</div>}
           bordered
           dataSource={selectedProjects?.tests}
           renderItem={(item, index) => (

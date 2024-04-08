@@ -2,15 +2,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchProfiles, dataProfileSelector, setSelectedProfile } from "./../../../redux/Slice/dataProfileSlice";
-import { TextInput } from "flowbite-react";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Row, Col, Input, Button, Collapse } from 'antd';
+import { Row, Col, Button, Collapse } from 'antd';
 import CreateModal from './CreateModal'
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import DataProfileRightPanel from './DataProfileRightPanel'
-import {
-  PlayCircleOutlined
-} from '@ant-design/icons';
 import Variable from "./Variable";
 
 

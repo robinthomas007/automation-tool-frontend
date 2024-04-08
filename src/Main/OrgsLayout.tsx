@@ -1,50 +1,25 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  MenuUnfoldOutlined,
-  HomeOutlined,
-  ExperimentOutlined,
-  RocketOutlined,
-  DatabaseOutlined,
-  StepForwardOutlined,
-  ProjectOutlined
-} from '@ant-design/icons';
-import { Outlet, Link, useParams } from "react-router-dom";
-import { Layout, Menu, theme, Popover, Button, Typography } from 'antd';
+import React, { useState, useEffect } from 'react';
+
+import { Outlet, Link } from "react-router-dom";
+import { Layout, theme, Popover, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { fetchMe, meSelector, selectOrgs } from "../redux/Slice/meSlice";
-import { useLocation } from 'react-router-dom';
-import { Select } from 'antd';
+import { fetchMe, meSelector } from "../redux/Slice/meSlice";
 import { useAuth } from '../Context/authContext'
 import './main.css'
-import Logo from './../Images/logo.svg'
 import { clearCookie } from '../Lib/auth'
-import CreateModal from './pages/Projects/CreateModal';
 import { useNavigate } from "react-router-dom";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 const { Title } = Typography
 
 const OrgsLayout: React.FC = () => {
 
-  const { id } = useParams();
-  const location = useLocation();
-  const [pathName, setPathName] = useState("");
-  useEffect(() => {
-    if (location) {
-      let tmp = location.pathname.slice(location.pathname.lastIndexOf("/"), location.pathname.length);
-      setPathName(tmp);
-    }
-  }, [location])
-  const [collapsed, setCollapsed] = useState(false);
+
   const [open, setOpen] = useState(false);
 
-  const [openCreate, setOpenCreate] = useState<boolean>(false)
   const navigate = useNavigate();
 
-  const handleCancel = () => {
-    setOpenCreate(false)
-  }
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -53,38 +28,22 @@ const OrgsLayout: React.FC = () => {
 
   const { selectedOrgs, me } = useAppSelector(meSelector);
   const auth = useAuth()
-  const navigation = useCallback(() => [
-    { label: "Users", href: `/org/${selectedOrgs?.org.id}/users`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedOrgs?.org.id}/users`, },
-  ], [selectedOrgs]);
+
   useEffect(() => {
     if (auth?.user && !auth.user.perm) {
       navigate(`/login`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth])
   useEffect(() => {
-    if (me == null || me == undefined)
+    if (me == null || me === undefined)
       dispatch(fetchMe());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [me, selectedOrgs]);
-
-  const hide = () => {
-    setOpen(false);
-  };
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-
-
-  const orgOptions = me?.orgs.map((org) => ({ label: org.org.name, value: org.org.id }));
-
-  const handleChange = (value: any) => {
-    if (value === "new") {
-      setOpenCreate(true)
-    } else {
-      let orgSelected = me?.orgs.find((org) => org.org.id === value)
-      dispatch(selectOrgs(orgSelected))
-    }
-  }
 
   const ProfileContent = (
     <div style={{ cursor: 'pointer' }}>

@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchTests, testsSelector, selectTests, deleteTest } from "./../../../redux/Slice/testsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
-import { Row, Col, Input, Button, Collapse, Dropdown, Empty } from 'antd';
+import { Row, Col, Button, Collapse, Dropdown, Empty } from 'antd';
 import CreateModal from './CreateModal'
 import {
   PlayCircleOutlined,
@@ -18,7 +18,6 @@ import Loader from "../../../Components/Loader";
 
 const Tests = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
   const [testeEdit, setTestEdit] = useState({})
 
   const dispatch = useAppDispatch();
@@ -33,6 +32,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
       dispatch(fetchTests({ projectId: selectedProjects?.id, searchTerm: '' }));
       dispatch(fetchProfiles({ projectId: selectedProjects?.id || 0, searchTerm: '' }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProjects]);
 
   const handleCancel = () => {
@@ -115,17 +115,17 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
           {tests.length > 0 && <Collapse accordion onChange={onChange} style={{ marginTop: 10 }}>
             {tests.map((test, index) => (
               <Collapse.Panel
-                header={<div>{test.name}{test.lock!=""?` (lock: ${test.lock})`:""}</div>}
+                header={<div>{test.name}{test.lock !== "" ? ` (lock: ${test.lock})` : ""}</div>}
                 key={index}
                 className="resource-panel"
-                extra={<div>
-                  <span className="resource-panel-extra">
+                extra={<div className="flex items-center">
+                  <span className="resource-panel-extra flex">
                     <EditTwoTone onClick={(e) => handleOpenEdit(e, test)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
                     <DeleteTwoTone onClick={(e) => handleDelete(e, test)} className="delete-icon" style={{ marginRight: 15 }} />
                   </span>
                   <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
                     <span onClick={(e) => e.stopPropagation()}>
-                      {loading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
+                      {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
                     </span>
                   </Dropdown>
                 </div>}

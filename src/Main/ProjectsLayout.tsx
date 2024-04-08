@@ -29,7 +29,6 @@ const ProjectsLayout: React.FC = () => {
   const { id } = useParams();
   const location = useLocation();
   const [pathName, setPathName] = useState("");
-  const [projectsFetched,setProjectsFetched] = useState(false)
   useEffect(() => {
     if (location) {
       let tmp = location.pathname.slice(location.pathname.lastIndexOf("/"), location.pathname.length);
@@ -54,7 +53,7 @@ const ProjectsLayout: React.FC = () => {
   const { projects, selectedProjects } = useAppSelector(projectsSelector);
   useEffect(() => {
     const iid = parseInt(id ? id : '')
-    if (iid > 0 && projects.find(p=>p.id==iid))
+    if (iid > 0 && projects.find(p => p.id == iid))
       dispatch(selectProjects(projects.find(p => p.id == iid)))
     else {
       dispatch(selectProjects(projects[0]))
@@ -79,6 +78,7 @@ const ProjectsLayout: React.FC = () => {
     if (auth?.user && !auth.user.perm) {
       navigate(`/`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth])
 
   useEffect(() => {
@@ -87,17 +87,16 @@ const ProjectsLayout: React.FC = () => {
     if (selectedOrgs != null && selectedOrgs !== undefined) {
       dispatch(fetchProjects({ orgId: selectedOrgs!!.org.id, searchTerm: '' }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOrgs]);
 
   useEffect(() => {
     if (selectedProjects) {
       navigate(`/project/${selectedProjects.id}${pathName == '/project' ? '/' : pathName == `/${selectedProjects.id}` ? "/" : pathName}`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProjects, pathName])
 
-  const hide = () => {
-    setOpen(false);
-  };
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);

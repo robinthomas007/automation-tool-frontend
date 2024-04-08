@@ -1,8 +1,5 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 // Auth Router
-import AuthLayout from "./Auth/AuthLayout";
-import Login from "./Auth/pages/Login";
-import { ConfigProvider } from 'antd';
 
 // Main Router
 import ProjectsLayout from "./Main/ProjectsLayout";
@@ -25,8 +22,8 @@ const AuthRouter = createBrowserRouter([
     element: <LoginPage />
   },
   {
-    path:"/loginStatus",
-    element:<LogInStatus />
+    path: "/loginStatus",
+    element: <LogInStatus />
   },
   {
     path: "/project",
