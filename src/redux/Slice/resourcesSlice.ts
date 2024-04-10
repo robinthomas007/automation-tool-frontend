@@ -51,6 +51,7 @@ export interface Resource {
 }
 export interface ResourcesState {
   loading: boolean;
+  fetchLoading: boolean;
   resources: Array<Resource>;
   selectedResources: Resource | any;
   error: string | undefined;
@@ -61,6 +62,7 @@ export interface ResourcesState {
 }
 const initialState: ResourcesState = {
   loading: false,
+  fetchLoading: false,
   resources: [],
   selectedResources: {},
   error: undefined,
@@ -149,12 +151,14 @@ const resourcesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchResources.pending, (state) => {
       state.loading = true;
+      state.fetchLoading = true
       state.resources = [];
       state.selectedActionElements = {};
       state.selectedResources = {}
     });
     builder.addCase(fetchResources.fulfilled, (state, { payload }) => {
       state.loading = false;
+      state.fetchLoading = false;
       state.resources = payload.data;
       if (payload.data.length) {
         state.selectedResources = payload.data[0];
@@ -162,6 +166,7 @@ const resourcesSlice = createSlice({
     });
     builder.addCase(fetchResources.rejected, (state, action) => {
       state.loading = false;
+      state.fetchLoading = false;
       state.resources = [];
       state.error = action.error.message;
     });
@@ -402,7 +407,9 @@ const resourcesSlice = createSlice({
 
     builder.addCase(deleteResource.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.resources = state.resources.filter((item) => item.id !== payload.data.id)
+      const remainingRes = state.resources.filter((item) => item.id !== payload.data.id)
+      state.resources = remainingRes
+      state.selectedResources = remainingRes.length ? remainingRes[0] : {}
     });
 
     builder.addCase(deleteResource.rejected, (state, action) => {

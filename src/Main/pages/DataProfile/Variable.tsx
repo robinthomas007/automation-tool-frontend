@@ -5,10 +5,11 @@ import { addVariableToProfile, createProfileVariable, RemoveVariable } from "./.
 import {
   CloseCircleOutlined
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Variable = ({ variables, profileId }: { variables: any, profileId: number }) => {
   const dispatch = useAppDispatch();
+  const [form] = Form.useForm();
 
   const [, drop] = useDrop({
     accept: 'VARIABLE_TO_PROFILE',
@@ -44,27 +45,30 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
       <Col span={24}>
         <Form
           name="createProfileVariable"
-          // labelCol={{ span: 12 }}
-          // wrapperCol={{ span: 24 }}
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 18 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           labelAlign="right"
+          form={form}
         >
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Variables</span>
-              <Button form="createProfileVariable" key="submit" htmlType="submit" type='primary'>Save</Button></div>}
+              <Button
+                form="createProfileVariable" key="submit" htmlType="submit" type='primary'>Save</Button></div>}
             bordered
             dataSource={variables ? variables : []}
             renderItem={(item: any, index) => (
               <List.Item className="variable-item">
                 <Form.Item
+                  className="w-full"
                   label={item.variable.name}
-                  name={['variables', index, `variable_${item.variable.id}`]} // Ensure the name follows the correct structure
+                  name={['variables', index, `variable_${item.variable.id}`]}
                   rules={[{ required: true, message: 'Please input the variable value!' }]}
                   initialValue={item.value ? item.value : ''}
                 >
-                  <Input placeholder="Variable Value" />
+                  <Input placeholder="Variable Value" style={{ width: '100%' }} />
                 </Form.Item>
                 <CloseCircleOutlined className="close-icon" onClick={() => handleRemoveVariable({ id: item.id })} style={{ marginLeft: 10 }} />
 

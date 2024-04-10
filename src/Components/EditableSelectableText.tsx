@@ -11,6 +11,7 @@ const EditableSelectableText = ({ value, onChange, options }: { value: number, o
     setIsEditing(true);
   };
 
+
   const handleChange = (val: number) => {
     setText(options.find(o => o.value === val)?.label ?? 'Select One');
     handleBlur();

@@ -168,8 +168,10 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
 
   const [, drop] = useDrop({
     accept: 'RESOURCE_ELEMENTS_TO_RESOURCE',
-    drop: (item) => {
-      dispatch(addResElemToResActElem({ item, command: commands[0] }));
+    drop: (item: any) => {
+      const filterCommand = commands
+        .filter((cmd: any) => item.type === cmd.applicable_on)
+      dispatch(addResElemToResActElem({ item, command: filterCommand[0] }));
     }
   });
 

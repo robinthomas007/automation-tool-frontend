@@ -29,6 +29,13 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
     console.log('Failed:', errorInfo);
   };
 
+  const validateProfileName = (_: any, value: string) => {
+    if (value && value.trim().length === 0) {
+      return Promise.reject(new Error('Profile name cannot be empty'));
+    }
+    return Promise.resolve();
+  };
+
   return (
     <Modal
       title="Create Profile"
@@ -58,7 +65,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
             <Form.Item
               label="Profile Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your profile name!' }]}
+              rules={[{ required: true, message: 'Please input your profile name!' },
+              { validator: validateProfileName },]}
             >
               <Input />
             </Form.Item>

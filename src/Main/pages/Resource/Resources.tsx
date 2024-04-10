@@ -3,7 +3,7 @@ import Resource from "./Resource";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchResources, resourcesSelector, selectResources, fetchResElCommands, deleteResource, fetchResElEvents, fetchResourceTypes } from "./../../../redux/Slice/resourcesSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Input } from 'antd';
+import { Empty } from 'antd';
 import { Collapse, Row, Col, Button } from 'antd';
 import CreateModal from './CreateModal'
 import ResourceRightPanel from './ResourceRightPanel'
@@ -21,7 +21,7 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
   const [resourceEdit, setResourceEdit] = useState({})
   const [search, setSearch] = useState('')
   const dispatch = useAppDispatch();
-  const { resources, selectedResources } = useAppSelector(resourcesSelector);
+  const { resources, selectedResources, fetchLoading } = useAppSelector(resourcesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
 
   useEffect(() => {
@@ -108,10 +108,18 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
       </Row>
       <Row>
         <Col span={24}>
-          {resources.length === 0 && <Loader />}
-          <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+          {fetchLoading && <Loader />}
+          {resources.length > 0 &&
+            <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+              {resource}
+            </Collapse>}
+          {resources.length === 0 && !fetchLoading && <div className="my-40">
+            <Empty />
+          </div>}
+          {/* {resources.length === 0 && <Loader />} */}
+          {/* <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
             {resource}
-          </Collapse>
+          </Collapse> */}
         </Col>
       </Row>
     </div>
