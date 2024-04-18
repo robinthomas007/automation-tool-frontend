@@ -141,7 +141,7 @@ const ProjectsLayout: React.FC = () => {
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis'
             }}
-          >{selectedOrgs?.org.domain}</Title>}
+          >{selectedOrgs?.org.name}</Title>}
         </div>
 
         {!collapsed && <Select
