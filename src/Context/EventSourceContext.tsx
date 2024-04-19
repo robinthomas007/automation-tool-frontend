@@ -21,7 +21,7 @@ export const EventSourceProvider = ({ children }: EventSourceProviderProps) => {
 
   const getRuns = async (projectId:number,data: any) => {
     const source = `${process.env.REACT_APP_BASE_URL}/project/${projectId}/run`
-
+    console.log("Called")
     await fetchEventSource(source, {
       method:"POST",
       headers:{

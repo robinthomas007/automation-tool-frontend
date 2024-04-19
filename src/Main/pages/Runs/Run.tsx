@@ -1,7 +1,7 @@
 import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
-import { Row, Col, List, Typography } from 'antd';
+import { Row, Col, List, Typography, Collapse } from 'antd';
 import { CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Tree } from 'antd';
+import { Tree, } from 'antd';
 import ReactPlayer from "react-player";
 
 const { Title } = Typography
@@ -22,6 +22,29 @@ const Icon = ({status}:{status:string})=>{
   }
 }
 const Run = ({ run }: { run: RunModel }) => {
+  return (
+    <Row>
+      {run.result.type=='Suite'?
+      <Col span={24}>
+        <Collapse defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
+          {run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>
+          {i && <RunItem item={i} />}
+          {i.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
+          </Collapse.Panel>)}
+        </Collapse>        
+      </Col>:<Col span={24}>
+      <Collapse defaultActiveKey={run.result.id>0?run.result.id:0}>
+          <Collapse.Panel key={run.result.id} header={<div><span><Icon status={run.result.status}/></span><span> {run.result.name}</span></div>}>
+          {run.result && <RunItem item={run.result} />}
+          {run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
+          </Collapse.Panel>
+        </Collapse>  
+      </Col>}
+    </Row>
+  );
+};
+
+const RunItem = ({ item }: { item: RunDataItem }) => {
   const constructTreeNodes = (data: any, parentKey: string) => {
     if (!data) {
       return null
@@ -44,7 +67,7 @@ const Run = ({ run }: { run: RunModel }) => {
     }));
   };
 
-  const newTreeData = run?.result ? constructTreeNodes(run?.result, '') : constructTreeNodes(null, '')
+  const newTreeData = item ? constructTreeNodes(item, '') : constructTreeNodes(null, '')
 
   const updatedTreeData = newTreeData && newTreeData.map((node: any, index: any) => {
     if (newTreeData[index]) {
@@ -55,19 +78,6 @@ const Run = ({ run }: { run: RunModel }) => {
     }
     return node;
   });
-
-  return (
-    <Row>
-      <Col span={24}>
-        <Title level={2}><Icon status={run.result.status}/> {`${run?.result?.name}(${run?.result.time})`}</Title>
-        {run && <RunItem item={run.result} treeData={updatedTreeData} />}
-        {run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
-      </Col>
-    </Row>
-  );
-};
-
-const RunItem = ({ item, treeData }: { item: RunDataItem, treeData: any }) => {
   const onSelect = (selectedKeys: React.Key[], info: any) => {
   };
 
@@ -77,7 +87,7 @@ const RunItem = ({ item, treeData }: { item: RunDataItem, treeData: any }) => {
       showIcon={true}
       defaultExpandAll={true}
       onSelect={onSelect}
-      treeData={treeData}
+      treeData={updatedTreeData}
       style={{ padding: '10px' }}
     />
   </div>
