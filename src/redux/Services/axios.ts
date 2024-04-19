@@ -35,7 +35,7 @@ axios.interceptors.response.use(
     // Handle response error
     // token expired
     if (error.response.status === 401) {
-      clearCookie()
+      clearCookie('token')
     }
 
     return Promise.reject(error);

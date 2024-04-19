@@ -51,7 +51,7 @@ const OrgsLayout: React.FC = () => {
         return <p key={index}>{o.org.name}</p>
       })}
       <hr />
-      <p onClick={() => clearCookie()}>Logout</p>
+      <p onClick={() => clearCookie('token')}>Logout</p>
     </div>
   );
 

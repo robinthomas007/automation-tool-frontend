@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie'
+
 export const getGoogleUrl = (from: string) => {
   const rootUrl = `https://accounts.google.com/o/oauth2/v2/auth`;
 
@@ -21,16 +23,14 @@ export const getGoogleUrl = (from: string) => {
 
 
 export function getCookie(name: string) {
-  return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+  return Cookies.get(name)
 }
 export function setCookie(name: string,value: string) {
-  document.cookie = `${name}=${value};max-age=86400;domain=${window.location.hostname}`
-
-  return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+  Cookies.set(name, value, { expires: 1 })
+  return Cookies.get(name)
 }
 
-export function clearCookie() {
-  document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; domain=.sedinqa.com';
+export function clearCookie(name:string) {
+  Cookies.remove(name)
   window.location.href = '/'
 }

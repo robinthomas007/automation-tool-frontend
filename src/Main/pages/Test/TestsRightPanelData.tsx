@@ -37,7 +37,7 @@ const TestsRightPanelData = () => {
         >
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span className='font-semibold'>Steps Actions Data</span>
+              <span className='font-semibold'>Steps Data</span>
             </div>}
             footer={<div style={{ textAlign: 'right' }}><Button disabled={data.length === 0} form="actiondata" key="submit" htmlType="submit" type='primary'> Save</Button></div>}
             bordered

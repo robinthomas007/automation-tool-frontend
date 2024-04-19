@@ -120,7 +120,7 @@ const ProjectsLayout: React.FC = () => {
         return <p key={index} onClick={(e) => dispatch(selectOrgs(o))}>{o.org.name}</p>
       })}
       <hr />
-      <p onClick={() => clearCookie()}>Logout</p>
+      <p onClick={() => clearCookie('token')}>Logout</p>
     </div>
   );
 
