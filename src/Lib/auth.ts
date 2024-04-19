@@ -23,14 +23,14 @@ export const getGoogleUrl = (from: string) => {
 
 
 export function getCookie(name: string) {
-  return Cookies.get(name)
+  return localStorage.getItem(name)
 }
 export function setCookie(name: string,value: string) {
-  Cookies.set(name, value, { expires: 1 })
-  return Cookies.get(name)
+  localStorage.setItem(name,value)
+  return value
 }
 
 export function clearCookie(name:string) {
-  Cookies.remove(name)
+  localStorage.removeItem(name)
   window.location.href = '/'
 }
