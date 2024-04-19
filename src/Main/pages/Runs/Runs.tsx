@@ -4,10 +4,17 @@ import { Row, Col, Empty } from 'antd';
 
 import { runsSelector } from "../../../redux/Slice/runsSlice";
 import Loader from "../../../Components/Loader";
+import { useEffect } from "react";
+import { useEventSource } from "../../../Context/EventSourceContext";
 
 const Runs = () => {
-  const { runs, selectedRunId, fetchLoading } = useAppSelector(runsSelector);
-
+  const { runs, selectedRunId, fetchLoading,lastRun } = useAppSelector(runsSelector);
+  const {getRuns} = useEventSource()
+  useEffect(()=>{
+    if (lastRun!=undefined){
+      getRuns(lastRun.id)
+    }
+  },[lastRun])
   return (
     <div style={{height:'100%'}}>
 
@@ -15,7 +22,7 @@ const Runs = () => {
           {runs.length === 0 && !fetchLoading && <div className="my-40">
             <Empty />
           </div>}
-          {runs.length > 0 && <Run run={runs.find(r => r.id === selectedRunId)!} />}
+          {runs.length > 0 && runs.find(r => r.id === selectedRunId) && <Run run={runs.find(r => r.id === selectedRunId)!} />}
 
     </div>
   );

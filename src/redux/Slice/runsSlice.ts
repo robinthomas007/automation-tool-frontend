@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { Runs, /*CreateRun*/ } from "../Services/runs";
+import { CreateRun, Runs, /*CreateRun*/ } from "../Services/runs";
 export interface Run {
   id: number;
   result: RunDataItem
@@ -28,6 +28,7 @@ export interface RunsState {
   loading: boolean;
   fetchLoading: boolean;
   runs: Array<Run>;
+  lastRun: any;
   selectedRunId: number | undefined;
   error: string | undefined;
 }
@@ -35,12 +36,17 @@ const initialState: RunsState = {
   loading: false,
   fetchLoading: false,
   runs: [],
+  lastRun: undefined,
   selectedRunId: undefined,
   error: undefined,
 };
 export const fetchRuns = createAsyncThunk(
   "runs/fetchRuns",
   async ({ projectId, searchTerm }: { projectId: number, searchTerm: string }) => Runs(projectId, searchTerm)
+);
+export const createRun = createAsyncThunk(
+  "runs/createRun",
+  async ({ projectId, body }: { projectId: number, body: any }) => CreateRun(projectId, body)
 );
 // export const createRun = createAsyncThunk(
 //   "runs/createRun",
@@ -66,7 +72,18 @@ const runsSlice = createSlice({
       state.runs = [];
       state.error = action.error.message;
     });
-
+    builder.addCase(createRun.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createRun.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.lastRun = payload.data;
+      state.selectedRunId = payload?.data ? payload.data.id : undefined;
+    });
+    builder.addCase(createRun.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
   },
   reducers: {
     selectRuns: (state, action) => {
@@ -78,7 +95,7 @@ const runsSlice = createSlice({
         state.selectedRunId = action.payload.id
       } else {
         const currentlySelectedRun = state.runs.find(r => r.id === state.selectedRunId)!
-        if (currentlySelectedRun.result.status === "PASS" || currentlySelectedRun.result.status === "FAIL") {
+        if (currentlySelectedRun?(currentlySelectedRun.result.status === "PASS" || currentlySelectedRun.result.status === "FAIL"):true) {
           state.selectedRunId = action.payload.id
         }
       }

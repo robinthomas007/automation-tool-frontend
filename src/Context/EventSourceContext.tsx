@@ -18,20 +18,28 @@ const EventSourceContext = createContext<EventSourceContextType | any>(null)
 export const EventSourceProvider = ({ children }: EventSourceProviderProps) => {
   const [socket, setSocket] = useState<Run | null>(null);
   const dispatch = useAppDispatch();
-
-  const getRuns = async (projectId:number,data: any) => {
-    const source = `${process.env.REACT_APP_BASE_URL}/project/${projectId}/run`
-    console.log("Called")
+  const [ abortController, setAbortController ] = useState(new AbortController());
+  const getRuns = async (runId:number) => {
+    const { signal } = abortController
+    const source = `${process.env.REACT_APP_BASE_URL}/run/${runId}/subscribe`
     await fetchEventSource(source, {
-      method:"POST",
+      method:"GET",
       headers:{
         "Authorization":"Bearer "+getCookie('token')
       },
-      body: JSON.stringify(data),
       onmessage(event) {
         const eventData = JSON.parse(event.data);
         setSocket(eventData)
-      }
+      },
+      onclose() {
+        abortController.abort() // hack to close the connection
+        setAbortController(new AbortController());
+      },
+      onerror() {
+        abortController.abort()
+        setAbortController(new AbortController());
+      },
+      signal
   });
     // const eventSource = new EventSource(source);
 

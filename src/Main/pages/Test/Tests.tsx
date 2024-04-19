@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
+import { createRun } from "../../../redux/Slice/runsSlice";
 
 const Tests = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
@@ -41,16 +42,17 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
 
 
   const StartExecution = (id: number, profileId: number, browser: string, headless: boolean) => {
-    getRuns(selectedProjects?.id, {
+    dispatch(createRun({projectId:selectedProjects!!.id, body:{
       test_id: id,
       profile_id: profileId,
       browser: browser,
       headless: headless
-    })
+    }}))
     navigate(`/project/${selectedProjects?.id}/runs`)
   }
 
-  const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-dev", "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary"]
+  const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-canary"]
+  // const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-dev", "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary"]
   const generateMenuItems = (suit: any) => {
     return profle.map((prf) => ({
       key: prf.id.toString(),
