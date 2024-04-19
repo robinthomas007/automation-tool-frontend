@@ -29,7 +29,7 @@ export default function Users() {
   };
 
   return (
-    <Layout style={{ background: colorBgContainer }}>
+    <Layout style={{ background: colorBgContainer , height:'100%'}}>
       <Content style={{
         margin: '24px 16px',
         padding: 24,

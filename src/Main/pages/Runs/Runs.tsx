@@ -9,16 +9,14 @@ const Runs = () => {
   const { runs, selectedRunId, fetchLoading } = useAppSelector(runsSelector);
 
   return (
-    <div>
-      <Row>
-        <Col span={24}>
+    <div style={{height:'100%'}}>
+
           {fetchLoading && <Loader />}
           {runs.length === 0 && !fetchLoading && <div className="my-40">
             <Empty />
           </div>}
           {runs.length > 0 && <Run run={runs.find(r => r.id === selectedRunId)!} />}
-        </Col>
-      </Row>
+
     </div>
   );
 };

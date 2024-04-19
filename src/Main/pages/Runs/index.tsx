@@ -11,7 +11,7 @@ export default function Index() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  return (<Layout style={{ background: colorBgContainer }}>
+  return (<Layout style={{ background: colorBgContainer , height:'100%'}}>
     <DndProvider backend={HTML5Backend}>
       <Content style={{
         margin: '24px 16px',

@@ -13,7 +13,7 @@ const Index = () => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ background: colorBgContainer }}>
+    <Layout style={{ background: colorBgContainer , height:'100%'}}>
       <DndProvider backend={HTML5Backend}>
         <Content style={{
           margin: '24px 16px',

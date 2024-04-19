@@ -126,7 +126,7 @@ const ProjectsLayout: React.FC = () => {
 
 
   return (
-    <Layout>
+    <Layout style={{height:"100vh"}}>
       <CreateModal open={openCreate} handleCancel={handleCancel} />
       <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: '#fff' }} className='main-left-slider'>
         <div className="demo-logo-vertical" />

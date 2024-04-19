@@ -23,25 +23,23 @@ const Icon = ({status}:{status:string})=>{
 }
 const Run = ({ run }: { run: RunModel }) => {
   return (
-    <Row>
+    <div style={{height:'100%'}}>
       {run.result.type=='Suite'?
-      <Col span={24}>
-        <Collapse defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
+        <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
           {run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>
           {i && <RunItem item={i} />}
           {i.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>)}
         </Collapse>        
-      </Col>:<Col span={24}>
-      <Collapse defaultActiveKey={run.result.id>0?run.result.id:0}>
+:
+      <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.id>0?run.result.id:0}>
           <Collapse.Panel key={run.result.id} header={<div><span><Icon status={run.result.status}/></span><span> {run.result.name}</span></div>}>
           {run.result && <RunItem item={run.result} />}
           {run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>
         </Collapse>  
-      </Col>}
-    </Row>
-  );
+      }
+  </div>)
 };
 
 const RunItem = ({ item }: { item: RunDataItem }) => {

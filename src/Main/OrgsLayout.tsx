@@ -57,7 +57,7 @@ const OrgsLayout: React.FC = () => {
 
 
   return (
-    <Layout>
+    <Layout style={{height:"100vh"}}>
       <Layout>
         <Header style={{
           background: colorBgContainer,
