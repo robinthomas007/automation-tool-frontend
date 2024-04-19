@@ -20,12 +20,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => {
 
-    if (response.config.method === "post" || response.config.method === "patch") {
+    if (response.config.method === "post" || response.config.method === "patch" || response.config.method === "delete" || response.config.method === "put") {
       if (response.status === 200 || response.status === 201) {
-        const message = response.config.method === 'post' ? 'Record created successfully!' : 'Record updated successfully!'
-        toast.success(message);
+        toast.success(response.data.message);
       } else {
-        toast.error("Something went wrong!");
+        toast.error(response.data.message);
       }
     }
     // Modify response data before it's passed to the application
