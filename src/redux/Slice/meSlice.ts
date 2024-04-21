@@ -45,8 +45,8 @@ const initialState: UserState = {
   error: undefined,
 };
 export const fetchMe = createAsyncThunk("me/fetchMe", async () => GetMe());
-export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async () => GetAPIKeys());
-export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async () => GenerateAPIKey());
+export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
+export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async ({projectId}:{projectId:number}) => GenerateAPIKey(projectId));
 const meSlice = createSlice({
   name: "me",
   initialState,
@@ -74,7 +74,11 @@ const meSlice = createSlice({
       fetchAPIKeys.fulfilled,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.apiKeys = action.payload.data;
+        if (action.payload.data == null || action.payload.data==undefined)
+          state.apiKeys=[]
+        else {
+          state.apiKeys = action.payload.data;
+        }
       }
     );
     builder.addCase(fetchAPIKeys.rejected, (state, action) => {

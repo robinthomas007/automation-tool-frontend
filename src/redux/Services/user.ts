@@ -3,12 +3,12 @@ export const GetMe = async () => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/me`);
   return res.data;
 };
-export const GetAPIKeys = async () => {
-  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/apiKey`);
+export const GetAPIKeys = async (projectId:number) => {
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/apiKey`);
   return res.data;
 };
-export const GenerateAPIKey = async () => {
-  const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/apiKey`);
+export const GenerateAPIKey = async (projectId:number) => {
+  const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/apiKey`);
   return res.data;
 };
 export const GetOrgUsers = async (org_id:number) => {
