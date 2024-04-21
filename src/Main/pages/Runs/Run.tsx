@@ -26,16 +26,16 @@ const Run = ({ run }: { run: RunModel }) => {
     <div style={{height:'100%'}}>
       {run.result.type=='Suite'?
         <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
-          {run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>
+          {run&& run.result&&run.result.items && run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>
           {i && <RunItem item={i} />}
-          {i.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
+          {i.video && i.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>)}
         </Collapse>        
 :
       <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.id>0?run.result.id:0}>
           <Collapse.Panel key={run.result.id} header={<div><span><Icon status={run.result.status}/></span><span> {run.result.name}</span></div>}>
           {run.result && <RunItem item={run.result} />}
-          {run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
+          {run.result.video && run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>
         </Collapse>  
       }
@@ -54,7 +54,7 @@ const RunItem = ({ item }: { item: RunDataItem }) => {
           {item.screenshot && <span style={{ display: 'block', padding: 10 }}>
             <img src={item.screenshot} alt="Screenshot" style={{ maxWidth: '100%', marginTop: 10, marginBottom: 10, border: '1px solid #ddd' }} />
           </span>}
-          {item.video.map((vurl:string)=><span style={{ display: 'block', padding: 10 }}>
+          {item.video && item.video.map((vurl:string)=><span style={{ display: 'block', padding: 10 }}>
           <ReactPlayer url={vurl} controls={true}/>
           </span>)}
         </span>

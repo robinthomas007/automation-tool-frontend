@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { me } from "../Services/user";
+import { GenerateAPIKey, GetAPIKeys, GetMe } from "../Services/user";
 export interface Org {
   org: {
     id: number,
@@ -12,6 +12,7 @@ export interface Org {
 }
 export interface UserState {
   loading: boolean;
+  apiKeys: any[];
   me: {
     id: number,
     name: string,
@@ -38,11 +39,14 @@ export interface UserState {
 }
 const initialState: UserState = {
   loading: false,
+  apiKeys:[],
   me: undefined,
   selectedOrgs: undefined,
   error: undefined,
 };
-export const fetchMe = createAsyncThunk("me/fetchMe", async () => me());
+export const fetchMe = createAsyncThunk("me/fetchMe", async () => GetMe());
+export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async () => GetAPIKeys());
+export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async () => GenerateAPIKey());
 const meSlice = createSlice({
   name: "me",
   initialState,
@@ -63,6 +67,38 @@ const meSlice = createSlice({
       state.me = undefined;
       state.error = action.error.message;
     });
+    builder.addCase(fetchAPIKeys.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      fetchAPIKeys.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.apiKeys = action.payload.data;
+      }
+    );
+    builder.addCase(fetchAPIKeys.rejected, (state, action) => {
+      state.loading = false;
+      state.apiKeys = [];
+      state.error = action.error.message;
+    });
+
+    //Generate
+    builder.addCase(generateAPIKey.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      generateAPIKey.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.apiKeys = [...state.apiKeys,action.payload.data];
+      }
+    );
+    builder.addCase(generateAPIKey.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    
   },
   reducers: {
     selectOrgs: (state, action) => {

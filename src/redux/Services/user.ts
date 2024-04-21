@@ -1,6 +1,14 @@
 import axios from "./axios";
-export const me = async () => {
+export const GetMe = async () => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/me`);
+  return res.data;
+};
+export const GetAPIKeys = async () => {
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/apiKey`);
+  return res.data;
+};
+export const GenerateAPIKey = async () => {
+  const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/apiKey`);
   return res.data;
 };
 export const GetOrgUsers = async (org_id:number) => {
