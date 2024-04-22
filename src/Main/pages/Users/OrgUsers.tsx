@@ -12,6 +12,7 @@ interface OrgUserFormValues {
 export default function OrgUsers() {
   const options = [
     { label: "Owner", value: "own" },
+    { label: "Admin", value: "admin" },
     { label: "Manager", value: "manage" },
     { label: "User", value: "use" }
   ];
