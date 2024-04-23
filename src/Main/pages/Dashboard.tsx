@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, forwardRef, ForwardedRef } from 'react';
-import { projectsSelector } from "../../redux/Slice/projectsSlice";
-import { useAppSelector } from "../../redux/hooks";
-import { Card, Col, Row, Statistic } from 'antd';
+import { fetchProjects, projectsSelector } from "../../redux/Slice/projectsSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {  Row } from 'antd';
 
 import { Layout, theme } from 'antd';
 
 import Chart from 'chart.js/auto';
 import StatChart from '../../Components/StatChart';
 import TableChart from '../../Components/TableChart';
+import { meSelector } from '../../redux/Slice/meSlice';
 
 const { Content } = Layout;
 
@@ -88,10 +89,11 @@ const { Content } = Layout;
 // });
 
 const Dashboard = () => {
-
+  const dispatch = useAppDispatch();
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart<"doughnut"> | null>(null);
   const { selectedProjects } = useAppSelector(projectsSelector)
+  const { selectedOrgs } = useAppSelector(meSelector)
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -102,7 +104,7 @@ const Dashboard = () => {
     const labels = [`Suites`, 'Tests', 'Steps', 'Resources'];
     const data = [selectedProjects?.suites.length || 1, selectedProjects?.tests.length || 1, selectedProjects?.steps.length || 1, selectedProjects?.resources.length || 1];
     const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56', '#1300f6'];
-
+    
     if (chartRef.current) {
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
@@ -142,8 +144,10 @@ const Dashboard = () => {
       }
     };
   }, [selectedProjects]);
-
-
+  useEffect(()=>{
+    if (selectedOrgs)
+    dispatch(fetchProjects({orgId:selectedOrgs.org.id,searchTerm:''}))
+  },[])
   return (
     <Layout style={{ background: colorBgContainer , height:'100%'}}>
       <Content style={{
