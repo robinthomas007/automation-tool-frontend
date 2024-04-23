@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { GenerateAPIKey, GetAPIKeys, GetMe } from "../Services/user";
+import { GenerateAPIKey, GetAPIKeys, GetFiles, GetMe, UploadFile } from "../Services/user";
 export interface Org {
   org: {
     id: number,
@@ -13,6 +13,7 @@ export interface Org {
 export interface UserState {
   loading: boolean;
   apiKeys: any[];
+  files: any[]
   me: {
     id: number,
     name: string,
@@ -40,12 +41,15 @@ export interface UserState {
 const initialState: UserState = {
   loading: false,
   apiKeys:[],
+  files:[],
   me: undefined,
   selectedOrgs: undefined,
   error: undefined,
 };
 export const fetchMe = createAsyncThunk("me/fetchMe", async () => GetMe());
-export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
+export const fetchFiles = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
+export const uploadFile = createAsyncThunk("me/uploadFile", async ({projectId,file}:{projectId:number,file:File}) => UploadFile(projectId,file));
+export const fetchAPIKeys = createAsyncThunk("me/fetchFiles", async ({projectId}:{projectId:number}) => GetFiles(projectId));
 export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async ({projectId}:{projectId:number}) => GenerateAPIKey(projectId));
 const meSlice = createSlice({
   name: "me",
@@ -86,7 +90,43 @@ const meSlice = createSlice({
       state.apiKeys = [];
       state.error = action.error.message;
     });
-
+    //Files
+    builder.addCase(fetchFiles.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      fetchFiles.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        if (action.payload.data == null || action.payload.data==undefined)
+          state.files=[]
+        else {
+          state.files = action.payload.data;
+        }
+      }
+    );
+    builder.addCase(fetchFiles.rejected, (state, action) => {
+      state.loading = false;
+      state.files = [];
+      state.error = action.error.message;
+    });
+    //UploadFile
+    builder.addCase(uploadFile.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      uploadFile.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        if (!(action.payload.data == null || action.payload.data==undefined)){
+          state.files = [...state.files,action.payload.data];
+        }
+      }
+    );
+    builder.addCase(uploadFile.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
     //Generate
     builder.addCase(generateAPIKey.pending, (state) => {
       state.loading = true;

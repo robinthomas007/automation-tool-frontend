@@ -1,5 +1,5 @@
 import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
-import { Row, Col, List, Typography, Collapse } from 'antd';
+import { Row, Col, List, Typography, Collapse, Button } from 'antd';
 import { CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Tree, } from 'antd';
 import ReactPlayer from "react-player";
@@ -21,9 +21,36 @@ const Icon = ({status}:{status:string})=>{
       return <QuestionCircleOutlined style={{ color: 'red' }} />
   }
 }
+const downloadFile = ({ data, fileName, fileType }:any) => {
+  // Create a blob with the data we want to download as a file
+  const blob = new Blob([data], { type: fileType })
+  // Create an anchor element and dispatch a click event on it
+  // to trigger a download
+  const a = document.createElement('a')
+  a.download = fileName
+  a.href = window.URL.createObjectURL(blob)
+  const clickEvt = new MouseEvent('click', {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  })
+  a.dispatchEvent(clickEvt)
+  a.remove()
+}
+
 const Run = ({ run }: { run: RunModel }) => {
+  
+  const exportToJson = (e:any) => {
+    e.preventDefault()
+    downloadFile({
+      data: JSON.stringify(run),
+      fileName: `${run.id}.json`,
+      fileType: 'text/json',
+    })
+  } 
   return (
     <div style={{height:'100%'}}>
+      <Button onClick={exportToJson}>Download</Button>
       {run.result.type=='Suite'?
         <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
           {run&& run.result&&run.result.items && run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>

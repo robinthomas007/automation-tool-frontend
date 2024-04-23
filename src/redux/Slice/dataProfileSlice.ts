@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
-import { DataProfile, DataProfileVariables, CreateProfile, CreateVariable, CreateProfileVariable } from "../Services/dataProfile";
+import { DataProfile, DataProfileVariables, CreateProfile, CreateVariable, CreateProfileVariable, DeleteProfile } from "../Services/dataProfile";
 
 export interface DataProfileState {
   profle: Array<any>;
@@ -24,7 +24,10 @@ export const fetchVariables = createAsyncThunk('dataProfile/fetchVariables', asy
 export const createProfile = createAsyncThunk('dataProfile/createProfile', async ({ values, project_id }: { values: any, project_id: any }) => CreateProfile(values, project_id))
 export const createVariable = createAsyncThunk('dataProfile/createVariable', async ({ values, project_id }: { values: any, project_id: any }) => CreateVariable(values, project_id))
 export const createProfileVariable = createAsyncThunk('dataProfile/createProfileVariable', async ({ variables, profileId }: { variables: any, profileId: number }) => CreateProfileVariable(variables, profileId))
-
+export const deleteProfile = createAsyncThunk(
+  "dataProfile/deleteProfile",
+  async ({ id }: { id: number }) => DeleteProfile(id)
+);
 const dataProfileSlice = createSlice({
   name: 'dataProfile',
   initialState,
@@ -99,6 +102,19 @@ const dataProfileSlice = createSlice({
     builder.addCase(createProfileVariable.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || '';
+    });
+    //Delete Profile
+    builder.addCase(deleteProfile.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(deleteProfile.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.profle = state.profle.filter((item) => item.id !== payload.data.id)
+    });
+
+    builder.addCase(deleteProfile.rejected, (state, action) => {
+      state.loading = false;
     });
   },
   reducers: {

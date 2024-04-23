@@ -1,14 +1,16 @@
 
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchProfiles, dataProfileSelector, setSelectedProfile } from "./../../../redux/Slice/dataProfileSlice";
+import { fetchProfiles, dataProfileSelector, setSelectedProfile, deleteProfile } from "./../../../redux/Slice/dataProfileSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Row, Col, Button, Collapse } from 'antd';
+import { Row, Col, Button, Collapse, Dropdown } from 'antd';
 import CreateModal from './CreateModal'
 import DataProfileRightPanel from './DataProfileRightPanel'
 import Variable from "./Variable";
 
-
+import {
+  DeleteTwoTone
+} from '@ant-design/icons';
 const DataProfile = ({ showSelected }: any) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
 
@@ -23,6 +25,12 @@ const DataProfile = ({ showSelected }: any) => {
 
   const handleCancel = () => {
     setOpenCreate(false)
+  }
+  const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, profile: any) => {
+    e.stopPropagation()
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteProfile({ id: profile.id }))
   }
 
   const onChange = (key: string | string[]) => {
@@ -43,11 +51,20 @@ const DataProfile = ({ showSelected }: any) => {
       </Row>
       <Row>
         <Col span={24}>
-          {showSelected && <Collapse onChange={onChange} accordion style={{ marginTop: 10 }}>
+          {showSelected && <Collapse
+          onChange={onChange} accordion style={{ marginTop: 10 }}
+          
+          >
             {profle.map((profile: any, index: any) => (
               <Collapse.Panel
                 header={profile.name}
+                className="resource-panel"
                 key={index}
+                extra={<div className="flex items-center">
+                  <span className="resource-panel-extra flex">
+                    <DeleteTwoTone onClick={(e) => handleDelete(e, profile)} className="delete-icon" style={{ marginRight: 15 }} />
+                  </span>
+                </div>}
               >
                 <Variable variables={profile.variables} profileId={profile.id} />
               </Collapse.Panel>

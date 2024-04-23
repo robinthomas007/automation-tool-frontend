@@ -17,6 +17,7 @@ import OrgUsers from "./Main/pages/Users/OrgUsers";
 import OrgsLayout from "./Main/OrgsLayout";
 import LogInStatus from "./Main/pages/LogInStatus";
 import APIKeys from "./Main/pages/APIKeys/APIKeys";
+import Files from "./Main/pages/Files/Files";
 const AuthRouter = createBrowserRouter([
   {
     path: "/",
@@ -70,7 +71,10 @@ const AuthRouter = createBrowserRouter([
         path: ":id/keys",
         element: <APIKeys />,
       },
-
+      {
+        path: ":id/files",
+        element: <Files />,
+      },
     ],
   },
   {

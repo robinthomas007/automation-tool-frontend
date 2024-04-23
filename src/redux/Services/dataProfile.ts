@@ -4,6 +4,10 @@ export const DataProfile = async (projectId: number, searchTerm?: string) => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/profile?q=${searchTerm}`);
   return res.data;
 };
+export const DeleteProfile = async (id: number) => {
+  const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}/profile/${id}`);
+  return res.data;
+};
 
 export const DataProfileVariables = async (projectId: number, searchTerm?: string) => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/variable?q=${searchTerm}`);

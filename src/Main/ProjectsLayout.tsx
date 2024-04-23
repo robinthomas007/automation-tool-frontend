@@ -69,7 +69,8 @@ const ProjectsLayout: React.FC = () => {
     { label: "Runs", href: `/project/${selectedProjects?.id}/runs`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/runs`, },
     { label: "Data Profiles", href: `/project/${selectedProjects?.id}/data_profiles`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/data_profiles`, },
     { label: "Users", href: `/project/${selectedProjects?.id}/users`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/users`, },
-    { label: "API Keys", href: `/project/${selectedProjects?.id}/keys`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/users`, },
+    { label: "API Keys", href: `/project/${selectedProjects?.id}/keys`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/keys`, },
+    { label: "Files", href: `/project/${selectedProjects?.id}/files`, icon: <MenuUnfoldOutlined />, key: `/project/${selectedProjects?.id}/files`, },
   ], [selectedProjects]);
 
   const { me, selectedOrgs } = useAppSelector(meSelector);
