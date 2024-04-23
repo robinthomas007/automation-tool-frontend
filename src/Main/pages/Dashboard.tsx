@@ -143,7 +143,7 @@ const Dashboard = () => {
         chartInstance.current.destroy();
       }
     };
-  }, [selectedProjects]);
+  }, []);
   useEffect(()=>{
     if (selectedOrgs)
     dispatch(fetchProjects({orgId:selectedOrgs.org.id,searchTerm:''}))
