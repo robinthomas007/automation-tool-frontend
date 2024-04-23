@@ -47,9 +47,9 @@ const initialState: UserState = {
   error: undefined,
 };
 export const fetchMe = createAsyncThunk("me/fetchMe", async () => GetMe());
-export const fetchFiles = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
+export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
 export const uploadFile = createAsyncThunk("me/uploadFile", async ({projectId,file}:{projectId:number,file:File}) => UploadFile(projectId,file));
-export const fetchAPIKeys = createAsyncThunk("me/fetchFiles", async ({projectId}:{projectId:number}) => GetFiles(projectId));
+export const  fetchFiles = createAsyncThunk("me/fetchFiles", async ({projectId}:{projectId:number}) => GetFiles(projectId));
 export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async ({projectId}:{projectId:number}) => GenerateAPIKey(projectId));
 const meSlice = createSlice({
   name: "me",

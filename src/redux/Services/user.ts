@@ -8,7 +8,7 @@ export const GetAPIKeys = async (projectId:number) => {
   return res.data;
 };
 export const GetFiles = async (projectId:number) => {
-  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/files`);
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/file`);
   return res.data;
 };
 export const GenerateAPIKey = async (projectId:number) => {
