@@ -4,11 +4,13 @@ import { List, Button, Input } from 'antd';
 import { HolderOutlined } from '@ant-design/icons';
 import { useDrag } from 'react-dnd';
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { fetchVariables, dataProfileSelector } from "./../../../redux/Slice/dataProfileSlice";
+import { fetchVariables, dataProfileSelector, deleteVariable } from "./../../../redux/Slice/dataProfileSlice";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import CreateVariableModal from './CreateVariableModal'
-
-const DraggableListItem = ({ item, type }: any) => {
+import {
+  DeleteTwoTone
+} from '@ant-design/icons';
+const DraggableListItem = ({ item, type ,handleDelete}: any) => {
 
   const [, drag] = useDrag({
     type,
@@ -16,9 +18,14 @@ const DraggableListItem = ({ item, type }: any) => {
   });
 
   return (
-    <div ref={drag} style={{ cursor: 'move' }}>
+    <div ref={drag} style={{ cursor: 'move' }} className='w-full flex flex-row element-panel'>
+      <div>
       <HolderOutlined style={{ marginRight: 8 }} />
       {item.name}
+      </div>
+      <span className='ml-auto'>
+        <DeleteTwoTone onClick={(e) => handleDelete(e, item)} className="delete-icon" />
+      </span>
     </div>
   );
 };
@@ -33,7 +40,12 @@ const DataProfileRightPanel = () => {
   const handleCancel = () => {
     setOpenCreate(false)
   }
-
+  const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, variable: any) => {
+    e.stopPropagation()
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteVariable({ id: variable.id }))
+  }
   useEffect(() => {
     if (selectedProjects)
       dispatch(fetchVariables({ projectId: selectedProjects?.id, searchTerm: '' }));
@@ -62,6 +74,7 @@ const DataProfileRightPanel = () => {
                   item={item}
                   type="VARIABLE_TO_PROFILE"
                   index={index}
+                  handleDelete={handleDelete}
                 />
               </List.Item>
             )}
