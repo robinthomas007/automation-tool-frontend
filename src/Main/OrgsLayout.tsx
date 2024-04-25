@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Logo from './../Images/logo.svg'
 
 import { Outlet, Link, useParams } from "react-router-dom";
-import { Layout, theme, Popover, Typography, Select, Button } from 'antd';
+import { Layout, theme, Popover, Typography, Select, Button, Menu } from 'antd';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchMe, meSelector, selectOrgs } from "../redux/Slice/meSlice";
 import { useAuth } from '../Context/authContext'
@@ -92,7 +92,7 @@ const OrgsLayout: React.FC = () => {
         }}>
           <CreateModal open={openCreate} handleCancel={handleCancel} />
           <div className='logo-wrapper'>
-            <img src={Logo} alt="My Logo" width={52} height={52}/>
+            <img src={Logo} alt={selectOrgs.name} width={52} height={52}/>
             <Title
               level={3}
               className='my-1'
@@ -103,9 +103,24 @@ const OrgsLayout: React.FC = () => {
               }}
             >{selectedOrgs?.org.name}</Title>
           </div>
-          <Link to={`/org/${selectedOrgs?.org.domain}/users`}>Users</Link>
+          <div>
+            
+          </div>
+          <Menu
+          theme="light"
+          mode="horizontal"
+          style={{ flex:1, minWidth: 0 }}
+        >
+          <Menu.Item>
+            <Link to={`/org/${selectedOrgs?.org.domain}/users`}>Users</Link>
+          </Menu.Item>
+          <Menu.Item>
           <Link to={`/org/${selectedOrgs?.org.domain}/projects`}>Projects</Link>
-          <div style={{ height: 50, width: 50, borderRadius: "50%" }}>
+          </Menu.Item>
+          
+          
+        </Menu>
+        <div style={{ height: 50, width: 50, borderRadius: "50%" }}>
             <Popover
               content={ProfileContent}
               title={me?.name}
