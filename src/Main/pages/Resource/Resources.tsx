@@ -3,7 +3,7 @@ import Resource from "./Resource";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchResources, resourcesSelector, selectResources, fetchResElCommands, deleteResource, fetchResElEvents, fetchResourceTypes } from "./../../../redux/Slice/resourcesSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { Empty } from 'antd';
+import { Empty, Input } from 'antd';
 import { Collapse, Row, Col, Button } from 'antd';
 import CreateModal from './CreateModal'
 import ResourceRightPanel from './ResourceRightPanel'
@@ -19,15 +19,24 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
   const [openCreateAction, setOpenCreateAction] = useState(false)
   const [resourceEdit, setResourceEdit] = useState({})
-  const [search, setSearch] = useState('')
+  
   const dispatch = useAppDispatch();
-  const { resources, selectedResources, fetchLoading } = useAppSelector(resourcesSelector);
+  const { resources:allResources, selectedResources, fetchLoading } = useAppSelector(resourcesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
-
+  const [searchText,setSearchText] = useState('')
+  const [resources,setResources] = useState<any[]>([])
+  useEffect(()=>{
+    if (selectedProjects)
+      setResources(allResources.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[allResources,searchText])
   useEffect(() => {
     if (selectedProjects)
-      dispatch(fetchResources({ projectId: selectedProjects?.id, searchTerm: search }));
-  }, [selectedProjects, search, dispatch]);
+      dispatch(fetchResources({ projectId: selectedProjects?.id, searchTerm: '' }));
+  }, [selectedProjects, dispatch]);
 
   useEffect(() => {
     dispatch(fetchResElCommands());
@@ -84,15 +93,6 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
     </Collapse.Panel>
   ));
 
-  const handleChangeResource = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputSearch = e.target.value
-    if (inputSearch.length >= 3) {
-      setSearch(inputSearch)
-    }
-    if (inputSearch.length === 0) {
-      setSearch('')
-    }
-  }
 
   return (
     <div>
@@ -100,7 +100,8 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
         {/* <Col span={12}>
           <Input placeholder="Search Resource" onChange={handleChangeResource} />
         </Col> */}
-        <Col span={24} style={{ textAlign: 'right' }}>
+        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
+          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Object</Button>
           {openCreate && <CreateModal open={openCreate} handleCancel={handleCancel} resource={resourceEdit} />}
           {openCreateAction && <CreateActionModal open={openCreateAction} handleCancel={handleCancelCreateAction} />}

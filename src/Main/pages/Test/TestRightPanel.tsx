@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Row, Col } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Row, Col, Input } from 'antd';
 import { List } from 'antd';
 import { HolderOutlined } from '@ant-design/icons';
 import { useDrag } from 'react-dnd';
@@ -27,6 +27,15 @@ const TestRightPanel = () => {
 
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { steps } = useAppSelector(stepsSelector);
+  const [searchText,setSearchText] = useState('')
+  const [allSteps,setAllSteps] = useState<any[]>([])
+  useEffect(()=>{
+    setAllSteps(steps.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[searchText,steps])
   useEffect(() => {
     if (selectedProjects)
       dispatch(fetchSteps({ projectId: selectedProjects.id, searchTerm: '' }))
@@ -36,9 +45,9 @@ const TestRightPanel = () => {
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
         <List
-          header={<div className='font-semibold'>Steps</div>}
+          header={<div className='flex flex-row'><span className='font-semibold'>Steps</span><Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/></div>}
           bordered
-          dataSource={steps}
+          dataSource={allSteps}
           renderItem={(item, index) => (
             <List.Item>
               <DraggableListItem

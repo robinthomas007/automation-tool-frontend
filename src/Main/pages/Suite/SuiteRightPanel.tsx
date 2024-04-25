@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Test as TestModel } from "./../../../redux/Slice/testsSlice";
-import { Row, Col } from 'antd';
+import { Row, Col, Input } from 'antd';
 import { List } from 'antd';
 import { HolderOutlined } from '@ant-design/icons';
 import { useDrag } from 'react-dnd';
@@ -25,14 +25,23 @@ const DraggableListItem = ({ item, type }: any) => {
 
 const SuiteRightPanel = () => {
   const { selectedProjects } = useAppSelector(projectsSelector);
-
+  const [searchText,setSearchText] = useState('')
+  const [allTests,setAllTests] = useState<any[]>([])
+  useEffect(()=>{
+    if (selectedProjects)
+    setAllTests(selectedProjects?.tests.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[selectedProjects,searchText])
   return (
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
         <List
-          header={<div className='font-semibold'>Tests</div>}
+          header={<div className='flex flex-row'><span className='font-semibold'>Tests</span><Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/></div>}
           bordered
-          dataSource={selectedProjects?.tests}
+          dataSource={allTests}
           renderItem={(item, index) => (
             <List.Item>
               <DraggableListItem

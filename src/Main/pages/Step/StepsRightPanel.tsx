@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { Row, Col } from 'antd';
+import { Row, Col, Input } from 'antd';
 import { List } from 'antd';
 import { HolderOutlined, PlusCircleTwoTone, DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { useDrag } from 'react-dnd';
@@ -39,19 +39,26 @@ const StepsRightPanel = () => {
   const { resources } = useAppSelector(resourcesSelector);
   const [openCreateElement, setOpenCreateElement] = useState(false)
   const [actionEdit, setActionEdit] = useState({})
-
+  const [searchText,setSearchText] = useState('')
+  const [allActions,setAllActions] = useState<any[]>([])
+  useEffect(()=>{
+    setAllActions(resources.flatMap(resource =>
+      resource.actions.map(action => ({
+        ...action,
+        resource: resource
+      }))
+    ).filter(a=>{
+      var tname=a.resource.name+'-'+a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[searchText,resources])
   useEffect(() => {
     if (selectedProjects)
       dispatch(fetchResources({ projectId: selectedProjects?.id, searchTerm: '' }));
   }, [selectedProjects]);
 
-  const allActions = resources.flatMap(resource =>
-    resource.actions.map(action => ({
-      ...action,
-      resource: resource
-    }))
-  );
-
+  
   const handleCancel = () => {
     setOpenCreateElement(false)
   }
@@ -76,7 +83,7 @@ const StepsRightPanel = () => {
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span className='font-semibold'>Interactions</span>
-            <PlusCircleTwoTone style={{ marginBottom: 10, fontSize: 22 }} onClick={() => setOpenCreateElement(true)} />
+            <Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           </div>}
           bordered
           dataSource={allActions}

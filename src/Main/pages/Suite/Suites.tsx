@@ -27,10 +27,20 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const [SuiteEdit, setSuiteEdit] = useState({})
 
   const dispatch = useAppDispatch();
-  const { suites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
+  const { suites:allSuites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { selectedOrgs } = useAppSelector(meSelector);
   const { profle } = useAppSelector(dataProfileSelector);
+  const [searchText,setSearchText] = useState('')
+  const [suites,setSuites] = useState<any[]>([])
+  useEffect(()=>{
+    if (selectedProjects)
+      setSuites(allSuites.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[allSuites,searchText])
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -135,7 +145,8 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
         {/* <Col span={12}>
           <Input placeholder="Search Suite" />
         </Col> */}
-        <Col span={24} style={{ textAlign: 'right' }}>
+        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
+          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Suite </Button>
           <CreateModal suite={SuiteEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>

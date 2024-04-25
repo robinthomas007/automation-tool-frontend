@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchTests, testsSelector, selectTests, deleteTest } from "./../../../redux/Slice/testsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
-import { Row, Col, Button, Collapse, Dropdown, Empty } from 'antd';
+import { Row, Col, Button, Collapse, Dropdown, Empty, Input } from 'antd';
 import CreateModal from './CreateModal'
 import {
   PlayCircleOutlined,
@@ -23,12 +23,22 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
   const [testeEdit, setTestEdit] = useState({})
 
   const dispatch = useAppDispatch();
-  const { tests, fetchLoading } = useAppSelector(testsSelector);
+  const { tests:allTests, fetchLoading } = useAppSelector(testsSelector);
   const { selectedOrgs } = useAppSelector(meSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { profle } = useAppSelector(dataProfileSelector);
   const navigate = useNavigate();
   const { getRuns } = useEventSource()
+  const [searchText,setSearchText] = useState('')
+  const [tests,setTests] = useState<any[]>([])
+  useEffect(()=>{
+    if (selectedProjects)
+      setTests(allTests.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[allTests,searchText])
 
   useEffect(() => {
     if (selectedProjects) {
@@ -104,11 +114,9 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
   return (
     <div>
       <Row>
-        {/* <Col span={12}>
-          <Input placeholder="Search Test" />
-        </Col> */}
-        <Col span={24} style={{ textAlign: 'right' }}>
-          <Button type="primary" onClick={() => setOpenCreate(true)}>Create Tests </Button>
+        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
+          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
+          <Button type="primary" onClick={() => setOpenCreate(true)}>Create Test</Button>
           <CreateModal test={testeEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>
       </Row>

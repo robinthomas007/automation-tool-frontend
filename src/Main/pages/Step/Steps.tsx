@@ -18,10 +18,19 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
   const [search, setSearch] = useState('')
 
   const dispatch = useAppDispatch();
-  const { steps, fetchLoading } = useAppSelector(stepsSelector);
+  const { steps:allSteps, fetchLoading } = useAppSelector(stepsSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
 
-
+  const [searchText,setSearchText] = useState('')
+  const [steps,setSteps] = useState<any[]>([])
+  useEffect(()=>{
+    if (selectedProjects)
+      setSteps(allSteps.filter(a=>{
+      var tname=a.name
+      tname = tname.toLowerCase()
+      return tname.includes(searchText.toLowerCase())
+    }))
+  },[allSteps,searchText])
   const onChange = (key: string | string[]) => {
     if (key.length)
       dispatch(selectSteps(steps[Number(key)]))
@@ -84,7 +93,8 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
         {/* <Col span={12}>
           <Input placeholder="Search Steps" onChange={handleChangeSteps} />
         </Col> */}
-        <Col span={24} style={{ textAlign: 'right' }}>
+        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
+          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Steps</Button>
           {openCreate && <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />}
         </Col>
