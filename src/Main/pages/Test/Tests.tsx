@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
+import { meSelector } from "../../../redux/Slice/meSlice";
 
 const Tests = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
@@ -23,6 +24,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
 
   const dispatch = useAppDispatch();
   const { tests, fetchLoading } = useAppSelector(testsSelector);
+  const { selectedOrgs } = useAppSelector(meSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { profle } = useAppSelector(dataProfileSelector);
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
       browser: browser,
       headless: headless
     }}))
-    navigate(`/project/${selectedProjects?.id}/runs`)
+    navigate(`/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`)
   }
 
   const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-canary"]

@@ -63,7 +63,6 @@ const meSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.me = action.payload.data.user;
-        state.selectedOrgs = action.payload.data.user.orgs[0]
       }
     );
     builder.addCase(fetchMe.rejected, (state, action) => {

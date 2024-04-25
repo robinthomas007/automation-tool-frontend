@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
+import { meSelector } from "../../../redux/Slice/meSlice";
 
 const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
@@ -28,6 +29,7 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   const dispatch = useAppDispatch();
   const { suites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
+  const { selectedOrgs } = useAppSelector(meSelector);
   const { profle } = useAppSelector(dataProfileSelector);
   const navigate = useNavigate();
 
@@ -53,24 +55,8 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
       browser: browser,
       headless: headless
     }}))
-    navigate(`/project/${selectedProjects?.id}/runs`)
+    navigate(`/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`)
   }
-
-  // const StartExecution = useCallback((id: number, profileId: number) => {
-  //   setLoading(true)
-  //   dispatch(createRun({
-  //     data: {
-  //       id: id,
-  //       profileId: profileId,
-  //       type: "suite"
-  //     }, callback: (data) => {
-  //       console.log(data, "data")
-  //       dispatch(updateRun(data))
-  //     }
-  //   }))
-  //   navigate(`/project/${selectedProjects?.id}/runs`)
-  //   setLoading(false)
-  // }, [])
 
   const onChange = (key: string | string[]) => {
     const index = key[key.length - 1]

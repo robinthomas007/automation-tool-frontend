@@ -6,6 +6,7 @@ import type { ColumnsType } from 'antd/es/table';
 import {  useAppSelector } from "./../../../redux/hooks";
 import {  projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import CreateModal from './CreateModal'
+import { meSelector } from '../../../redux/Slice/meSlice';
 
 const { Content } = Layout;
 
@@ -14,6 +15,7 @@ export default function Projects() {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
 
   const { projects } = useAppSelector(projectsSelector);
+  const { selectedOrgs } = useAppSelector(meSelector);
 
 
 
@@ -27,7 +29,7 @@ export default function Projects() {
       title: 'Project Name',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <a>{text}</a>,
+      render: (text) => <a href={`/org/${selectedOrgs?.org.domain}/${projects.find(p=>p.name==text)?.id}`}>{text}</a>,
     },
     {
       title: 'Description',
@@ -94,7 +96,6 @@ export default function Projects() {
         </Row>
         <Table style={{ borderTop: '1px solid #ddd' }} columns={columns} dataSource={projects} />
       </Content>
-      <RightPanel />
     </Layout>
   )
 }

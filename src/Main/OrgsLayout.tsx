@@ -1,19 +1,24 @@
 
 import React, { useState, useEffect } from 'react';
+import Logo from './../Images/logo.svg'
 
-import { Outlet, Link } from "react-router-dom";
-import { Layout, theme, Popover, Typography } from 'antd';
+import { Outlet, Link, useParams } from "react-router-dom";
+import { Layout, theme, Popover, Typography, Select, Button } from 'antd';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { fetchMe, meSelector } from "../redux/Slice/meSlice";
+import { fetchMe, meSelector, selectOrgs } from "../redux/Slice/meSlice";
 import { useAuth } from '../Context/authContext'
 import './main.css'
 import { clearCookie } from '../Lib/auth'
 import { useNavigate } from "react-router-dom";
+import { fetchProjects, projectsSelector, selectProjects } from '../redux/Slice/projectsSlice';
+import CreateModal from './pages/Projects/CreateModal';
 
 const { Header, Content } = Layout;
 const { Title } = Typography
 
 const OrgsLayout: React.FC = () => {
+  const { domain } = useParams();
+  const [openCreate, setOpenCreate] = useState<boolean>(false)
 
 
   const [open, setOpen] = useState(false);
@@ -27,6 +32,7 @@ const OrgsLayout: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { selectedOrgs, me } = useAppSelector(meSelector);
+  const { selectedProjects, projects } = useAppSelector(projectsSelector);
   const auth = useAuth()
 
   useEffect(() => {
@@ -38,26 +44,41 @@ const OrgsLayout: React.FC = () => {
   useEffect(() => {
     if (me == null || me === undefined)
       dispatch(fetchMe());
+    else
+      selectOrgs(me.orgs[0])
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me, selectedOrgs]);
+  }, [me]);
+  useEffect(()=>{
+    if (domain)
+      dispatch(selectOrgs(me?.orgs.find(o => o.org.domain == domain)))
+    else if (me?.orgs[0]){
+      navigate(`/org/${me.orgs[0].org.domain}`)
+    }
+  },[me,domain])
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-
   const ProfileContent = (
     <div style={{ cursor: 'pointer' }}>
       {me?.orgs.map((o: any, index: number) => {
-        return <p key={index}>{o.org.name}</p>
+        return <p key={index} onClick={(e) =>navigate(`/org/${o.org.domain}/projects`)}>{o.org.name}</p>
       })}
       <hr />
       <p onClick={() => clearCookie('token')}>Logout</p>
     </div>
   );
-
-
+  useEffect(() => {
+    if (selectedOrgs != null && selectedOrgs !== undefined) {
+      dispatch(fetchProjects({ orgId: selectedOrgs!!.org.id, searchTerm: '' }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOrgs]);
+  const handleCancel = () => {
+    setOpenCreate(false)
+  }
   return (
-    <Layout style={{height:"100vh"}}>
+    <Layout style={{ height: "100vh" }}>
       <Layout>
         <Header style={{
           background: colorBgContainer,
@@ -69,8 +90,21 @@ const OrgsLayout: React.FC = () => {
           paddingLeft: 40,
           paddingRight: 40
         }}>
-          <Title level={2} className='my-3'>{selectedOrgs?.org.name}</Title>
-          <Link to={`/project`}>Projects</Link>
+          <CreateModal open={openCreate} handleCancel={handleCancel} />
+          <div className='logo-wrapper'>
+            <img src={Logo} alt="My Logo" width={52} height={52}/>
+            <Title
+              level={3}
+              className='my-1'
+              style={{
+                textTransform: 'capitalize', overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+              }}
+            >{selectedOrgs?.org.name}</Title>
+          </div>
+          <Link to={`/org/${selectedOrgs?.org.domain}/users`}>Users</Link>
+          <Link to={`/org/${selectedOrgs?.org.domain}/projects`}>Projects</Link>
           <div style={{ height: 50, width: 50, borderRadius: "50%" }}>
             <Popover
               content={ProfileContent}

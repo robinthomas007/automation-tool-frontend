@@ -12,7 +12,7 @@ export default function LogInStatus(){
         if (token!=""){
             setCookie('token',token)
             login()
-            navigate("/project")
+            navigate("/org")
         }
     },[searchParams])
     return (

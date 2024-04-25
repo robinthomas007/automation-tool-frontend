@@ -18,7 +18,7 @@ export default function LoginPage() {
   console.log(auth)
   if (auth?.user && auth.user.perm) {
     
-    return <Navigate to="/project" state={{ path: location.pathname }} />
+    return <Navigate to="/org" state={{ path: location.pathname }} />
   }
 
   return (
