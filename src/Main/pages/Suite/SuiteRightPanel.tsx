@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Test as TestModel } from "./../../../redux/Slice/testsSlice";
+import { Test as TestModel, fetchTests, testsSelector } from "./../../../redux/Slice/testsSlice";
 import { Row, Col, Input } from 'antd';
 import { List } from 'antd';
 import { HolderOutlined } from '@ant-design/icons';
 import { useDrag } from 'react-dnd';
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { useAppSelector } from "./../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 
 const DraggableListItem = ({ item, type }: any) => {
 
@@ -24,17 +24,24 @@ const DraggableListItem = ({ item, type }: any) => {
 };
 
 const SuiteRightPanel = () => {
+  const dispatch = useAppDispatch()
   const { selectedProjects } = useAppSelector(projectsSelector);
+  const { tests } = useAppSelector(testsSelector);
   const [searchText,setSearchText] = useState('')
   const [allTests,setAllTests] = useState<any[]>([])
   useEffect(()=>{
+    if(tests.length==0 && selectedProjects){
+      dispatch(fetchTests({projectId:selectedProjects.id,searchTerm:''}))
+    }
+  },[selectedProjects])
+  useEffect(()=>{
     if (selectedProjects)
-    setAllTests(selectedProjects?.tests.filter(a=>{
+    setAllTests(tests.filter(a=>{
       var tname=a.name
       tname = tname.toLowerCase()
       return tname.includes(searchText.toLowerCase())
     }))
-  },[selectedProjects,searchText])
+  },[tests,searchText])
   return (
     <Row style={{ marginTop: 20 }}>
       <Col span={24}>
