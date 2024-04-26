@@ -8,7 +8,7 @@ import {
   HolderOutlined,
   CloseCircleOutlined,
   EditTwoTone,
-  CloudUploadOutlined,
+  SaveOutlined,
   DeleteTwoTone
 } from '@ant-design/icons';
 import { useDrag, useDrop } from 'react-dnd';
@@ -286,7 +286,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
         bordered
         header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <h4 style={{ margin: 0, color: '#1577ff' }}> Elements Action Sequence</h4>
-          <CloudUploadOutlined onClick={saveSelectedAction} title="save" />
+          <SaveOutlined onClick={saveSelectedAction} title="save" />
         </div>}
       >
         {selectedActionElements.element_actions && selectedActionElements.element_actions.map((item: any, index: number) => (

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import Test from "./Test";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchTests, testsSelector, selectTests, deleteTest } from "./../../../redux/Slice/testsSlice";
+import { fetchTests, testsSelector, selectTests, deleteTest, Test as TestModel } from "./../../../redux/Slice/testsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
 import { Row, Col, Button, Collapse, Dropdown, Empty, Input } from 'antd';
@@ -10,6 +9,12 @@ import {
   PlayCircleOutlined,
   SyncOutlined,
   EditTwoTone,
+  FolderAddTwoTone,
+  FolderTwoTone,
+  ExperimentTwoTone,
+  FileAddTwoTone,
+  FileAddFilled,
+  FolderAddFilled,
   DeleteTwoTone
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
@@ -17,28 +22,44 @@ import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
 import { meSelector } from "../../../redux/Slice/meSlice";
+import Test from "./Test";
+import { deleteFolder, foldersSelector, selectFolders } from "../../../redux/Slice/foldersSlice";
+import CreateFolderModal from "../CreateFolderModal";
+import { Hierarchy } from "../../../Lib/helpers";
+
 
 const Tests = ({ showSelected }: { showSelected: boolean }) => {
-  const [openCreate, setOpenCreate] = useState<boolean>(false)
-  const [testeEdit, setTestEdit] = useState({})
-
   const dispatch = useAppDispatch();
-  const { tests:allTests, fetchLoading } = useAppSelector(testsSelector);
-  const { selectedOrgs } = useAppSelector(meSelector);
+  const { tests: allTests, fetchLoading } = useAppSelector(testsSelector);
+  const { folders } = useAppSelector(foldersSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
-  const { profle } = useAppSelector(dataProfileSelector);
-  const navigate = useNavigate();
-  const { getRuns } = useEventSource()
-  const [searchText,setSearchText] = useState('')
-  const [tests,setTests] = useState<any[]>([])
-  useEffect(()=>{
+  const [searchText, setSearchText] = useState('')
+  const [tests, setTests] = useState<any[]>([])
+  const [openCreate, setOpenCreate] = useState<boolean>(false)
+  const [openCreateFolder, setOpenCreateFolder] = useState<boolean>(false)
+  const [testEdit, setTestEdit] = useState<any>({})
+  const [folderEdit, setFolderEdit] = useState<any>({})
+  const [h, setH] = useState<any>([]) 
+  const [keys,setKeys]=useState<string[]>([])
+  useEffect(() => {
     if (selectedProjects)
-      setTests(allTests.filter(a=>{
-      var tname=a.name
-      tname = tname.toLowerCase()
-      return tname.includes(searchText.toLowerCase())
-    }))
-  },[allTests,searchText])
+      setTests(allTests.filter(a => {
+        var tname = a.name
+        tname = tname.toLowerCase()
+        return tname.includes(searchText.toLowerCase())
+      }))
+  }, [allTests, searchText])
+  useEffect(() => {
+        const fs = folders.filter((f:any)=>f.containerType=='Test')
+        const ts = tests
+        var na:any = fs.map((f:any) => ({ ...f, tests: [] }))
+        for (const t of ts) {
+          const f = na.find((f:any) => f.id == t.folder.id)
+          if (f)
+            f.tests = [...f.tests, t]
+        }
+        setH(Hierarchy(na,{tests:ts.filter(t=>t.folder.id==0)}))
+  }, [tests, folders])
 
   useEffect(() => {
     if (selectedProjects) {
@@ -46,25 +67,77 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
       dispatch(fetchProfiles({ projectId: selectedProjects?.id || 0, searchTerm: '' }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProjects]);
+  }, [selectedProjects,folders]);
+  const handleOpenEditTest = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any,folder:any) => {
+    e.stopPropagation()
+    setOpenCreate(true)
+    setTestEdit({test,folder})
+  }
+
+  const handleOpenEditFolder = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, folder: any,parent:any) => {
+    e.stopPropagation()
+    setOpenCreateFolder(true)
+    setFolderEdit({folder,parent})
+  }
 
   const handleCancel = () => {
     setOpenCreate(false)
   }
-
-
+  const handleCancelFolder = () => {
+    setOpenCreateFolder(false)
+  }
+  return (
+    <div>
+      <Row>
+        <Col span={24} style={{ textAlign: 'right', display: 'flex', flexDirection: 'row' }}>
+            <CreateModal test={testEdit} open={openCreate}  handleCancel={handleCancel} />
+            <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
+            <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e) => { setSearchText(e.target.value) }} />
+            <FileAddTwoTone  onClick={(e) => handleOpenEditTest(e,undefined,undefined)} style={{ marginLeft: 10, marginRight: 10 }} />
+            <FolderAddTwoTone onClick={(e) => handleOpenEditFolder(e,undefined,undefined)} style={{ marginLeft: 10, marginRight: 10 }} />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          {fetchLoading && <Loader />}
+          {!fetchLoading && <Folder data={h} keys={keys} setKeys={setKeys} index={0}/>}
+        </Col>
+      </Row>
+    </div>
+  );
+};
+const Folder = ({ data,keys,index ,setKeys}: any) => {
+  const { fetchLoading } = useAppSelector(testsSelector);
+  const { selectedOrgs } = useAppSelector(meSelector);
+  const { selectedProjects } = useAppSelector(projectsSelector);
+  const { profle } = useAppSelector(dataProfileSelector);
+  const navigate = useNavigate();
+  const handleCancel = () => {
+    setOpenCreate(false)
+  }
+  const handleCancelFolder = () => {
+    setOpenCreateFolder(false)
+  }
+  const [openCreate, setOpenCreate] = useState<boolean>(false)
+  const [openCreateFolder, setOpenCreateFolder] = useState<boolean>(false)
+  const [testEdit, setTestEdit] = useState<any>({folder:data})
+  const [folderEdit, setFolderEdit] = useState<any>({})
+  const dispatch = useAppDispatch();
   const StartExecution = (id: number, profileId: number, browser: string, headless: boolean) => {
-    dispatch(createRun({projectId:selectedProjects!!.id, body:{
-      test_id: id,
-      profile_id: profileId,
-      browser: browser,
-      headless: headless
-    }}))
+    dispatch(createRun({
+      projectId: selectedProjects!!.id, body: {
+        test_id: id,
+        profile_id: profileId,
+        browser: browser,
+        headless: headless
+      }
+    }))
     navigate(`/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`)
   }
 
   const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-canary"]
-  // const browsers = ["chrome", "chrome-beta", "chrome-dev", "chrome-dev", "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary"]
+
+
   const generateMenuItems = (suit: any) => {
     return profle.map((prf) => ({
       key: prf.id.toString(),
@@ -92,67 +165,101 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
       })
     }));
   };
-  const onChange = (key: string | string[]) => {
-    const index = key[key.length - 1]
-    dispatch(selectTests(tests[Number(index)]))
-  };
-
-
-  const handleOpenEdit = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any) => {
-    // e.stopPropagation()
+  const handleOpenEditTest = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any,folder:any) => {
+    e.stopPropagation()
     setOpenCreate(true)
-    setTestEdit(test)
+    setTestEdit({test,folder})
   }
 
-  const handleDelete = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any) => {
+  const handleOpenEditFolder = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, folder: any,parent:any) => {
+    e.stopPropagation()
+    setOpenCreateFolder(true)
+    setFolderEdit({folder,parent})
+  }
+  const handleDeleteTest = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, test: any) => {
     e.stopPropagation()
     // eslint-disable-next-line no-restricted-globals
     const isConfirmed = confirm("Are you sure you want to delete this item?");
     isConfirmed && dispatch(deleteTest({ id: test.id }))
   }
+  const handleDeleteFolder = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, folder: any) => {
+    e.stopPropagation()
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this item?");
+    isConfirmed && dispatch(deleteFolder({ id: folder.id }))
+  }
+  const onChange = useCallback((k: string | string[]) => {
+    const mkey = k[k.length - 1]
+    if (mkey) {
+      if (keys.length==0){
+        setKeys([mkey])
+      } else {
+        const copy=[...keys]
+        copy.splice(index,keys.length,mkey)
+        if (copy){
+          setKeys(copy)
+        } else {
+          setKeys([])
+        }
+      }
+      const id = mkey.substring(2)
+      if (mkey.startsWith("t-")) {
+        dispatch(selectTests(data.tests.find((t:any) => t.id == id)))
+      } else {
+        dispatch(selectFolders(data.children.find((f:any) => f.id == id)))
+      }
+    }
 
-  return (
-    <div>
-      <Row>
-        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
-          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
-          <Button type="primary" onClick={() => setOpenCreate(true)}>Create Test</Button>
-          <CreateModal test={testeEdit} open={openCreate} handleCancel={handleCancel} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-          {fetchLoading && <Loader />}
+  },[keys,index]);
+  return <div>
+    <CreateModal test={testEdit} open={openCreate} handleCancel={handleCancel} />
+    <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
+    <Collapse accordion onChange={onChange} style={{ marginTop: 10 }} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
+    
+    {data.children && data.children.map((f: any) => <Collapse.Panel
+      header={<div><FolderTwoTone/><span className="ml-2">{f.name}</span></div>}
+      key={`f-${f.id}`}
+      className="resource-panel"
+      extra={<div className="flex items-center">
+        <span className="resource-panel-extra flex">
+          <FileAddTwoTone className="edit-icon" onClick={(e) => handleOpenEditTest(e,undefined,f)} style={{ marginLeft: 10, marginRight: 10 }} />
+          <FolderAddTwoTone className="edit-icon" onClick={(e) => handleOpenEditFolder(e,undefined,f)} style={{ marginLeft: 10, marginRight: 10 }} />  
+          <EditTwoTone className="edit-icon" onClick={(e) => handleOpenEditFolder(e, f,data)} style={{ marginLeft: 10, marginRight: 10 }} />
+          <DeleteTwoTone className="delete-icon" onClick={(e) => handleDeleteFolder(e, f)} style={{ marginRight: 15 }} />
+        </span>
+        {/* <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
+        <span onClick={(e) => e.stopPropagation()}>
+          {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
+        </span>
+      </Dropdown> */}
+      </div>}
+    >
+      <Folder data={f} keys={keys} setKeys={setKeys} index={index+1}/>
+    </Collapse.Panel>)}
+    {data.tests && data.tests.map((test:any) => (
+      <Collapse.Panel
+        header={<div><ExperimentTwoTone/><span className="ml-2">{test.name}{test.lock !== "" ? ` (lock: ${test.lock})` : ""}</span></div>}
+        key={`t-${test.id}`}
+        className="resource-panel"
+        extra={<div className="flex items-center">
+          <span className="resource-panel-extra flex">
+            
+            <EditTwoTone onClick={(e) => handleOpenEditTest(e, test,data)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
+            <DeleteTwoTone onClick={(e) => handleDeleteTest(e, test)} className="delete-icon" style={{ marginRight: 15 }} />
+          </span>
+          <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
+            <span onClick={(e) => e.stopPropagation()}>
+              {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
+            </span>
+          </Dropdown>
+        </div>}
+      >
+        <Test test={test} />
+      </Collapse.Panel>
+    ))}
+  </Collapse>
+  </div>
+}
 
-          {tests.length > 0 && <Collapse accordion onChange={onChange} style={{ marginTop: 10 }}>
-            {tests.map((test, index) => (
-              <Collapse.Panel
-                header={<div>{test.name}{test.lock !== "" ? ` (lock: ${test.lock})` : ""}</div>}
-                key={index}
-                className="resource-panel"
-                extra={<div className="flex items-center">
-                  <span className="resource-panel-extra flex">
-                    <EditTwoTone onClick={(e) => handleOpenEdit(e, test)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
-                    <DeleteTwoTone onClick={(e) => handleDelete(e, test)} className="delete-icon" style={{ marginRight: 15 }} />
-                  </span>
-                  <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
-                    <span onClick={(e) => e.stopPropagation()}>
-                      {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
-                    </span>
-                  </Dropdown>
-                </div>}
-              >
-                <Test test={test} />
-              </Collapse.Panel>
-            ))}
-          </Collapse>}
-          {tests.length === 0 && !fetchLoading && <div className="my-40">
-            <Empty />
-          </div>}
-        </Col>
-      </Row>
-    </div>
-  );
-};
 
 export default Tests;

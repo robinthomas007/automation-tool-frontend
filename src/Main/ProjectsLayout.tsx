@@ -5,9 +5,12 @@ import {
   HomeOutlined,
   ExperimentOutlined,
   RocketOutlined,
-  DatabaseOutlined,
+  KeyOutlined,
   StepForwardOutlined,
-  ProjectFilled
+  UserOutlined,
+  ApartmentOutlined,
+  FileOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
 import { Outlet, Link, useParams } from "react-router-dom";
 import { Layout, Menu, theme, Popover, Button, Typography } from 'antd';
@@ -17,6 +20,7 @@ import { meSelector } from "../redux/Slice/meSlice";
 import { useAuth } from '../Context/authContext'
 import './main.css'
 import { useNavigate } from "react-router-dom";
+import { fetchFolders } from '../redux/Slice/foldersSlice';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography
@@ -51,12 +55,12 @@ const ProjectsLayout: React.FC = () => {
     { label: "Suites", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/suites`, icon: <RocketOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/suites` },
     { label: "Tests", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/tests`, icon: <ExperimentOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/tests` },
     { label: "Steps", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/steps`, icon: <StepForwardOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/steps` },
-    { label: "Objects", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources`, icon: <DatabaseOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources` },
+    { label: "Objects", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources`, icon: <ApartmentOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources` },
     { label: "Runs", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`, },
-    { label: "Data Profiles", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, },
-    { label: "Users", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, },
-    { label: "API Keys", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/keys`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/keys`, },
-    { label: "Files", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/files`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/files`, },
+    { label: "Data Profiles", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, icon: <DatabaseOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, },
+    { label: "Users", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, icon: <UserOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, },
+    { label: "API Keys", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/keys`, icon: <KeyOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/keys`, },
+    { label: "Files", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/files`, icon: <FileOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/files`, },
   ], [selectedProjects]);
 
   const auth = useAuth()
@@ -67,6 +71,11 @@ const ProjectsLayout: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth])
+  useEffect(()=>{
+    if (selectedProjects){
+      dispatch(fetchFolders({projectId:selectedProjects.id,searchTerm:''}))
+    }
+  },[selectedProjects])
   return (
     <Layout style={{height:"100vh"}}>
       <Sider collapsible collapsed={collapsed} style={{ background: '#fff' }} onCollapse={(e)=>{setCollapsed(!collapsed)}}>

@@ -7,6 +7,7 @@ export interface Test {
   id: string;
   name: string;
   desciption: string;
+  folder: any;
   lock: string;
   CreatedAt: string;
   UpdatedAt: string;

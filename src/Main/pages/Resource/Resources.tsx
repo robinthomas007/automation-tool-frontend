@@ -75,12 +75,10 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
     <Collapse.Panel
       header={resource.name}
       key={index}
-      extra={
-        <span className="resource-panel-extra">
+      extra={resource.type=='PAGE'?<span className="resource-panel-extra">
           <EditTwoTone onClick={(e) => handleOpenEdit(e, resource)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
           <DeleteTwoTone onClick={(e) => handleDelete(e, resource)} className="delete-icon" />
-        </span>
-      }
+        </span>:<></>}
       className={selectedResources.id === resource.id ? 'active-panel resource-panel' : 'resource-panel'}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>

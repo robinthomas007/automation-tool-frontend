@@ -15,7 +15,6 @@ export default function LoginPage() {
   const from = process.env.REACT_APP_STATE??'http://localhost:3000';
 
   const auth = useAuth()
-  console.log(auth)
   if (auth?.user && auth.user.perm) {
     
     return <Navigate to="/org" state={{ path: location.pathname }} />

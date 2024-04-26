@@ -10,6 +10,7 @@ import projectsReducer from "./Slice/projectsSlice";
 import dataProfileReducer from "./Slice/dataProfileSlice";
 import runsReducer from "./Slice/runsSlice";
 import usersReducer from "./Slice/usersSlice";
+import foldersReducer from "./Slice/foldersSlice";
 
 export const rootReducer = combineReducers({
   me: meReducer,
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
   dataProfile: dataProfileReducer,
   runs: runsReducer,
   users: usersReducer,
+  folders: foldersReducer,
 });
 
 const store = configureStore({

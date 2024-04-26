@@ -7,7 +7,9 @@ import {
   DatabaseOutlined,
   StepForwardOutlined,
   DoubleLeftOutlined,
-  DoubleRightOutlined
+  DoubleRightOutlined,
+  FormOutlined,
+  BarsOutlined,
 } from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
 import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
@@ -57,7 +59,7 @@ const RightPanel = ({ type }: { type?: string }) => {
       type: "step"
     },
     {
-      Tab: <DatabaseOutlined />,
+      Tab: <FormOutlined />,
       Panel: <StepsRightPanelData />,
       type: "step"
     },
@@ -67,12 +69,12 @@ const RightPanel = ({ type }: { type?: string }) => {
       type: "tests"
     },
     {
-      Tab: <DatabaseOutlined />,
+      Tab: <FormOutlined />,
       Panel: <TestsRightPanelData />,
       type: "tests"
     },
     {
-      Tab: <DatabaseOutlined />,
+      Tab: <BarsOutlined />,
       Panel: <ResourcesRightPanel />,
       type: "resource"
     },
@@ -82,12 +84,12 @@ const RightPanel = ({ type }: { type?: string }) => {
       type: "suite"
     },
     {
-      Tab: <RocketOutlined />,
+      Tab: <BarsOutlined />,
       Panel: <RunsRightPanel />,
       type: "run"
     },
     {
-      Tab: <RocketOutlined />,
+      Tab: <BarsOutlined />,
       Panel: <DataProfile showSelected={false} />,
       type: "data_profile"
     },
