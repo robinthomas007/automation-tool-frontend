@@ -15,7 +15,7 @@ import {
 import CreateActionModal from "./CreateActionModal";
 import Loader from "../../../Components/Loader";
 
-const Resources = ({ showSelected }: { showSelected: boolean }) => {
+const Resources = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
   const [openCreateAction, setOpenCreateAction] = useState(false)
   const [resourceEdit, setResourceEdit] = useState({})
@@ -93,11 +93,8 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
 
 
   return (
-    <div>
-      <Row>
-        {/* <Col span={12}>
-          <Input placeholder="Search Resource" onChange={handleChangeResource} />
-        </Col> */}
+    <div className="data-root">
+      <Row className="filter">
         <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
           <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Object</Button>
@@ -105,20 +102,17 @@ const Resources = ({ showSelected }: { showSelected: boolean }) => {
           {openCreateAction && <CreateActionModal open={openCreateAction} handleCancel={handleCancelCreateAction} />}
         </Col>
       </Row>
-      <Row>
+      <Row className="data">
         <Col span={24}>
           {fetchLoading && <Loader />}
           {resources.length > 0 &&
-            <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+            <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true}>
               {resource}
             </Collapse>}
           {resources.length === 0 && !fetchLoading && <div className="my-40">
             <Empty />
           </div>}
-          {/* {resources.length === 0 && <Loader />} */}
-          {/* <Collapse defaultActiveKey={[0]} onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
-            {resource}
-          </Collapse> */}
+
         </Col>
       </Row>
     </div>

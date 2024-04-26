@@ -66,7 +66,7 @@ const ResourceRightPanel = () => {
   }, [selectedResources, resourceTypes])
   return (
     !selectedResources ? null :
-      <Row style={{ marginTop: 20 }}>
+      <Row>
         {openCreateElement && <CreateElementModal element={elementEdit} open={openCreateElement} handleCancel={handleCancel} allowedTypes={allowedTypes} />}
         <Col span={24}>
           <List

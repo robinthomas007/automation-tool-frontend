@@ -5,7 +5,7 @@ import { fetchTests, testsSelector, selectTests } from "../redux/Slice/testsSlic
 import { TextInput } from "flowbite-react";
 import { projectsSelector } from "../redux/Slice/projectsSlice";
 
-const Tests = ({ showSelected }: { showSelected: boolean }) => {
+const Tests = () => {
     const dispatch = useAppDispatch();
     const { tests, selectedTests } = useAppSelector(testsSelector);
     const { selectedProjects } = useAppSelector(projectsSelector);
@@ -22,9 +22,6 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
                     {tests.map(test => <li className="cursor-pointer" onClick={(e) => { dispatch(selectTests(test)) }}>{test.name}</li>)}
                 </ol>
             </div>
-            {showSelected && selectedTests && <div>
-                {/* <Test test={selectedTests} /> */}
-            </div>}
         </div>
     );
 };

@@ -13,14 +13,8 @@ export default function Index() {
   } = theme.useToken();
   return (<Layout style={{ background: colorBgContainer , height:'100%'}}>
     <DndProvider backend={HTML5Backend}>
-      <Content style={{
-        margin: '24px 16px',
-        padding: 24,
-        minHeight: 280,
-        background: '#fff',
-        borderRadius: borderRadiusLG,
-      }}>
-        <Runs />
+      <Content className="data-content">
+        <Runs/>
       </Content>
       <RightPanel type="run" />
     </DndProvider>

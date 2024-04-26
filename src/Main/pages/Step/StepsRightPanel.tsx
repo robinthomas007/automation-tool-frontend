@@ -77,7 +77,7 @@ const StepsRightPanel = () => {
   }
 
   return (
-    <Row style={{ marginTop: 20 }}>
+    <Row>
       {openCreateElement && <CreateActionModal action={actionEdit} open={openCreateElement} handleCancel={handleCancel} />}
       <Col span={24}>
         <List

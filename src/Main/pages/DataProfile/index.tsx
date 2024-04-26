@@ -14,14 +14,8 @@ const Index = () => {
   return (
     <Layout style={{ background: colorBgContainer , height:'100%'}}>
       <DndProvider backend={HTML5Backend}>
-        <Content style={{
-          margin: '24px 16px',
-          padding: 24,
-          minHeight: 280,
-          background: '#fff',
-          borderRadius: borderRadiusLG,
-        }}>
-          <DataProfile showSelected />
+        <Content className="data-content">
+          <DataProfile/>
         </Content>
         <RightPanel type="data_profile" />
       </DndProvider>

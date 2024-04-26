@@ -16,7 +16,7 @@ const Runs = () => {
     }
   },[lastRun])
   return (
-    <div style={{height:'100%'}}>
+    <div className="data-root">
 
           {fetchLoading && <Loader />}
           {runs.length === 0 && !fetchLoading && <div className="my-40">

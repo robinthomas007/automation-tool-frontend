@@ -28,7 +28,7 @@ import CreateFolderModal from "../CreateFolderModal";
 import { Hierarchy } from "../../../Lib/helpers";
 
 
-const Tests = ({ showSelected }: { showSelected: boolean }) => {
+const Tests = () => {
   const dispatch = useAppDispatch();
   const { tests: allTests, fetchLoading } = useAppSelector(testsSelector);
   const { folders } = useAppSelector(foldersSelector);
@@ -87,8 +87,8 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
     setOpenCreateFolder(false)
   }
   return (
-    <div>
-      <Row>
+    <div className="data-root">
+      <Row className="filter">
         <Col span={24} style={{ textAlign: 'right', display: 'flex', flexDirection: 'row' }}>
             <CreateModal test={testEdit} open={openCreate}  handleCancel={handleCancel} />
             <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
@@ -97,7 +97,7 @@ const Tests = ({ showSelected }: { showSelected: boolean }) => {
             <FolderAddTwoTone onClick={(e) => handleOpenEditFolder(e,undefined,undefined)} style={{ marginLeft: 10, marginRight: 10 }} />
         </Col>
       </Row>
-      <Row>
+      <Row className="data">
         <Col span={24}>
           {fetchLoading && <Loader />}
           {!fetchLoading && <Folder data={h} keys={keys} setKeys={setKeys} index={0}/>}
@@ -214,7 +214,7 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
   return <div>
     <CreateModal test={testEdit} open={openCreate} handleCancel={handleCancel} />
     <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
-    <Collapse accordion onChange={onChange} style={{ marginTop: 10 }} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
+    <Collapse accordion onChange={onChange} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
     
     {data.children && data.children.map((f: any) => <Collapse.Panel
       header={<div><FolderTwoTone/><span className="ml-2">{f.name}</span></div>}

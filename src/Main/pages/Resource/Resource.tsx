@@ -328,7 +328,7 @@ const Resource = ({ resource }: { resource: ResourceModel }) => {
       <Col span={24}>
         {openEdit && actionEdit && <CreateActionModal action={actionEdit} open={openEdit} handleCancel={handleCancel} />}
 
-        <Collapse onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+        <Collapse onChange={onChange} accordion destroyInactivePanel={true} >
           {resourceActions}
         </Collapse>
       </Col>

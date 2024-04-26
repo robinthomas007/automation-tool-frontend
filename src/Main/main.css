@@ -1,12 +1,12 @@
-.main-left-slider {
+/* .main-left-slider {
     min-width: 300px !important;
     padding: 10px;
     border-right: 1px solid #ddd;
-}
+} */
 
-.main-left-slider .ant-menu {
+/* .main-left-slider .ant-menu {
     border-inline-end:none !important;
-}
+} */
 
 .login-right-slider {
     min-width: 500px !important;
@@ -27,7 +27,26 @@ body {
     /* align-items: center; */
     margin: 10px;
 }
-
+.data-content {
+    max-height: calc(100vh - 70px);
+    overflow: hidden;
+    padding: 10px;
+}
+.data-root {
+    max-height: calc(100vh - 90px);
+    overflow: hidden;
+}
+.filter {
+    padding-bottom: 10px;
+}
+.data-root .ant-list-items{
+    max-height: calc(100vh - 190px) !important;
+    overflow-y: scroll;
+}
+.data{
+    max-height: calc(100vh - 140px) !important;
+    overflow-y: scroll;
+}
 .logo-wrapper .logo {
     height: 40px;
     margin-right: 12px;
@@ -60,7 +79,6 @@ body {
 .edit-icon,.delete-icon {
     visibility: hidden;
 }
-
 .resource-panel:hover .resource-panel-extra .edit-icon, .resource-panel:hover .resource-panel-extra .delete-icon,
 .resource-action-panel:hover .resource-action-panel-extra .edit-icon, .resource-action-panel:hover .resource-action-panel-extra .delete-icon,
 .element-panel:hover .edit-icon, .element-panel:hover .delete-icon {
@@ -91,13 +109,3 @@ body {
   .variable-item:hover .close-icon {
     visibility: visible;
   }
-
-  ul.ant-list-items {
-    max-height: 600px;
-    overflow: scroll;
-}
-
-.ant-collapse.ant-collapse-icon-position-start.css-dev-only-do-not-override-17sses9 {
-    max-height: 600px;
-    overflow: scroll;
-}

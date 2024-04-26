@@ -77,9 +77,8 @@ const ProjectsLayout: React.FC = () => {
     }
   },[selectedProjects])
   return (
-    <Layout style={{height:"100vh"}}>
+    <Layout style={{maxHeight:"calc(100vh-70px)",overflow:'hidden'}}>
       <Sider collapsible collapsed={collapsed} style={{ background: '#fff' }} onCollapse={(e)=>{setCollapsed(!collapsed)}}>
-         
         <Menu
           theme="light"
           mode="inline"
@@ -94,16 +93,12 @@ const ProjectsLayout: React.FC = () => {
       <Layout>
         <Content
           style={{
-            // margin: '24px 16px',
-            // padding: 24,
-            minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
         >
-          <Outlet />
+          <Outlet/>
         </Content>
-
       </Layout>
     </Layout>
   );

@@ -21,7 +21,7 @@ import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
 import { meSelector } from "../../../redux/Slice/meSlice";
 
-const Suites = ({ showSelected }: { showSelected: boolean }) => {
+const Suites = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [SuiteEdit, setSuiteEdit] = useState({})
@@ -140,11 +140,8 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
   ));
 
   return (
-    <div>
-      <Row>
-        {/* <Col span={12}>
-          <Input placeholder="Search Suite" />
-        </Col> */}
+    <div className="data-root">
+      <Row className="filter">
         <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
           <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Suite </Button>
@@ -155,7 +152,7 @@ const Suites = ({ showSelected }: { showSelected: boolean }) => {
         <Col span={24}>
           {fetchLoading && <Loader />}
 
-          {suites.length > 0 && <Collapse onChange={onChange} accordion style={{ marginTop: 10 }}>
+          {suites.length > 0 && <Collapse onChange={onChange} accordion className="data">
             {suitItems}
           </Collapse>}
           {suites.length === 0 && !fetchLoading && <div className="my-40">

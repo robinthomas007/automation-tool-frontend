@@ -26,7 +26,7 @@ const TestsRightPanelData = () => {
     console.log('Failed:', errorInfo);
   };
   return (
-    <Row style={{ marginTop: 20 }}>
+    <Row>
       <Col span={24}>
         <Form
           name="actiondata"

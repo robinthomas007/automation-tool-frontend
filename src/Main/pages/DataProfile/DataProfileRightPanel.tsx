@@ -62,7 +62,7 @@ const DataProfileRightPanel = () => {
           <CreateVariableModal open={openCreate} handleCancel={handleCancel} />
         </Col>
       </Row>
-      <Row style={{ marginTop: 20 }}>
+      <Row>
         <Col span={24}>
           <List
             header={<div className='font-semibold'>Variables</div>}

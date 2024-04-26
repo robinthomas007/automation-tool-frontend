@@ -11,7 +11,7 @@ import Variable from "./Variable";
 import {
   DeleteTwoTone
 } from '@ant-design/icons';
-const DataProfile = ({ showSelected }: any) => {
+const DataProfile = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
 
   const dispatch = useAppDispatch();
@@ -39,11 +39,8 @@ const DataProfile = ({ showSelected }: any) => {
   };
 
   return (
-    showSelected ? <div>
-      <Row>
-        {/* <Col span={12}>
-          <Input placeholder="Search Profile" />
-        </Col> */}
+    <div className="data-root">
+      <Row className="filter">
         <Col span={24} style={{ textAlign: 'right' }}>
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Profile </Button>
           <CreateModal open={openCreate} handleCancel={handleCancel} />
@@ -51,9 +48,9 @@ const DataProfile = ({ showSelected }: any) => {
       </Row>
       <Row>
         <Col span={24}>
-          {showSelected && <Collapse
-          onChange={onChange} accordion style={{ marginTop: 10 }}
-          
+          <Collapse
+          onChange={onChange} accordion
+          className="data"
           >
             {profle.map((profile: any, index: any) => (
               <Collapse.Panel
@@ -69,10 +66,10 @@ const DataProfile = ({ showSelected }: any) => {
                 <Variable variables={profile.variables} profileId={profile.id} />
               </Collapse.Panel>
             ))}
-          </Collapse>}
+          </Collapse>
         </Col>
       </Row>
-    </div> : <DataProfileRightPanel />
+    </div>
   );
 };
 

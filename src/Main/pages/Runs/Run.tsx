@@ -49,7 +49,7 @@ const Run = ({ run }: { run: RunModel }) => {
     })
   } 
   return (
-    <div style={{height:'100%'}}>
+    <div className="data">
       <Button onClick={exportToJson}>Download</Button>
       {run.result.type=='Suite'?
         <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>

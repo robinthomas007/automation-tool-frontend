@@ -42,7 +42,7 @@ const TestRightPanel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProjects])
   return (
-    <Row style={{ marginTop: 20 }}>
+    <Row>
       <Col span={24}>
         <List
           header={<div className='flex flex-row'><span className='font-semibold'>Steps</span><Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/></div>}

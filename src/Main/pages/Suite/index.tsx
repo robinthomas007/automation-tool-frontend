@@ -15,14 +15,8 @@ const Index = () => {
   return (
     <Layout style={{ background: colorBgContainer , height:'100%'}}>
       <DndProvider backend={HTML5Backend}>
-        <Content style={{
-          margin: '24px 16px',
-          padding: 24,
-          minHeight: 280,
-          background: '#fff',
-          borderRadius: borderRadiusLG,
-        }}>
-          <Suites showSelected />
+        <Content className="data-content">
+          <Suites/>
         </Content>
         <RightPanel type="suite" />
       </DndProvider>

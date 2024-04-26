@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import Loader from "../../../Components/Loader";
 
-const Steps = ({ showSelected }: { showSelected: boolean }) => {
+const Steps = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
   const [stepeEdit, setStepEdit] = useState({})
   const [search, setSearch] = useState('')
@@ -88,8 +88,8 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
   ));
 
   return (
-    <div>
-      <Row>
+    <div className="data-root">
+      <Row className="filter">
         {/* <Col span={12}>
           <Input placeholder="Search Steps" onChange={handleChangeSteps} />
         </Col> */}
@@ -99,12 +99,12 @@ const Steps = ({ showSelected }: { showSelected: boolean }) => {
           {openCreate && <CreateModal step={stepeEdit} open={openCreate} handleCancel={handleCancel} />}
         </Col>
       </Row>
-      <Row>
+      <Row className="data">
         <Col span={24}>
           {fetchLoading && <Loader />}
 
           {steps.length > 0 &&
-            <Collapse onChange={onChange} accordion destroyInactivePanel={true} style={{ marginTop: 10 }} >
+            <Collapse onChange={onChange} accordion destroyInactivePanel={true}  >
               {stepItems}
             </Collapse>}
           {steps.length === 0 && !fetchLoading && <div className="my-40">

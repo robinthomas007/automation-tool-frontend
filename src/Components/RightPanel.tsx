@@ -23,6 +23,7 @@ import { useAppSelector } from "./../redux/hooks";
 import { testsSelector, } from "./../redux/Slice/testsSlice";
 import StepsRightPanelData from '../Main/pages/Step/StepsRightPanelData';
 import { stepsSelector } from '../redux/Slice/stepsSlice';
+import DataProfileRightPanel from '../Main/pages/DataProfile/DataProfileRightPanel';
 
 const { Sider } = Layout;
 
@@ -90,14 +91,15 @@ const RightPanel = ({ type }: { type?: string }) => {
     },
     {
       Tab: <BarsOutlined />,
-      Panel: <DataProfile showSelected={false} />,
+      Panel: <DataProfileRightPanel/>,
       type: "data_profile"
     },
   ]
 
   return (
-    <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: '#fff', padding: 30 }} className='main-right-slider'>
-      <div className="demo-logo-vertical" />
+    <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: '#fff', paddingTop:10,paddingBottom:10,paddingLeft: 30,paddingRight: 30, maxHeight:"90vh",
+    overflow:"hidden" }} className='main-right-slider'>
+      <div/>
       {collapsed ? <DoubleLeftOutlined style={{ marginLeft: 22 }} onClick={() => setCollapsed(!collapsed)} /> : <DoubleRightOutlined style={{ marginLeft: 22 }} onClick={() => setCollapsed(!collapsed)} />}
       <Tabs
         tabPosition={'left'}
@@ -108,7 +110,7 @@ const RightPanel = ({ type }: { type?: string }) => {
           return {
             label: tab.Tab,
             key: id,
-            children: tab.Panel,
+            children: <div className='data-root'>{tab.Panel}</div>,
           };
         })}
       />

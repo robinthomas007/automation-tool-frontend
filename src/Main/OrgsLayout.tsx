@@ -138,9 +138,8 @@ const OrgsLayout: React.FC = () => {
         </Header>
         <Content
           style={{
-            // margin: '24px 16px',
-            // padding: 24,
-            minHeight: 280,
+            maxHeight:"calc(100vh-70px)",
+            overflow:"hidden",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
