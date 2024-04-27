@@ -13,7 +13,8 @@
 }
 
 .main-right-slider {
-    min-width: 550px !important;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 .ant-layout-sider-collapsed {
     min-width: 80px !important;
@@ -34,18 +35,19 @@ body {
 }
 .data-root {
     max-height: calc(100vh - 90px);
-    overflow: hidden;
+    overflow: hidden !important;
 }
 .filter {
     padding-bottom: 10px;
 }
-.data-root .ant-list-items{
+.tools-tab .ant-list-items{
     max-height: calc(100vh - 190px) !important;
     overflow-y: scroll;
 }
 .data{
     max-height: calc(100vh - 140px) !important;
     overflow-y: scroll;
+
 }
 .logo-wrapper .logo {
     height: 40px;

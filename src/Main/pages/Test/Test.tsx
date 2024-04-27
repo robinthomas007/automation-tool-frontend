@@ -7,7 +7,7 @@ import { addStepToTest, reOrderTestSteps, addStepDataToTest, updateTest, removeS
 import {
   HolderOutlined,
   CloseCircleOutlined,
-  SaveOutlined
+  SaveTwoTone
 } from '@ant-design/icons';
 import { testsSelector } from "./../../../redux/Slice/testsSlice";
 
@@ -77,7 +77,7 @@ const Test = ({ test }: { test: TestModel }) => {
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Steps</span>
-            <SaveOutlined onClick={(e) => dispatch(updateTest({ test }))} title="save" />
+            <SaveTwoTone onClick={(e) => dispatch(updateTest({ test }))} title="save" />
           </div>}
           bordered
           dataSource={test.steps ? test.steps : []}

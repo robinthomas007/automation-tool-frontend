@@ -6,7 +6,7 @@ import { useAppDispatch } from "./../../../redux/hooks";
 import { addResActToStep, addActionDataToStep, reOrderStepsActions, updateSelectedStepAction, removeActionFromResource } from "./../../../redux/Slice/stepsSlice";
 import {
   ArrowDownOutlined,
-  SaveOutlined,
+  SaveTwoTone,
   CloseCircleOutlined
 } from '@ant-design/icons';
 import EditableText from '../../../Components/EditableText';
@@ -101,7 +101,7 @@ export default function Step({ step }: { step: StepModel }) {
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h4 style={{ margin: 0, color: '#1577ff' }}>Interactions</h4>
-            <SaveOutlined onClick={(e) => dispatch(updateStep({ step }))} title="save" />
+            <SaveTwoTone onClick={(e) => dispatch(updateStep({ step }))} title="save" />
             {/* <Button style={{ fontSize: 12 }} type='primary' size='small' onClick={(e) => dispatch(updateStep({ step }))}>Save</Button> */}
 
           </div>}

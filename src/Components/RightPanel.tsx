@@ -97,10 +97,8 @@ const RightPanel = ({ type }: { type?: string }) => {
   ]
 
   return (
-    <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: '#fff', paddingTop:10,paddingBottom:10,paddingLeft: 30,paddingRight: 30, maxHeight:"90vh",
-    overflow:"hidden" }} className='main-right-slider'>
+    <Sider collapsible style={{ background: '#fff', paddingTop:'8px',paddingBottom:'8px', paddingRight:collapsed?'0px':'8px', border:'1px solid rgb(229, 231, 235)' }} className='data-root main-right-slider' width={550} reverseArrow>
       <div/>
-      {collapsed ? <DoubleLeftOutlined style={{ marginLeft: 22 }} onClick={() => setCollapsed(!collapsed)} /> : <DoubleRightOutlined style={{ marginLeft: 22 }} onClick={() => setCollapsed(!collapsed)} />}
       <Tabs
         tabPosition={'left'}
         activeKey={activeTabKey}
@@ -110,7 +108,7 @@ const RightPanel = ({ type }: { type?: string }) => {
           return {
             label: tab.Tab,
             key: id,
-            children: <div className='data-root'>{tab.Panel}</div>,
+            children: <div className='tools-tab'>{tab.Panel}</div>,
           };
         })}
       />

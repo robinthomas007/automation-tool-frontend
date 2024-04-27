@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { addTestToSuite, updateSuite, removeTestFromSuite } from "./../../../redux/Slice/suitesSlice";
 import {
   CloseCircleOutlined,
-  SaveOutlined
+  SaveTwoTone
 } from '@ant-design/icons';
 const Suite = ({ suite }: { suite: SuiteModel }) => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ const Suite = ({ suite }: { suite: SuiteModel }) => {
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Tests</span>
-            <SaveOutlined onClick={(e) => dispatch(updateSuite({ suite }))} title="save" />
+            <SaveTwoTone onClick={(e) => dispatch(updateSuite({ suite }))} title="save" />
           </div>}
           bordered
           dataSource={suite.tests ? suite.tests : []}
