@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, TreeSelect } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { createStep, updateStep } from "./../../../redux/Slice/stepsSlice";
-
+import { Hierarchy } from '../../../Lib/helpers';
+import { foldersSelector } from '../../../redux/Slice/foldersSlice';
+import { createStep, updateStep } from '../../../redux/Slice/stepsSlice';
+import {
+  FolderTwoTone,
+} from '@ant-design/icons';
+import { HToTD } from '../../../Lib/helperComponents';
 interface CreateModalProps {
   open: boolean;
   handleCancel: () => void,
@@ -15,12 +20,20 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, step }) =
 
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
+  const { folders } = useAppSelector(foldersSelector);
+  const [treeData,setTreeData] = useState<any>(undefined)
   const [form] = Form.useForm()
-
+  
+  useEffect(()=>{
+    const h=Hierarchy(folders.filter((f:any)=>f.containerType=='Step'),{})
+    setTreeData(HToTD(h))
+  },[folders])
   useEffect(() => {
-    console.log(step, "==00")
-    if (step && Object.keys(step).length !== 0) {
-      form.setFieldsValue({ id: step.id, name: step.name, description: step.description })
+    if(step.folder){
+      form.setFieldsValue({ folder_id:step.folder.id })
+    }
+    if (step &&step.step && Object.keys(step.step).length !== 0) {
+      form.setFieldsValue({ id: step.step.id, name: step.step.name, description: step.step.description,folder_id:step.folder.id })
     }
   }, [step]);
 
@@ -31,8 +44,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, step }) =
       setConfirmLoading(false);
     }, 1000);
     if (selectedProjects)
-      if (step.id) {
-        dispatch(updateStep({ step: { ...values, id: step.id } }));
+      if (step.step && step.step.id) {
+        dispatch(updateStep({ step: { ...values, id: step.step.id } }));
       } else {
         dispatch(createStep({ step: values, projectId: selectedProjects?.id }));
       }
@@ -41,15 +54,14 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, step }) =
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-
+  
   return (
     <Modal
       title="Create Step"
       open={open}
+      destroyOnClose
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
-      destroyOnClose
-      width={600}
       footer={[
         <Button form="createProjectStep" key="submit" htmlType="submit" type="primary">
           Save
@@ -71,6 +83,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, step }) =
             form={form}
             preserve={false}
           >
+            <Form.Item
+              label="Folder"
+              name="folder_id"
+            >
+              <TreeSelect
+              treeLine={true}
+              suffixIcon= {<FolderTwoTone/>}
+              treeData={treeData}
+              />
+            </Form.Item>
             <Form.Item
               label="Step Name"
               name="name"

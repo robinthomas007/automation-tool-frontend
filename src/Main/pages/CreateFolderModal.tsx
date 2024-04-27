@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Row, Col, TreeSelect } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../redux/hooks";
 import { projectsSelector } from "./../../redux/Slice/projectsSlice";
-import { createTest, updateTest } from "./../../redux/Slice/testsSlice";
 import { createFolder, foldersSelector, updateFolder } from '../../redux/Slice/foldersSlice';
 import { Hierarchy } from '../../Lib/helpers';
-
+import {
+  FolderTwoTone,
+} from '@ant-design/icons';
+import { HToTD } from '../../Lib/helperComponents';
 interface CreateModalProps {
   open: boolean;
   handleCancel: () => void,
-  data: any
+  data: any,
+  containerType: string
 }
-
-const CreateFolderModal: React.FC<CreateModalProps> = ({ open, handleCancel, data }) => {
+const CreateFolderModal: React.FC<CreateModalProps> = ({ open, handleCancel, data,containerType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -20,20 +22,11 @@ const CreateFolderModal: React.FC<CreateModalProps> = ({ open, handleCancel, dat
   const { folders } = useAppSelector(foldersSelector);
   const [treeData,setTreeData] = useState<any>(undefined)
   const [form] = Form.useForm()
-  const HToTD=(h:any)=>{
-    return h.children?h.children.map((f:any)=>NodeMap(f)):[]
-  }
-  const NodeMap=(n:any)=>{
-    return {
-      value:n.id,
-      title:n.name,
-      children: n.children?n.children.map((f:any)=>NodeMap(f)):[]
-    }
-  }
+  
   useEffect(()=>{
-    const h=Hierarchy(folders.filter((f:any)=>f.containerType=='Test'),{})
+    const h=Hierarchy(folders.filter((f:any)=>f.containerType==containerType),{})
     setTreeData(HToTD(h))
-  },[selectedProjects])
+  },[folders,containerType])
 
 
   useEffect(() => {
@@ -53,9 +46,9 @@ const CreateFolderModal: React.FC<CreateModalProps> = ({ open, handleCancel, dat
     }, 1000);
     if (selectedProjects)
       if (data.folder && data.folder.id) {
-        dispatch(updateFolder({ folder: { ...values, id: data.folder.id,containerType:'Test' } }));
+        dispatch(updateFolder({ folder: { ...values, id: data.folder.id,containerType} }));
       } else {
-        dispatch(createFolder({ folder: {...values,containerType:'Test'},projectId: selectedProjects?.id }));
+        dispatch(createFolder({ folder: {...values,containerType},projectId: selectedProjects?.id }));
       }
   };
 
@@ -96,6 +89,8 @@ const CreateFolderModal: React.FC<CreateModalProps> = ({ open, handleCancel, dat
               name="parent_id"
             >
               <TreeSelect
+              treeLine={true}
+              suffixIcon= {<FolderTwoTone/>}
               treeData={treeData}
               />
             </Form.Item>

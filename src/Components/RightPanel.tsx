@@ -3,11 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {
   InteractionOutlined,
   ExperimentOutlined,
-  RocketOutlined,
-  DatabaseOutlined,
   StepForwardOutlined,
-  DoubleLeftOutlined,
-  DoubleRightOutlined,
   FormOutlined,
   BarsOutlined,
 } from '@ant-design/icons';
@@ -16,7 +12,7 @@ import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
 import ResourcesRightPanel from "./../Main/pages/Resource/ResourceRightPanel";
 import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanelTreeStyled";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
-import TestRightPanel from './../Main/pages/Test/TestRightPanel'
+import TestRightPanel from './../Main/pages/Test/TestRightPanelTreeStyled'
 import RunsRightPanel from './../Main/pages/Runs/RunsRightPanel'
 import { useAppSelector } from "./../redux/hooks";
 import { testsSelector, } from "./../redux/Slice/testsSlice";

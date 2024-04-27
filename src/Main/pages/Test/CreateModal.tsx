@@ -5,7 +5,10 @@ import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { createTest, updateTest } from "./../../../redux/Slice/testsSlice";
 import { Hierarchy } from '../../../Lib/helpers';
 import { foldersSelector } from '../../../redux/Slice/foldersSlice';
-
+import { HToTD } from '../../../Lib/helperComponents';
+import {
+  FolderTwoTone,
+} from '@ant-design/icons';
 interface CreateModalProps {
   open: boolean;
   handleCancel: () => void,
@@ -20,16 +23,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
   const { folders } = useAppSelector(foldersSelector);
   const [treeData,setTreeData] = useState<any>(undefined)
   const [form] = Form.useForm()
-  const HToTD=(h:any)=>{
-    return h.children?h.children.map((f:any)=>NodeMap(f)):[]
-  }
-  const NodeMap=(n:any)=>{
-    return {
-      value:n.id,
-      title:n.name,
-      children: n.children?n.children.map((f:any)=>NodeMap(f)):[]
-    }
-  }
+  
   useEffect(()=>{
     const h=Hierarchy(folders.filter((f:any)=>f.containerType=='Test'),{})
     setTreeData(HToTD(h))
@@ -94,7 +88,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
               name="folder_id"
             >
               <TreeSelect
+              treeLine={true}
               treeData={treeData}
+              suffixIcon= {<FolderTwoTone/>}
               />
             </Form.Item>
             <Form.Item

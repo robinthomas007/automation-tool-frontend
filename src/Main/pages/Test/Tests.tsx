@@ -91,7 +91,7 @@ const Tests = () => {
       <Row className="filter">
         <Col span={24} style={{ textAlign: 'right', display: 'flex', flexDirection: 'row' }}>
             <CreateModal test={testEdit} open={openCreate}  handleCancel={handleCancel} />
-            <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
+            <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} containerType="Test"/>
             <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e) => { setSearchText(e.target.value) }} />
             <FileAddTwoTone  onClick={(e) => handleOpenEditTest(e,undefined,undefined)} style={{ marginLeft: 10, marginRight: 10 }} />
             <FolderAddTwoTone onClick={(e) => handleOpenEditFolder(e,undefined,undefined)} style={{ marginLeft: 10, marginRight: 10 }} />
@@ -214,7 +214,7 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
   },[keys,index,data]);
   return <div>
     <CreateModal test={testEdit} open={openCreate} handleCancel={handleCancel} />
-    <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
+    <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} containerType="Test"/>
     <Collapse accordion onChange={onChange} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
     
     {data.children && data.children.map((f: any) => <Collapse.Panel
