@@ -5,7 +5,7 @@ import { Tree, } from 'antd';
 import ReactPlayer from "react-player";
 
 const { Title } = Typography
-const Icon = ({status}:{status:string})=>{
+export const Icon = ({status}:{status:string})=>{
   switch(status){
     case 'PASS':
       return <CheckCircleFilled style={{ color: 'green' }} />
@@ -53,14 +53,14 @@ const Run = ({ run }: { run: RunModel }) => {
       <Button onClick={exportToJson}>Download</Button>
       {run.result.type=='Suite'?
         <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
-          {run&& run.result&&run.result.items && run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name}</span></div>}>
+          {run&& run.result&&run.result.items && run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name} ({i.time})</span></div>}>
           {i && <RunItem item={i} />}
           {i.video && i.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>)}
         </Collapse>        
 :
       <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.id>0?run.result.id:0}>
-          <Collapse.Panel key={run.result.id} header={<div><span><Icon status={run.result.status}/></span><span> {run.result.name}</span></div>}>
+          <Collapse.Panel key={run.result.id} header={<div><span><Icon status={run.result.status}/></span><span> {run.result.name} ({run.result.time})</span></div>}>
           {run.result && <RunItem item={run.result} />}
           {run.result.video && run.result.video.map(vurl=><ReactPlayer url={vurl} controls={true}/>)}
           </Collapse.Panel>
