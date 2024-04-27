@@ -1,3 +1,15 @@
+export const TestsFromFolder=(f:any):any[]=>{
+  var tests:any[] = []
+  if (f.tests){
+    tests = [...f.tests]
+  }
+  if (f.children){
+    for(const ch of f.children){
+      tests = [...tests,...TestsFromFolder(ch)]
+    }
+  }
+  return tests
+}
 export const Hierarchy = (arr: any,extra:object) => {
     const mapped = arr?arr.map((f: any) => ({ ...f, children: [] })):[]
     const h: any = {

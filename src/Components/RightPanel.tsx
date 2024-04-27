@@ -14,11 +14,10 @@ import {
 import { Layout, Tabs } from 'antd';
 import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
 import ResourcesRightPanel from "./../Main/pages/Resource/ResourceRightPanel";
-import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanel";
+import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanelTreeStyled";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'
 import TestRightPanel from './../Main/pages/Test/TestRightPanel'
 import RunsRightPanel from './../Main/pages/Runs/RunsRightPanel'
-import DataProfile from './../Main/pages/DataProfile/DataProfile'
 import { useAppSelector } from "./../redux/hooks";
 import { testsSelector, } from "./../redux/Slice/testsSlice";
 import StepsRightPanelData from '../Main/pages/Step/StepsRightPanelData';

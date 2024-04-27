@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Suites, CreateSuites, UpdateSuite, DeleteSuite } from "../Services/suites";
 import { Test } from "./testsSlice";
+import { TestsFromFolder } from "../../Lib/helpers";
 export interface Suite {
   id: number;
   name: string;
@@ -153,6 +154,41 @@ const suitesSlice = createSlice({
         state.suites = updatedSuites;
       }
     },
+    addFolderToSuite: (state, action) => {
+      const { item } = action.payload;
+      const testsToAdd = TestsFromFolder(item)
+
+      const selectedSut = { ...state.selectedSuites }
+      const suites = [...state.suites];
+      selectedSut.tests = selectedSut.tests ? selectedSut.tests : []
+
+      if (selectedSut) {
+        var updatedSuites = suites
+        var updatedSelectedSuite = state.selectedSuites
+        for(const test of testsToAdd){
+          const isItemAlreadyPresent = selectedSut.tests.some((existingItem: any) => existingItem.id === test.id);
+          if (updatedSelectedSuite.id === selectedSut.id && !isItemAlreadyPresent) {
+            if(updatedSelectedSuite.tests)
+            updatedSelectedSuite = {
+              ...updatedSelectedSuite,
+              tests: [...updatedSelectedSuite.tests,test],
+            };
+          }
+          updatedSuites = suites.map((suite) => {
+          if (suite.id === selectedSut.id && !isItemAlreadyPresent) {
+            const tests = suite.tests ? suite.tests : []
+            return {
+              ...suite,
+              tests: [...tests,test],
+            };
+          }
+          return suite;
+        });
+        }
+        state.selectedSuites = updatedSelectedSuite
+        state.suites = updatedSuites;
+      }
+    },
     removeTestFromSuite: (state, action) => {
       const { id } = action.payload;
 
@@ -175,6 +211,6 @@ const suitesSlice = createSlice({
   },
 });
 
-export const { selectSuites, addTestToSuite, removeTestFromSuite } = suitesSlice.actions;
+export const { selectSuites, addTestToSuite,addFolderToSuite, removeTestFromSuite } = suitesSlice.actions;
 export const suitesSelector = (state: RootState) => state.suites;
 export default suitesSlice.reducer;

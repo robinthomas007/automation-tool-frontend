@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Suite as SuiteModel } from "./../../../redux/Slice/suitesSlice";
+import { Suite as SuiteModel, addFolderToSuite } from "./../../../redux/Slice/suitesSlice";
 import { Row, Col, List, Button } from 'antd';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
@@ -18,6 +18,13 @@ const Suite = ({ suite }: { suite: SuiteModel }) => {
       dispatch(addTestToSuite({ item }));
     }
   });
+  const [, dropFolder] = useDrop({
+    accept: 'FOLDER_TO_SUITE',
+    drop: (item) => {
+      // alert(JSON.stringify(item))
+      dispatch(addFolderToSuite({ item }));
+    }
+  });
 
   const handleRemoveStep = ({ id }: { id: string }) => {
     dispatch(removeTestFromSuite({ id }));
@@ -25,7 +32,7 @@ const Suite = ({ suite }: { suite: SuiteModel }) => {
 
   return (
     <Row ref={drop}>
-      <Col span={24}>
+      <Col span={24} ref={dropFolder}>
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Tests</span>

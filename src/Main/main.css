@@ -44,6 +44,10 @@ body {
     max-height: calc(100vh - 190px) !important;
     overflow-y: scroll;
 }
+.tools-tab .ant-tree{
+    max-height: calc(100vh - 190px) !important;
+    overflow-y: scroll;
+}
 .data{
     max-height: calc(100vh - 140px) !important;
     overflow-y: scroll;
