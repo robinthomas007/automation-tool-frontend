@@ -204,13 +204,14 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
       }
       const id = mkey.substring(2)
       if (mkey.startsWith("t-")) {
-        dispatch(selectTests(data.tests.find((t:any) => t.id == id)))
+        const test=data.tests.find((t:any) => t.id == id)
+        dispatch(selectTests(test))
       } else {
         dispatch(selectFolders(data.children.find((f:any) => f.id == id)))
       }
     }
 
-  },[keys,index]);
+  },[keys,index,data]);
   return <div>
     <CreateModal test={testEdit} open={openCreate} handleCancel={handleCancel} />
     <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} />
