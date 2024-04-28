@@ -1,29 +1,40 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col, Space } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, TreeSelect } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import {  projectsSelector } from "./../../../redux/Slice/projectsSlice";
-import { createResource, updateResource } from "./../../../redux/Slice/resourcesSlice";
+import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
+import { Hierarchy } from '../../../Lib/helpers';
+import { foldersSelector } from '../../../redux/Slice/foldersSlice';
+import { createStep, updateStep } from '../../../redux/Slice/stepsSlice';
 import {
-  CloseCircleOutlined
+  FolderTwoTone,
 } from '@ant-design/icons';
-import { Card } from 'antd';
-
+import { HToTD } from '../../../Lib/helperComponents';
+import { createResource, updateResource } from '../../../redux/Slice/resourcesSlice';
 interface CreateModalProps {
   open: boolean;
-  handleCancel: () => void;
-  resource?: any
+  handleCancel: () => void,
+  resource: any
 }
 
 const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
+
   const dispatch = useAppDispatch();
-  const [form] = Form.useForm()
-
   const { selectedProjects } = useAppSelector(projectsSelector);
-
+  const { folders } = useAppSelector(foldersSelector);
+  const [treeData,setTreeData] = useState<any>(undefined)
+  const [form] = Form.useForm()
+  
+  useEffect(()=>{
+    const h=Hierarchy(folders.filter((f:any)=>f.containerType=='Resource'),{})
+    setTreeData(HToTD(h))
+  },[folders])
   useEffect(() => {
-    if (resource && Object.keys(resource).length !== 0) {
-      form.setFieldsValue({ id: resource.id, name: resource.name, description: resource.description, type: resource.type })
+    if(resource.folder){
+      form.setFieldsValue({ folder_id:resource.folder.id })
+    }
+    if (resource &&resource.resource && Object.keys(resource.resource).length !== 0) {
+      form.setFieldsValue({ id: resource.resource.id, name: resource.resource.name, description: resource.resource.description,type: resource.resource.type,folder_id:resource.folder.id })
     }
   }, [resource]);
 
@@ -34,29 +45,26 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
       setConfirmLoading(false);
     }, 1000);
     if (selectedProjects)
-      if (resource.id) {
-        dispatch(updateResource({ resource: values, resourceId: resource.id }));
+      if (resource.resource && resource.resource.id) {
+        dispatch(updateResource({ resource: values, resourceId: resource.resource.id }));
       } else {
         dispatch(createResource({ resource: values, projectId: selectedProjects?.id }));
       }
-
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-
-
+  
   return (
     <Modal
       title="Create Object"
       open={open}
-      width={600}
       destroyOnClose
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
       footer={[
-        <Button form="createResource" key="submit" htmlType="submit" type="primary">
+        <Button form="createProjectObject" key="submit" htmlType="submit" type="primary">
           Save
         </Button>,
         <Button key="back" onClick={handleCancel}>
@@ -67,7 +75,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
       <Row justify="start">
         <Col span={24}>
           <Form
-            name="createResource"
+            name="createProjectObject"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             onFinish={onFinish}
@@ -75,27 +83,34 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
             autoComplete="off"
             form={form}
             preserve={false}
-            initialValues={{ type: 'PAGE' }}
           >
-            <Row justify="start">
-              <Col span={24}>
-                <Form.Item
-                  label="Object Name"
-                  name="name"
-                  rules={[{ required: true, message: 'Please input your Resource Name!' },
-                  { min: 2, message: 'Resource name must be minimum 2 characters.' }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Object Description"
-                  name="description"
-                  rules={[{ required: true, message: 'Please input your Resource Description!' },
-                  { min: 2, message: 'Resource description must be minimum 2 characters.' }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
+            <Form.Item
+              label="Folder"
+              name="folder_id"
+            >
+              <TreeSelect
+              treeLine={true}
+              suffixIcon= {<FolderTwoTone/>}
+              treeData={treeData}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Object Name"
+              name="name"
+              rules={[{ required: true, message: 'Please input your object name!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Object Description"
+              name="description"
+              rules={[{ required: true, message: 'Please input your step description!' },
+              { min: 2, message: 'Field must be minimum 2 characters.' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
                   label="Type"
                   name="type"
                   rules={[{ required: true, message: 'Please input your Type!' },
@@ -103,115 +118,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
                 >
                   <Input disabled value={'PAGE'} />
                 </Form.Item>
-              </Col>
-            </Row>
-            {/* <Row justify="center">
-              <Col span={12}>
-                <Form.List name="elements">
-                  {(fields, { add, remove }) => (
-                    <>
-                      <Form.Item className='form-item-head-btn' label=" " colon={false}>
-                        <Button type="dashed" onClick={() => add()} block>
-                          Add Elements
-                        </Button>
-                      </Form.Item>
-                      {fields.map(({ key, name, ...restField }) => (
-
-                        <Card style={{ position: 'relative', margin: 10, background: '#f5f5f5' }}>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'name']}
-                            label="Element Name"
-                            rules={[{ required: true, message: 'Please input element name!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'description']}
-                            label="Description"
-                            rules={[{ required: true, message: 'Please input description!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'type']}
-                            label="Type"
-                            rules={[{ required: true, message: 'Please input Type!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'locator']}
-                            label="Locator"
-                            rules={[{ required: true, message: 'Please input Locator!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <CloseCircleOutlined onClick={() => remove(name)} style={{ position: 'absolute', top: 6, right: 6 }} />
-                        </Card>
-
-                      ))}
-                    </>
-                  )}
-                </Form.List>
-              </Col>
-              <Col span={12}>
-                <Form.List name="actions">
-                  {(fields, { add, remove }) => (
-                    <>
-                      <Form.Item className='form-item-head-btn' style={{ textAlign: 'right' }} label=" " colon={false}>
-                        <Button type="dashed" onClick={() => add()} block>
-                          Add Action
-                        </Button>
-                      </Form.Item>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Card style={{ position: 'relative', margin: 10, background: '#f5f5f5' }}>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'name']}
-                            label="Interaction Name"
-                            rules={[{ required: true, message: 'Please input action name!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'description']}
-                            label="Description"
-                            rules={[{ required: true, message: 'Please input description!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'type']}
-                            label="Type"
-                            rules={[{ required: true, message: 'Please input Type!' }]}
-                          >
-                            <Input />
-                          </Form.Item>
-
-                          <CloseCircleOutlined onClick={() => remove(name)} style={{ position: 'absolute', top: 6, right: 6 }} />
-                        </Card>
-                      ))}
-                    </>
-                  )}
-                </Form.List>
-              </Col>
-            </Row> */}
           </Form>
         </Col>
       </Row>
-
     </Modal>
   )
 }

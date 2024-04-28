@@ -35,7 +35,6 @@ const Steps = () => {
   const [h, setH] = useState<any>([]) 
   const [keys,setKeys]=useState<string[]>([])
   useEffect(() => {
-    if (selectedProjects)
       setSteps(allSteps.filter(a => {
         var tname = a.name
         tname = tname.toLowerCase()

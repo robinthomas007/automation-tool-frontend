@@ -8,7 +8,7 @@ import {
   BarsOutlined,
 } from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
-import StepsRightPanel from "./../Main/pages/Step/StepsRightPanel";
+import StepsRightPanel from "./../Main/pages/Step/StepsRightPanelTreeStyled";
 import ResourcesRightPanel from "./../Main/pages/Resource/ResourceRightPanel";
 import SuitesRightPanel from "./../Main/pages/Suite/SuiteRightPanelTreeStyled";
 import TestsRightPanelData from './../Main/pages/Test/TestsRightPanelData'

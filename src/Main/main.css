@@ -85,9 +85,15 @@ body {
 .edit-icon,.delete-icon {
     visibility: hidden;
 }
+.ant-tree-title .e-panel{
+    visibility: hidden;
+}
 .resource-panel:hover .resource-panel-extra .edit-icon, .resource-panel:hover .resource-panel-extra .delete-icon,
 .resource-action-panel:hover .resource-action-panel-extra .edit-icon, .resource-action-panel:hover .resource-action-panel-extra .delete-icon,
 .element-panel:hover .edit-icon, .element-panel:hover .delete-icon {
+    visibility: visible !important;
+}
+.ant-tree-title:hover .e-panel{
     visibility: visible !important;
 }
 

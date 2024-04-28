@@ -8,9 +8,9 @@ import {
   KeyOutlined,
   StepForwardOutlined,
   UserOutlined,
-  ApartmentOutlined,
   FileOutlined,
   DatabaseOutlined,
+  ContainerOutlined,
 } from '@ant-design/icons';
 import { Outlet, Link, useParams } from "react-router-dom";
 import { Layout, Menu, theme, Popover, Button, Typography } from 'antd';
@@ -55,7 +55,7 @@ const ProjectsLayout: React.FC = () => {
     { label: "Suites", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/suites`, icon: <RocketOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/suites` },
     { label: "Tests", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/tests`, icon: <ExperimentOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/tests` },
     { label: "Steps", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/steps`, icon: <StepForwardOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/steps` },
-    { label: "Objects", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources`, icon: <ApartmentOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources` },
+    { label: "Objects", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources`, icon: <ContainerOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/resources` },
     { label: "Runs", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`, icon: <MenuUnfoldOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`, },
     { label: "Data Profiles", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, icon: <DatabaseOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/data_profiles`, },
     { label: "Users", href: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, icon: <UserOutlined />, key: `/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/users`, },

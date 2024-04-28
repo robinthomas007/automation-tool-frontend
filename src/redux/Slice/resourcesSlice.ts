@@ -41,6 +41,7 @@ export interface ResourceElement {
   UpdatedAt: string;
 }
 export interface Resource {
+  folder: any;
   id: number;
   name: string;
   type: string;
@@ -325,14 +326,13 @@ const resourcesSlice = createSlice({
     builder.addCase(updateResource.fulfilled, (state, { payload }) => {
       state.loading = false;
       if (payload && payload.data) {
-        state.selectedResources = payload.data;
-
         state.resources = state.resources.map(resource => {
-          if (resource.id === state.selectedResources.id) {
-            return { ...state.selectedResources };
+          if (resource.id === payload.data.id) {
+            return { ...payload.data };
           }
           return resource;
         });
+        state.selectedResources = payload.data;
       }
     });
 

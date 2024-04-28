@@ -52,8 +52,6 @@ const DraggableListItem = ({ item, type, index, moveItem, resourceId, events, co
     },
   });
 
-  const onSearch = (value: string) => {
-  };
   const commandObj = commands.find((command: any) => command.id === item.command_id);
   const eventObj = events.find((event: any) => event.id === item.event_id)
 

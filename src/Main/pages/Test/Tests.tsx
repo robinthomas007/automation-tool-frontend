@@ -42,7 +42,6 @@ const Tests = () => {
   const [h, setH] = useState<any>([]) 
   const [keys,setKeys]=useState<string[]>([])
   useEffect(() => {
-    if (selectedProjects)
       setTests(allTests.filter(a => {
         var tname = a.name
         tname = tname.toLowerCase()

@@ -44,3 +44,20 @@ export const Hierarchy = (arr: any,extra:object) => {
     return {...h,...extra}
   
 }
+const sanitizeNode=(node:any)=>{
+  if(node.isLeaf){
+    return node
+  } else if(node.children){
+    const childs=node.children.map((c:any)=>sanitizeNode(c)).filter((n:any)=>n!=null)
+    if (childs.length!=0){
+      return {...node,childrens:childs}
+    } else {
+      return null
+    }
+  } else {
+    return null
+  }
+}
+export const SanitizeTreeData=((td:any[])=>{
+  return td.map((n:any)=>sanitizeNode(n)).filter((n:any)=>n!=null)
+})

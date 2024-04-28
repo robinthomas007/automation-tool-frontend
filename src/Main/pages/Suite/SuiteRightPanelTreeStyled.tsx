@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { Hierarchy } from '../../../Lib/helpers';
 import { foldersSelector } from '../../../redux/Slice/foldersSlice';
 import { ExperimentTwoTone } from '@ant-design/icons';
+import { SanitizeTreeData } from '../../../Lib/helperComponents';
 const { DirectoryTree } = Tree;
 
 const DraggableItem = ({ item, type }: any) => {
@@ -33,8 +34,11 @@ const SuiteRightPanel = () => {
   const [searchText,setSearchText] = useState('')
   const [tests,setTests] = useState<any[]>([])
   const { folders } = useAppSelector(foldersSelector);
-  const [treeData,setTreeData] = useState<any[]>([])
   const [h, setH] = useState<any>([]) 
+  const [treeData,setTreeData] = useState<any[]>([])
+  useEffect(()=>{
+    setTreeData(GetTreeData(h))
+  },[h])
   useEffect(() => {
     const fs = folders.filter((f:any)=>f.containerType=='Test')
     const ts = tests
@@ -50,13 +54,13 @@ const SuiteRightPanel = () => {
     const data=[]
     if (root.children)
     for(const f of root.children){
-      data.push({title:<DraggableItem item={f} type="FOLDER_TO_SUITE"/>,key:f.id,isLeaf:false,children:GetTreeData(f)})
+      data.push({title:<DraggableItem item={f} type="FOLDER_TO_SUITE"/>,key:'f-'+f.id,isLeaf:false,children:GetTreeData(f)})
     }
     if(root.tests)
     for(const item of root.tests){
-      data.push({title:<DraggableItem item={item} type="TEST_TO_SUITE"/>,key:item.id,isLeaf:true,icon:<ExperimentTwoTone/>})
+      data.push({title:<DraggableItem item={item} type="TEST_TO_SUITE"/>,key:"t-"+item.id,isLeaf:true,icon:<ExperimentTwoTone/>})
     }
-    return data
+    return SanitizeTreeData(data)
   }
   useEffect(()=>{
     if(tests.length==0 && selectedProjects){
@@ -84,7 +88,7 @@ const SuiteRightPanel = () => {
         showLine
         multiple
         defaultExpandAll
-        treeData={GetTreeData(h)}
+        treeData={treeData}
         />
         {/* <List
           header={<div className='flex flex-row'><span className='font-semibold'>Tests</span><Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/></div>}

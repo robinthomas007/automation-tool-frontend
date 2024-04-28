@@ -7,6 +7,7 @@ import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { StepForwardOutlined } from '@ant-design/icons';
 import { foldersSelector } from '../../../redux/Slice/foldersSlice';
 import { Hierarchy } from '../../../Lib/helpers';
+import { SanitizeTreeData } from '../../../Lib/helperComponents';
 const { DirectoryTree } = Tree;
 const DraggableItem = ({ item, type }: any) => {
 
@@ -31,8 +32,11 @@ const TestRightPanel = () => {
   const [searchText,setSearchText] = useState('')
   const [steps,setSteps] = useState<any[]>([])
   const { folders } = useAppSelector(foldersSelector);
-  const [treeData,setTreeData] = useState<any[]>([])
   const [h, setH] = useState<any>([]) 
+  const [treeData,setTreeData] = useState<any[]>([])
+  useEffect(()=>{
+    setTreeData(GetTreeData(h))
+  },[h])
   useEffect(() => {
     const fs = folders.filter((f:any)=>f.containerType=='Step')
     const ss = steps
@@ -48,13 +52,13 @@ const TestRightPanel = () => {
     const data=[]
     if (root.children)
     for(const f of root.children){
-      data.push({title:f.name,key:f.id,isLeaf:false,children:GetTreeData(f)})
+      data.push({title:f.name,key:"f-"+f.id,isLeaf:false,children:GetTreeData(f)})
     }
     if(root.steps)
     for(const item of root.steps){
-      data.push({title:<DraggableItem item={item} type="STEP_TO_TEST"/>,key:item.id,isLeaf:true,icon:<StepForwardOutlined/>})
+      data.push({title:<DraggableItem item={item} type="STEP_TO_TEST"/>,key:"s-"+item.id,isLeaf:true,icon:<StepForwardOutlined/>})
     }
-    return data
+    return SanitizeTreeData(data)
   }
   useEffect(()=>{
     setSteps(allSteps.filter(a=>{
@@ -81,7 +85,7 @@ const TestRightPanel = () => {
         showLine
         multiple
         defaultExpandAll
-        treeData={GetTreeData(h)}
+        treeData={treeData}
         />
         {/* <List
           header={<div className='flex flex-row'><span className='font-semibold'>Tests</span><Input style={{marginLeft:'4px'}} type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/></div>}
