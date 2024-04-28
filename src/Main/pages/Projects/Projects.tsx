@@ -83,18 +83,12 @@ export default function Projects() {
 
   return (
     <Layout style={{ background: colorBgContainer, height:'100%' }}>
-      <Content style={{
-        margin: '24px 16px',
-        padding: 24,
-        minHeight: 280,
-        background: '#fff',
-        borderRadius: borderRadiusLG,
-      }}>
+      <Content className='data-root'>
         <Row justify={'end'}>
           <Col><Button type="primary" style={{ marginBottom: 10 }} onClick={() => setOpenCreate(true)}>Create Project</Button></Col>
           <CreateModal open={openCreate} handleCancel={handleCancel} />
         </Row>
-        <Table style={{ borderTop: '1px solid #ddd' }} columns={columns} dataSource={projects} />
+        <Table className='data' columns={columns} dataSource={projects} />
       </Content>
     </Layout>
   )

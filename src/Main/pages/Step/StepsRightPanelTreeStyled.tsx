@@ -22,7 +22,7 @@ const DraggableItem = ({ item, type, handleOpenEdit, handleDelete }: any) => {
 
   return (
     <span style={{ padding: 15, width: '100%' }}>
-        <span ref={drag} style={{ cursor: 'move', width: '100%' }}>{item.name+"("+item.required_variables.join(",")+")"}</span>
+        <span ref={drag} style={{ cursor: 'move', width: '100%' }}>{item.name+(item.required_variables?"("+item.required_variables.join(",")+")":"")}</span>
         <span className='e-panel'>
           <EditTwoTone onClick={(e) => handleOpenEdit(e, item)} style={{ marginLeft: 10, marginRight: 10 }} />
           <DeleteTwoTone onClick={(e) => handleDelete(e, item)}/>
@@ -78,7 +78,7 @@ const StepsRightPanel = () => {
   
   useEffect(()=>{
     setResources(allResources.map(r=>({...r,actions:r.actions.filter((a:any)=>{
-      const tname=r.name+"."+a.name + "("+a.required_variables.join(",") +")"
+      const tname=r.name+"."+a.name +(a.required_variables?"("+a.required_variables.join(",") +")":"")
       return tname.toLowerCase().includes(searchText.toLowerCase())
     }
     )})))
