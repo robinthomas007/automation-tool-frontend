@@ -15,8 +15,6 @@ import {
   FolderTwoTone,
   ExperimentTwoTone,
   FileAddTwoTone,
-  FileAddFilled,
-  FolderAddFilled,
   DeleteTwoTone
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";

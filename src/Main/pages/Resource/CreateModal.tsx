@@ -35,6 +35,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
     }
     if (resource &&resource.resource && Object.keys(resource.resource).length !== 0) {
       form.setFieldsValue({ id: resource.resource.id, name: resource.resource.name, description: resource.resource.description,type: resource.resource.type,folder_id:resource.folder.id })
+    } else {
+      form.setFieldsValue({type:'PAGE'})
     }
   }, [resource]);
 
@@ -116,7 +118,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
                   rules={[{ required: true, message: 'Please input your Type!' },
                   { min: 2, message: 'Resource type must be minimum 2 characters.' }]}
                 >
-                  <Input disabled value={'PAGE'} />
+                  <Input disabled/>
                 </Form.Item>
           </Form>
         </Col>
