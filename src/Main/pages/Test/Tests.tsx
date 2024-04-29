@@ -1,9 +1,11 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchTests, testsSelector, selectTests, deleteTest, Test as TestModel } from "./../../../redux/Slice/testsSlice";
+import { fetchTests, testsSelector, selectTests, deleteTest, Test as TestModel, updateTest } from "./../../../redux/Slice/testsSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
-import { Row, Col, Button, Collapse, Dropdown, Empty, Input } from 'antd';
+import { Row, Col, Collapse, Dropdown, Input, Empty } from 'antd';
+import { useDrop, useDrag } from 'react-dnd';
+
 import CreateModal from './CreateModal'
 import {
   PlayCircleOutlined,
@@ -18,7 +20,6 @@ import {
   DeleteTwoTone
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
-import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
 import { meSelector } from "../../../redux/Slice/meSlice";
@@ -27,7 +28,20 @@ import { deleteFolder, foldersSelector, selectFolders } from "../../../redux/Sli
 import CreateFolderModal from "../CreateFolderModal";
 import { Hierarchy } from "../../../Lib/helpers";
 
+const DraggableTest = ({ item, type,children }: any) => {
 
+  const [, drag] = useDrag({
+    type,
+    item: item,
+  });
+
+
+  return (
+    <div ref={drag} style={{ cursor: 'move' }}>
+      {children}
+    </div>
+  );
+};
 const Tests = () => {
   const dispatch = useAppDispatch();
   const { tests: allTests, fetchLoading } = useAppSelector(testsSelector);
@@ -106,6 +120,18 @@ const Tests = () => {
   );
 };
 const Folder = ({ data,keys,index ,setKeys}: any) => {
+  const [, drop] = useDrop({
+    accept: 'TEST_TO_FOLDER',
+    drop: (item:any,monitor) => {
+      if(monitor.didDrop()){
+        return
+      } else {
+        const new_test:any = {name:item.name,description:item.description,lock:item.lock,folder_id:data.id,id:item.id}
+        dispatch(updateTest({test:new_test}))
+      }
+    }
+  });
+
   const { fetchLoading } = useAppSelector(testsSelector);
   const { selectedOrgs } = useAppSelector(meSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
@@ -211,11 +237,10 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
     }
 
   },[keys,index,data]);
-  return <div>
+  return <div ref={drop}>
     <CreateModal test={testEdit} open={openCreate} handleCancel={handleCancel} />
     <CreateFolderModal data={folderEdit} open={openCreateFolder} handleCancel={handleCancelFolder} containerType="Test"/>
-    <Collapse accordion onChange={onChange} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
-    
+    {(data.children && data.children.length>0)||(data.tests && data.tests.length>0)?<Collapse ref={drop} onChange={onChange} defaultActiveKey={(keys && keys.length>index)?keys[index]:null}>
     {data.children && data.children.map((f: any) => <Collapse.Panel
       header={<div><FolderTwoTone/><span className="ml-2">{f.name}</span></div>}
       key={`f-${f.id}`}
@@ -227,18 +252,13 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
           <EditTwoTone className="edit-icon" onClick={(e) => handleOpenEditFolder(e, f,data)} style={{ marginLeft: 10, marginRight: 10 }} />
           <DeleteTwoTone className="delete-icon" onClick={(e) => handleDeleteFolder(e, f)} style={{ marginRight: 15 }} />
         </span>
-        {/* <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
-        <span onClick={(e) => e.stopPropagation()}>
-          {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
-        </span>
-      </Dropdown> */}
       </div>}
     >
       <Folder data={f} keys={keys} setKeys={setKeys} index={index+1}/>
     </Collapse.Panel>)}
     {data.tests && data.tests.map((test:any) => (
       <Collapse.Panel
-        header={<div><ExperimentTwoTone/><span className="ml-2">{test.name}{test.lock !== "" ? ` (lock: ${test.lock})` : ""}</span></div>}
+        header={<DraggableTest item={test} type="TEST_TO_FOLDER"><div><ExperimentTwoTone/><span className="ml-2">{test.name}{test.lock !== "" ? ` (lock: ${test.lock})` : ""}</span></div></DraggableTest>}
         key={`t-${test.id}`}
         className="resource-panel"
         extra={<div className="flex items-center">
@@ -254,10 +274,10 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
           </Dropdown>
         </div>}
       >
-        <Test test={test} />
+        <Test test={test}/>
       </Collapse.Panel>
     ))}
-  </Collapse>
+  </Collapse>:<Empty/>}
   </div>
 }
 
