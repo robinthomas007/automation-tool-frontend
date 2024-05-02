@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, Select } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { createSuites, updateSuite } from "./../../../redux/Slice/suitesSlice";
@@ -16,7 +16,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
   const [form] = Form.useForm()
-
+  const [enableQuery,setEnableQuery] = useState<boolean>(suite.type == "Query"?true:false)
   const onFinish = (values: any) => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -33,7 +33,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
 
   useEffect(() => {
     if (suite && Object.keys(suite).length !== 0) {
-      form.setFieldsValue({ id: suite.id, name: suite.name, description: suite.description })
+      form.setFieldsValue({ id: suite.id, name: suite.name,type: suite.type,query:suite.query, description: suite.description })
     }
   }, [suite]);
 
@@ -85,6 +85,21 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
             >
               <Input />
             </Form.Item>
+            <Form.Item
+              label="Suite Type"
+              name="type"
+            >
+              <Select disabled={suite.id?true:false} onChange={(e)=>{setEnableQuery(e=="Query")}}>
+                <Select.Option value={"Container"}>Container</Select.Option>
+                <Select.Option value={"Query"}>Query</Select.Option>
+              </Select>
+            </Form.Item>
+            {enableQuery &&<Form.Item
+              label="Query"
+              name="query"
+            >
+              <Input/>
+            </Form.Item>}
           </Form>
         </Col>
       </Row>

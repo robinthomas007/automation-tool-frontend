@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col, TreeSelect } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, TreeSelect, Select, RadioChangeEvent } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { createTest, updateTest } from "./../../../redux/Slice/testsSlice";
@@ -9,6 +9,7 @@ import { HToTD } from '../../../Lib/helperComponents';
 import {
   FolderTwoTone,
 } from '@ant-design/icons';
+import { SizeType } from 'antd/es/config-provider/SizeContext';
 interface CreateModalProps {
   open: boolean;
   handleCancel: () => void,
@@ -21,19 +22,23 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { folders } = useAppSelector(foldersSelector);
-  const [treeData,setTreeData] = useState<any>(undefined)
+  const [treeData, setTreeData] = useState<any>(undefined)
   const [form] = Form.useForm()
-  
-  useEffect(()=>{
-    const h=Hierarchy(folders.filter((f:any)=>f.containerType=='Test'),{})
-    setTreeData(HToTD(h))
-  },[folders])
+  const [size, setSize] = useState<SizeType>('middle');
+
+  const handleSizeChange = (e: RadioChangeEvent) => {
+    setSize(e.target.value);
+  };
   useEffect(() => {
-    if(test.folder){
-      form.setFieldsValue({ folder_id:test.folder.id })
+    const h = Hierarchy(folders.filter((f: any) => f.containerType == 'Test'), {})
+    setTreeData(HToTD(h))
+  }, [folders])
+  useEffect(() => {
+    if (test.folder) {
+      form.setFieldsValue({ folder_id: test.folder.id })
     }
-    if (test &&test.test && Object.keys(test.test).length !== 0) {
-      form.setFieldsValue({ id: test.test.id, name: test.test.name, description: test.test.description,lock: test.test.lock,folder_id:test.folder.id })
+    if (test && test.test && Object.keys(test.test).length !== 0) {
+      form.setFieldsValue({ id: test.test.id, name: test.test.name,tags: test.test.tags, description: test.test.description, lock: test.test.lock, folder_id: test.folder.id })
     }
   }, [test]);
 
@@ -54,7 +59,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-  
+
   return (
     <Modal
       title="Create Test"
@@ -88,9 +93,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
               name="folder_id"
             >
               <TreeSelect
-              treeLine={true}
-              treeData={treeData}
-              suffixIcon= {<FolderTwoTone/>}
+                treeLine={true}
+                treeData={treeData}
+                suffixIcon={<FolderTwoTone />}
               />
             </Form.Item>
             <Form.Item
@@ -116,6 +121,19 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, test }) =
               { min: 2, message: 'Field must be minimum 2 characters.' }]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item
+              label="Tags"
+              name="tags"
+            >
+              <Select
+                mode="tags"
+                size={size}
+                placeholder="Please select"
+                defaultValue={[]}
+                style={{ width: '100%' }}
+                options={[]}
+              />
             </Form.Item>
           </Form>
         </Col>
