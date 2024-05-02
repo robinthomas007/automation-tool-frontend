@@ -42,8 +42,21 @@ export default function OrgUsers() {
   };
 
   return (
-    <Card style={{ width: '50%', margin: 10 }}>
+    <div className="data-content">
+    <div className="data-root">
+      <Form<OrgUserFormValues> form={form} onFinish={onFinish} style={{ width: '94%' }} className="filter flex justify-between gap-2">
+        <Form.Item name="role" initialValue={'use'}>
+          <Select options={options} />
+        </Form.Item>
+        <Form.Item className="w-full" name="email" rules={[{ required: true, message: 'Please input an email!' }, { type: 'email', message: 'Please enter a valid email address!' }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">Add</Button>
+        </Form.Item>
+      </Form>
       <List
+        className="data"
         size="large"
         header={<strong>Organization Users</strong>}
         bordered
@@ -63,17 +76,7 @@ export default function OrgUsers() {
             </div>
           </List.Item>}
       />
-      <Form<OrgUserFormValues> form={form} onFinish={onFinish} style={{ width: '94%', marginTop: 15 }} className="flex justify-between gap-2">
-        <Form.Item name="role" initialValue={'use'}>
-          <Select options={options} />
-        </Form.Item>
-        <Form.Item className="w-full" name="email" rules={[{ required: true, message: 'Please input an email!' }, { type: 'email', message: 'Please enter a valid email address!' }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Add</Button>
-        </Form.Item>
-      </Form>
-    </Card>
+    </div>
+    </div>
   );
 }

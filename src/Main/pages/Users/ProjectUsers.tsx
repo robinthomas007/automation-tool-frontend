@@ -32,29 +32,9 @@ const ProjectUsers: React.FC = () => {
   }
 
   return (
-    <div>
-      <List
-        size="large"
-        bordered
-        dataSource={projectUsers}
-        className=""
-        renderItem={(project) => (
-          <List.Item>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '40%' }}>
-              <span style={{ color: '#1577ff' }}>{project.email}</span>
-              <Select style={{ width: 100 }} value={project.role} options={options} onChange={(value) => {
-                dispatch(upsertProjectUser({
-                  projectId: selectedProjects!!.id, data: {
-                    email: project.email,
-                    role: value
-                  }
-                }));
-              }} />
-            </div>
-          </List.Item>
-        )}
-      />
-      <div className="my-4">
+    <div className="data-content">
+    <div className="data-root">
+      <div className="filter">
         <Form form={form} onFinish={onFinish} className="flex gap-2">
           <Form.Item
             name="role"
@@ -81,6 +61,29 @@ const ProjectUsers: React.FC = () => {
           </Form.Item>
         </Form>
       </div>
+      <List
+        size="large"
+        bordered
+        dataSource={projectUsers}
+        className="data"
+        renderItem={(project) => (
+          <List.Item>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '40%' }}>
+              <span style={{ color: '#1577ff' }}>{project.email}</span>
+              <Select style={{ width: 100 }} value={project.role} options={options} onChange={(value) => {
+                dispatch(upsertProjectUser({
+                  projectId: selectedProjects!!.id, data: {
+                    email: project.email,
+                    role: value
+                  }
+                }));
+              }} />
+            </div>
+          </List.Item>
+        )}
+      />
+      
+    </div>
     </div>
   );
 };

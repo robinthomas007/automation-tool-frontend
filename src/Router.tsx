@@ -12,7 +12,7 @@ import Suites from "./Main/pages/Suite";
 import LoginPage from "./Main/pages/Guest/Login";
 import DataProfile from './Main/pages/DataProfile'
 import Runs from "./Main/pages/Runs";
-import Users from "./Main/pages/Users/Users";
+import Users from "./Main/pages/Users/ProjectUsers";
 import OrgUsers from "./Main/pages/Users/OrgUsers";
 import OrgsLayout from "./Main/OrgsLayout";
 import LogInStatus from "./Main/pages/LogInStatus";
