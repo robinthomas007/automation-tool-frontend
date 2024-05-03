@@ -7,6 +7,7 @@ import { TestsFromFolder } from "../../Lib/helpers";
 export interface Suite {
   id: number;
   name: string;
+  type: string;
   desciption: string;
   CreatedAt: string;
   UpdatedAt: string;

@@ -31,7 +31,7 @@ const Suite = ({ suite }: { suite: SuiteModel }) => {
   };
 
   return (
-    <Row ref={drop}>
+    <Row ref={suite.type=='Container'?drop:null}>
       <Col span={24} ref={dropFolder}>
         <List
           header={<div style={{ display: 'flex', justifyContent: 'space-between' }}>

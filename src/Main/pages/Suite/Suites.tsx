@@ -1,22 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Suite from "./Suite";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { fetchSuites, suitesSelector, selectSuites, deleteSuite } from "./../../../redux/Slice/suitesSlice";
-import { TextInput } from "flowbite-react";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Row, Col, Input, Button, Collapse, Dropdown, Empty } from 'antd';
 import CreateModal from './CreateModal'
-import SuiteRightPanel from "./SuiteRightPanel";
 import {
   PlayCircleOutlined,
   SyncOutlined,
   EditTwoTone,
   DeleteTwoTone
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
 import { useNavigate } from "react-router-dom";
-import { useEventSource } from './../../../Context/EventSourceContext'
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
 import { meSelector } from "../../../redux/Slice/meSlice";
@@ -24,23 +20,23 @@ import { meSelector } from "../../../redux/Slice/meSlice";
 const Suites = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const [SuiteEdit, setSuiteEdit] = useState({})
+  const [suiteEdit, setSuiteEdit] = useState({})
 
   const dispatch = useAppDispatch();
-  const { suites:allSuites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
+  const { suites: allSuites, selectedSuites, fetchLoading } = useAppSelector(suitesSelector);
   const { selectedProjects } = useAppSelector(projectsSelector);
   const { selectedOrgs } = useAppSelector(meSelector);
   const { profle } = useAppSelector(dataProfileSelector);
-  const [searchText,setSearchText] = useState('')
-  const [suites,setSuites] = useState<any[]>([])
-  useEffect(()=>{
+  const [searchText, setSearchText] = useState('')
+  const [suites, setSuites] = useState<any[]>([])
+  useEffect(() => {
     if (selectedProjects)
-      setSuites(allSuites.filter(a=>{
-      var tname=a.name
-      tname = tname.toLowerCase()
-      return tname.includes(searchText.toLowerCase())
-    }))
-  },[allSuites,searchText])
+      setSuites(allSuites.filter(a => {
+        var tname = a.name
+        tname = tname.toLowerCase()
+        return tname.includes(searchText.toLowerCase())
+      }))
+  }, [allSuites, searchText])
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,16 +51,15 @@ const Suites = () => {
     setOpenCreate(false)
   }
 
-  const { getRuns } = useEventSource()
-
-
   const StartExecution = (id: number, profileId: number, browser: string, headless: boolean) => {
-    dispatch(createRun({projectId:selectedProjects!!.id, body:{
-      suite_id: id,
-      profile_id: profileId,
-      browser: browser,
-      headless: headless
-    }}))
+    dispatch(createRun({
+      projectId: selectedProjects!!.id, body: {
+        suite_id: id,
+        profile_id: profileId,
+        browser: browser,
+        headless: headless
+      }
+    }))
     navigate(`/org/${selectedOrgs?.org.domain}/${selectedProjects?.id}/runs`)
   }
 
@@ -105,8 +100,8 @@ const Suites = () => {
 
   const handleOpenEdit = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, suit: any) => {
     // e.stopPropagation()
-    setOpenCreate(true)
     setSuiteEdit(suit)
+    setOpenCreate(true)
   }
 
 
@@ -117,35 +112,14 @@ const Suites = () => {
     isConfirmed && dispatch(deleteSuite({ id: suit.id }))
   }
 
-  const suitItems = suites.map((suit, index) => (
-    <Collapse.Panel
-      header={suit.name}
-      key={index}
-      className="resource-panel"
-      extra={<div>
-        <span className="resource-panel-extra">
-          <EditTwoTone onClick={(e) => handleOpenEdit(e, suit)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
-          <DeleteTwoTone onClick={(e) => handleDelete(e, suit)} className="delete-icon" style={{ marginRight: 15 }} />
-        </span>
-        <Dropdown menu={{ items: generateMenuItems(suit) }} placement="bottom" arrow={{ pointAtCenter: true }}>
-          <span onClick={(e) => e.stopPropagation()}>
-            {loading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
-          </span>
-        </Dropdown>
-      </div>
-      }
-    >
-      <Suite suite={selectedSuites} />
-    </Collapse.Panel>
-  ));
 
   return (
     <div className="data-root">
       <Row className="filter">
-        <Col span={24} style={{ textAlign: 'right' , display:'flex', flexDirection:'row'}}>
-          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e)=>{setSearchText(e.target.value)}}/>
+        <Col span={24} style={{ textAlign: 'right', display: 'flex', flexDirection: 'row' }}>
+          <Input type='text' name='searchText' placeholder="filter" value={searchText} onChange={(e) => { setSearchText(e.target.value) }} />
           <Button type="primary" onClick={() => setOpenCreate(true)}>Create Suite </Button>
-          <CreateModal suite={SuiteEdit} open={openCreate} handleCancel={handleCancel} />
+          <CreateModal suite={suiteEdit} open={openCreate} handleCancel={handleCancel} />
         </Col>
       </Row>
       <Row>
@@ -153,7 +127,27 @@ const Suites = () => {
           {fetchLoading && <Loader />}
 
           {suites.length > 0 && <Collapse onChange={onChange} accordion className="data">
-            {suitItems}
+            {suites.map((suit, index) => (
+              <Collapse.Panel
+                header={suit.name}
+                key={index}
+                className="resource-panel"
+                extra={<div>
+                  <span className="resource-panel-extra">
+                    <EditTwoTone onClick={(e) => handleOpenEdit(e, suit)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
+                    <DeleteTwoTone onClick={(e) => handleDelete(e, suit)} className="delete-icon" style={{ marginRight: 15 }} />
+                  </span>
+                  <Dropdown menu={{ items: generateMenuItems(suit) }} placement="bottom" arrow={{ pointAtCenter: true }}>
+                    <span onClick={(e) => e.stopPropagation()}>
+                      {loading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
+                    </span>
+                  </Dropdown>
+                </div>
+                }
+              >
+                <Suite suite={selectedSuites} />
+              </Collapse.Panel>
+            ))}
           </Collapse>}
           {suites.length === 0 && !fetchLoading && <div className="my-40">
             <Empty />

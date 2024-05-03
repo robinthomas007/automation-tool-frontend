@@ -65,15 +65,18 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
       if (suite.id) {
         dispatch(updateSuite({ suite: { ...values, id: suite.id } }));
       } else {
-        dispatch(createSuites({ suite: values, projectId: selectedProjects?.id }));
+        dispatch(createSuites({ suite: {...values,query}, projectId: selectedProjects?.id }));
       }
   };
 
   useEffect(() => {
+    console.log('Change:',suite)
     if (suite && Object.keys(suite).length !== 0) {
-      form.setFieldsValue({ id: suite.id, name: suite.name,type: suite.type,query:suite.query, description: suite.description })
+      setEnableQuery(suite.type == "Query"?true:false)
+      form.setFieldsValue({ id: suite.id, name: suite.name,type: suite.type, description: suite.description })
+      setQuery(suite.query)
     }
-  }, [suite]);
+  }, [suite,open]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
