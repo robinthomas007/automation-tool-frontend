@@ -24,6 +24,7 @@ export interface TestsState {
   loading: boolean;
   fetchLoading: boolean;
   tests: Array<Test>;
+  filteredTests: Array<Test>;
   selectedTests: Test | any;
   error: string | undefined;
   selectedStep: Step | any
@@ -31,6 +32,7 @@ export interface TestsState {
 const initialState: TestsState = {
   loading: false,
   tests: [],
+  filteredTests: [],
   selectedTests: {},
   selectedStep: {},
   error: undefined,
@@ -38,7 +40,13 @@ const initialState: TestsState = {
 };
 export const fetchTests = createAsyncThunk(
   "tests/fetchTests",
-  async ({ projectId, searchTerm }: { projectId: number, searchTerm: string }) => {
+  async ({ projectId }: { projectId: number, searchTerm: string }) => {
+    return Tests(projectId, '')
+  }
+);
+export const fetchTestFiltered = createAsyncThunk(
+  "tests/fetchTestFiltered",
+  async ({ projectId,searchTerm }: { projectId: number, searchTerm: string }) => {
     return Tests(projectId, searchTerm)
   }
 );
@@ -88,6 +96,22 @@ const testsSlice = createSlice({
       state.loading = false;
       state.fetchLoading = false;
       state.tests = [];
+      state.error = action.error.message;
+    });
+    builder.addCase(fetchTestFiltered.pending, (state) => {
+      state.loading = true;
+      state.fetchLoading = true;
+      state.filteredTests = []
+    });
+    builder.addCase(fetchTestFiltered.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.fetchLoading = false;
+      state.filteredTests = payload.data;
+    });
+    builder.addCase(fetchTestFiltered.rejected, (state, action) => {
+      state.loading = false;
+      state.fetchLoading = false;
+      state.filteredTests = [];
       state.error = action.error.message;
     });
 

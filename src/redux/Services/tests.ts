@@ -3,7 +3,7 @@ import { Step } from './../Slice/stepsSlice'
 
 import axios from "./axios";
 export const Tests = async (projectId: number, searchTerm: string) => {
-  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/test?q=${searchTerm}`);
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/test?q=${encodeURIComponent(searchTerm)}`);
   return res.data;
 };
 
