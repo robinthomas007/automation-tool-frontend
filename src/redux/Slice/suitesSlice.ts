@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { Suites, CreateSuites, UpdateSuite, DeleteSuite } from "../Services/suites";
+import { Suites, CreateSuites, UpdateSuite, DeleteSuite, SuiteTests } from "../Services/suites";
 import { Test } from "./testsSlice";
 import { TestsFromFolder } from "../../Lib/helpers";
 export interface Suite {
@@ -32,6 +32,12 @@ export const fetchSuites = createAsyncThunk(
   "suites/fetchSuites",
   async ({ projectId, searchTerm }: { projectId: number, searchTerm: string }) => {
     return Suites(projectId, searchTerm)
+  }
+);
+export const fetchTests = createAsyncThunk(
+  "suites/fetchTests",
+  async ({suiteId }: { suiteId: number }) => {
+    return SuiteTests(suiteId)
   }
 );
 
@@ -75,6 +81,32 @@ const suitesSlice = createSlice({
       state.suites = [];
       state.error = action.error.message;
     });
+
+    //fetch tests
+    builder.addCase(fetchTests.pending, (state) => {
+      state.loading = true;
+      state.fetchLoading = true
+    });
+    builder.addCase(fetchTests.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.fetchLoading = false
+      state.selectedSuites = {...state.selectedSuites,tests:payload.data};
+      const stepIndex = state.suites.findIndex(suite => suite.id === state.selectedSuites.id);
+      if (stepIndex !== -1) {
+        const updatedSuites = [...state.suites];
+        updatedSuites[stepIndex] = {
+          ...state.selectedSuites
+        }
+        state.suites = updatedSuites;
+      }
+    });
+    builder.addCase(fetchTests.rejected, (state, action) => {
+      state.loading = false;
+      state.fetchLoading = false
+      state.error = action.error.message;
+    });
+
+
     builder.addCase(createSuites.pending, (state) => {
       state.loading = true;
     });

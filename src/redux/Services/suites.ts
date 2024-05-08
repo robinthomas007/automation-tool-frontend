@@ -5,6 +5,10 @@ export const Suites = async (projectId: number, searchTerm: string) => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/suite?q=${searchTerm}`);
   return res.data;
 };
+export const SuiteTests = async (suiteId: number) => {
+  const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/suite/${suiteId}/test`);
+  return res.data;
+};
 
 export const CreateSuites = async (projectId: number, suite: Suite) => {
   const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/suite`, suite);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Suite from "./Suite";
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
-import { fetchSuites, suitesSelector, selectSuites, deleteSuite } from "./../../../redux/Slice/suitesSlice";
+import { fetchSuites, suitesSelector, selectSuites, deleteSuite, fetchTests } from "./../../../redux/Slice/suitesSlice";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Row, Col, Input, Button, Collapse, Dropdown, Empty } from 'antd';
 import CreateModal from './CreateModal'
@@ -65,7 +65,10 @@ const Suites = () => {
 
   const onChange = (key: string | string[]) => {
     const index = key[key.length - 1]
-    index && dispatch(selectSuites(suites[Number(index)]))
+    if (index) {
+      dispatch(selectSuites(suites[Number(index)]))
+      dispatch(fetchTests({suiteId:suites[Number(index)].id}))
+    }
   };
 
   const browsers = ["chrome", "chrome-beta", "chrome-dev"]

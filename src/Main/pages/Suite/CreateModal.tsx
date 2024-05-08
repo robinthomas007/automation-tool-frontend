@@ -63,7 +63,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, suite }) 
     }, 1000);
     if (selectedProjects)
       if (suite.id) {
-        dispatch(updateSuite({ suite: { ...values, id: suite.id } }));
+        dispatch(updateSuite({ suite: { ...values,query, id: suite.id } }));
       } else {
         dispatch(createSuites({ suite: {...values,query}, projectId: selectedProjects?.id }));
       }
