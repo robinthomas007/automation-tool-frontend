@@ -9,13 +9,17 @@ import {
   PlayCircleOutlined,
   SyncOutlined,
   EditTwoTone,
-  DeleteTwoTone
+  DeleteTwoTone,
+  CopyTwoTone
 } from '@ant-design/icons';
 import { dataProfileSelector, fetchProfiles } from "./../../../redux/Slice/dataProfileSlice";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../Components/Loader";
 import { createRun } from "../../../redux/Slice/runsSlice";
 import { meSelector } from "../../../redux/Slice/meSlice";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+const CLI ='sedstart run'
+// const CLI ='go run ./cmd/sedstart'
 
 const Suites = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false)
@@ -84,10 +88,16 @@ const Suites = () => {
       children: browsers.flatMap(b => {
         return [{
           key: b,
-          label: (<span onClick={(e) => {
+          label: (<span className="flex flex-row">
+            <CopyToClipboard text={`${CLI} -b ${b} -d ${prf.id} -s ${suit.id} -e <your config file name>`}
+            onCopy={(e)=>alert("Copied")}
+          >
+          <CopyTwoTone/>
+        </CopyToClipboard>
+            <span className="grow" onClick={(e) => {
             StartExecution(suit.id, prf.id, b, false)
             e.stopPropagation();
-          }}>{b}</span>)
+          }}>{b}</span></span>)
         },
         {
           key: b + "-headless",
