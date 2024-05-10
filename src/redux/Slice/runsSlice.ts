@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { CreateRun, Runs, /*CreateRun*/ } from "../Services/runs";
+import { CreateRun, Runs, SignalRun, /*CreateRun*/ } from "../Services/runs";
 export interface Run {
   id: number;
   result: RunDataItem
@@ -48,6 +48,10 @@ export const createRun = createAsyncThunk(
   "runs/createRun",
   async ({ projectId, body }: { projectId: number, body: any }) => CreateRun(projectId, body)
 );
+export const signalRun = createAsyncThunk(
+  "runs/signalRun",
+  async ({ runId,body }: { runId: number, body: any }) => SignalRun(runId, body)
+);
 // export const createRun = createAsyncThunk(
 //   "runs/createRun",
 //   async ({ projectId,data, callback }: { projectId:number,data: CreateRunData, callback: (run: Run) => void }) => CreateRun(projectId,data, callback)
@@ -81,6 +85,16 @@ const runsSlice = createSlice({
       state.selectedRunId = payload?.data ? payload.data.id : undefined;
     });
     builder.addCase(createRun.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(signalRun.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(signalRun.fulfilled, (state, { payload }) => {
+      state.loading = false;
+    });
+    builder.addCase(signalRun.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

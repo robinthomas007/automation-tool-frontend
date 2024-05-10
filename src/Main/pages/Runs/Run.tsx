@@ -1,14 +1,17 @@
-import { RunDataItem, Run as RunModel } from "../../../redux/Slice/runsSlice";
+import { RunDataItem, Run as RunModel, signalRun } from "../../../redux/Slice/runsSlice";
 import { Row, Col, List, Typography, Collapse, Button } from 'antd';
-import { CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { StopFilled, StopTwoTone, CheckCircleFilled, CloseCircleFilled,ClockCircleOutlined,QuestionCircleOutlined, LoadingOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Tree, } from 'antd';
 import ReactPlayer from "react-player";
+import { useAppDispatch } from "../../../redux/hooks";
 
 const { Title } = Typography
 export const Icon = ({status}:{status:string})=>{
   switch(status){
     case 'PASS':
       return <CheckCircleFilled style={{ color: 'green' }} />
+    case 'HALTED':
+      return <StopFilled style={{ color: 'orange' }} />
     case 'FAIL':
       return <CloseCircleFilled style={{ color: 'red' }} />
     case 'SKIPPED':
@@ -39,7 +42,7 @@ const downloadFile = ({ data, fileName, fileType }:any) => {
 }
 
 const Run = ({ run }: { run: RunModel }) => {
-  
+  const dispatch = useAppDispatch()
   const exportToJson = (e:any) => {
     e.preventDefault()
     downloadFile({
@@ -50,7 +53,11 @@ const Run = ({ run }: { run: RunModel }) => {
   } 
   return (
     <div className="data">
-      <Button onClick={exportToJson}>Download</Button>
+      {run.result.status=="IN_PROGRESS"?<Button onClick={(e)=>{
+            e.stopPropagation()
+            dispatch(signalRun({runId: run.id,body:null}))
+          }
+            }icon={<StopTwoTone />}>Stop</Button>:<></>} 
       {run.result.type=='Suite'?
         <Collapse style={{minHeight:'100%'}} defaultActiveKey={run.result.items.length>0?run.result.items[0].id:0}>
           {run&& run.result&&run.result.items && run.result.items.map(i=><Collapse.Panel key={i.id} header={<div><span><Icon status={i.status}/></span><span> {i.name} ({i.time})</span></div>}>
