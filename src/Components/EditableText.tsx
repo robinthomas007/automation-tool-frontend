@@ -1,31 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CheckSquareFilled } from '@ant-design/icons'
 
 const EditableText = ({ initialText, defaultText, onChange }: { defaultText: string, initialText: string, onChange: (e: string) => void }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(initialText);
-
-  const handleClick = () => {
-    setIsEditing(true);
-  };
+  const finalizeValue = useCallback(()=>{
+    if (text.trim().length === 0){
+      setText(initialText)
+    }
+      setIsEditing(false)
+  },[text,initialText])
+  const handleClick = useCallback(() => {
+    setIsEditing(true)
+  },[text]);
 
   const handleChange = (event: any) => {
-    if (event.target.value && event.target.value.trim().length === 0) {
-      setText(initialText);
-    }
-    else {
-      setText(event.target.value);
-    }
+    setText(event.target.value);
   };
 
   const handleBlur = () => {
-    setIsEditing(false);
+    finalizeValue()
   };
-  useEffect(() => {
-    if (isEditing === false) {
-      onChange(text)
-    }
-  }, [isEditing])
 
   return (
     <div onClick={handleClick}>
