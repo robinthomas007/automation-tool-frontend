@@ -150,11 +150,11 @@ const Suites = () => {
                     <EditTwoTone onClick={(e) => handleOpenEdit(e, suit)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
                     <DeleteTwoTone onClick={(e) => handleDelete(e, suit)} className="delete-icon" style={{ marginRight: 15 }} />
                   </span>
-                  <Dropdown menu={{ items: generateMenuItems(suit) }} placement="bottom" arrow={{ pointAtCenter: true }}>
+                  {profle.length>0?<Dropdown menu={{ items: generateMenuItems(suit) }} placement="bottom" arrow={{ pointAtCenter: true }}>
                     <span onClick={(e) => e.stopPropagation()}>
                       {loading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
                     </span>
-                  </Dropdown>
+                  </Dropdown>:<></>}
                 </div>
                 }
               >

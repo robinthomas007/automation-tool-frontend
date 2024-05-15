@@ -265,11 +265,11 @@ const Folder = ({ data,keys,index ,setKeys}: any) => {
             <EditTwoTone onClick={(e) => handleOpenEditTest(e, test,data)} className="edit-icon" style={{ marginLeft: 10, marginRight: 10 }} />
             <DeleteTwoTone onClick={(e) => handleDeleteTest(e, test)} className="delete-icon" style={{ marginRight: 15 }} />
           </span>
-          <Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
+          {profle.length>0?<Dropdown menu={{ items: generateMenuItems(test) }} placement="bottom" arrow={{ pointAtCenter: true }}>
             <span onClick={(e) => e.stopPropagation()}>
               {fetchLoading ? <SyncOutlined spin style={{ color: '#873cb7' }} /> : <PlayCircleOutlined style={{ color: '#873cb7' }} />}
             </span>
-          </Dropdown>
+          </Dropdown>:<></>}
         </div>}
       >
         <Test test={test}/>
