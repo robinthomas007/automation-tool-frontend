@@ -159,7 +159,7 @@ const stepsSlice = createSlice({
         ...state.selectedSteps,
         resource_actions: [
           ...state.selectedSteps.resource_actions,
-          { resource_action: item, sequence_number: state.selectedSteps.resource_actions.length + 1, data: item.required_variables.map((rv: string) => ({ name: rv, expression: '' })) }
+          { resource_action: item, sequence_number: state.selectedSteps.resource_actions.length + 1, data: item.required_variables.flatMap((rv: string[]) => rv.map((r:any)=>({ name: r, expression: '' })))}
         ]
       }
 

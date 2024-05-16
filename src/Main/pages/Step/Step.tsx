@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Step as StepModel, updateStep, selectResourceAction } from "./../../../redux/Slice/stepsSlice";
 import { useDrag, useDrop } from 'react-dnd';
 import { Row, Col, List, Button, Checkbox, Input } from 'antd';
@@ -32,8 +32,13 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
     },
   });
 
-  const data = item.data ? item.data : []
-
+  const getRAName = useCallback(()=>{
+    const data = item.data ? item.data : []
+    //item?.resource_action?.resource?.name.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')
+    const ResourceName = item?.resource_action?.resource?.name + (item.resource_action.required_variables[0].length==0?"":"["+data.filter((d:any)=>item?.resource_action?.required_variables[0].includes(d.name)).map((d:any)=>d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')+"]")
+    const RAName = item?.resource_action?.name+"("+data.filter((d:any)=>item?.resource_action?.required_variables[1].includes(d.name)).map((d: any) => d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')+")"
+    return ResourceName+"."+RAName
+  },[item])
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 10, position: 'relative' }}>
 
@@ -43,10 +48,10 @@ const DraggableListItem = ({ item, type, index, moveItem, step, handleInputChang
 
       }}>
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', flexGrow: '1' }}>
-          <span style={{ wordBreak: 'break-word' }} onClick={(e) => {
+          <span className="grow cursor-pointer" style={{ wordBreak: 'break-word' }} onClick={(e) => {
             e.stopPropagation()
             handleResourceActionData(item)
-          }}>{item?.resource_action?.resource?.name}.{item?.resource_action?.name}({data.map((d: any) => d.name + "=" + (d.expression === "" ? "inherited" : d.expression)).join(',')})</span>
+          }}>{getRAName()}</span>
           <span style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto' }}>enabled: <EditableText defaultText="Enter value" initialText={item?.enabled ? item?.enabled : 'true'} onChange={(value) => { handleInputChange(value, item.id, item.sequence_number) }} /></span>
         </div>
         <CloseCircleOutlined onClick={() => handleRemoveAction({ id: item.id, sequence_number: item.sequence_number })} style={{ visibility: hover ? 'visible' : 'hidden', marginLeft: 10 }} />

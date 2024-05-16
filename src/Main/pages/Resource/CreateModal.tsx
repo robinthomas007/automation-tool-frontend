@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col, TreeSelect } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, TreeSelect, Select } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { projectsSelector } from "./../../../redux/Slice/projectsSlice";
 import { Hierarchy } from '../../../Lib/helpers';
@@ -34,7 +34,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
       form.setFieldsValue({ folder_id:resource.folder.id })
     }
     if (resource &&resource.resource && Object.keys(resource.resource).length !== 0) {
-      form.setFieldsValue({ id: resource.resource.id, name: resource.resource.name, description: resource.resource.description,type: resource.resource.type,folder_id:resource.folder.id })
+      form.setFieldsValue({ id: resource.resource.id, name: resource.resource.name,type: resource.resource.type,locator: resource.resource.locator, description: resource.resource.description,folder_id:resource.folder.id })
     } else {
       form.setFieldsValue({type:'PAGE'})
     }
@@ -57,7 +57,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-  
+
   return (
     <Modal
       title="Create Object"
@@ -115,11 +115,18 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
             <Form.Item
                   label="Type"
                   name="type"
-                  rules={[{ required: true, message: 'Please input your Type!' },
-                  { min: 2, message: 'Resource type must be minimum 2 characters.' }]}
                 >
-                  <Input disabled/>
-                </Form.Item>
+              <Select>
+                <Select.Option value={"PAGE"}>Page</Select.Option>
+                <Select.Option value={"IFRAME"}>iFrame</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+                  label="Locator"
+                  name="locator"
+                >
+                <Input/>
+            </Form.Item>
           </Form>
         </Col>
       </Row>

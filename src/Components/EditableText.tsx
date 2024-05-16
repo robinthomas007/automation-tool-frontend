@@ -8,7 +8,9 @@ const EditableText = ({ initialText, defaultText, onChange }: { defaultText: str
     if (text.trim().length === 0){
       setText(initialText)
     }
-      setIsEditing(false)
+    setIsEditing(false)
+    onChange(text.trim())
+      
   },[text,initialText])
   const handleClick = useCallback(() => {
     setIsEditing(true)
