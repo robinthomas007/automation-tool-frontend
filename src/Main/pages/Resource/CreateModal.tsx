@@ -116,7 +116,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel, resource 
                   label="Type"
                   name="type"
                 >
-              <Select>
+              <Select disabled={(resource && resource.resource && (resource.resource.type=="BROWSER"||resource.resource.type=="SYSTEM"))?true:false}>
                 <Select.Option value={"PAGE"}>Page</Select.Option>
                 <Select.Option value={"IFRAME"}>iFrame</Select.Option>
               </Select>
