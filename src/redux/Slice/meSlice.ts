@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { GenerateAPIKey, GetAPIKeys, GetFiles, GetMe, UploadFile } from "../Services/user";
+import { DeleteFile, GenerateAPIKey, GetAPIKeys, GetFiles, GetMe, UploadFile } from "../Services/user";
 export interface Org {
   org: {
     id: number,
@@ -50,6 +50,7 @@ export const fetchMe = createAsyncThunk("me/fetchMe", async () => GetMe());
 export const fetchAPIKeys = createAsyncThunk("me/fetchApiKeys", async ({projectId}:{projectId:number}) => GetAPIKeys(projectId));
 export const uploadFile = createAsyncThunk("me/uploadFile", async ({projectId,file}:{projectId:number,file:File}) => UploadFile(projectId,file));
 export const  fetchFiles = createAsyncThunk("me/fetchFiles", async ({projectId}:{projectId:number}) => GetFiles(projectId));
+export const  deleteFile = createAsyncThunk("me/deleteFile", async ({fileId}:{fileId:number}) => DeleteFile(fileId));
 export const generateAPIKey = createAsyncThunk("me/generateAPIKey", async ({projectId}:{projectId:number}) => GenerateAPIKey(projectId));
 const meSlice = createSlice({
   name: "me",
@@ -107,6 +108,21 @@ const meSlice = createSlice({
     builder.addCase(fetchFiles.rejected, (state, action) => {
       state.loading = false;
       state.files = [];
+      state.error = action.error.message;
+    });
+    //Delete File
+    builder.addCase(deleteFile.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(deleteFile.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      const remainingRes = state.files.filter((item) => item.id !== payload.data.id)
+      state.files = remainingRes
+    });
+
+    builder.addCase(deleteFile.rejected, (state, action) => {
+      state.loading = false;
       state.error = action.error.message;
     });
     //UploadFile

@@ -11,6 +11,10 @@ export const GetFiles = async (projectId:number) => {
   const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/file`);
   return res.data;
 };
+export const DeleteFile = async (fileId:number) => {
+  const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}/file/${fileId}`);
+  return res.data;
+};
 export const GenerateAPIKey = async (projectId:number) => {
   const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/project/${projectId}/apiKey`);
   return res.data;
