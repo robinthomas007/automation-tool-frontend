@@ -22,3 +22,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# tfvars 
+prod-sedstart-frontend-jenkins.groovy
+prod-sedstart-frontend.tfvars
+
+qa-sedstart-frontend-jenkins.groovy
+qa-sedstart-frontend.tfvars

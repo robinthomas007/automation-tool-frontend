@@ -1,0 +1,231 @@
+pipeline {
+    agent any
+    
+    options {
+        timestamps ()
+    }
+    environment {
+        AWS_PROFILE = "${AWS_PROFILE}"
+    }
+    
+    stages {
+
+        stage ("Init") {
+            steps {
+                script {
+                    echo '<============== Downloading Jenkins Env file ==========>' 
+                    sh 'aws s3 cp $JENKINS_ENV_S3_FILE_PATH  jenkins-env.groovy'
+                    load 'jenkins-env.groovy'
+                }
+            }
+        }
+        stage("Run Docker Container") {
+            steps {
+                echo '<======== Running Ruby Docker container for deployment ========>'
+                script {
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    sh "aws ecr get-login-password --profile ${env.AWS_PROFILE} --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.DOCKER_BASE_IMAGE}"
+                    def dockerRunCmd = """
+                        docker run -d \
+                        -e "REACT_APP_BASE_URL=${env.REACT_APP_BASE_URL}" \
+                        -e "REACT_APP_STATE=${env.REACT_APP_STATE}" \
+                        -e "REACT_APP_GOOGLE_OAUTH_CLIENT_ID=${env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}" \
+                        -e "REACT_APP_GOOGLE_OAUTH_ENDPOINT=${env.REACT_APP_GOOGLE_OAUTH_ENDPOINT}" \
+                        -e "REACT_APP_GOOGLE_OAUTH_REDIRECT=${env.REACT_APP_GOOGLE_OAUTH_REDIRECT}" \
+                        -e "DISABLE_ESLINT_PLUGIN=${env.DISABLE_ESLINT_PLUGIN}" \
+                        -v ${currentWorkspace}:/app \
+                        --entrypoint "" ${DOCKER_BASE_IMAGE}/node-base:21.1.0 tail -f /dev/null
+                    """
+                    def containerId = sh(script: dockerRunCmd, returnStdout: true).trim()
+                    env.CONTAINER_ID = containerId
+                    echo "${env.CONTAINER_ID}"
+                }
+            }
+        }
+
+        
+        stage ("Build") {
+            steps {
+                script {
+                    // interactive running the bundle commands to deploy the app in the target server. 
+                    def deployCmd = """
+                        docker exec ${env.CONTAINER_ID} sh -c '
+                        cd /app &&
+                        rm -rf node_modules &&
+                        npm ci install &&
+                        npm run build '
+                    """
+                    try {
+                        sh deployCmd
+                    } catch (Exception ex) {
+                        echo "Deployment failed: ${ex.message}"
+                        currentBuild.result = 'FAILURE'
+                        throw ex
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        echo "Post notification"
+                    }
+                }
+                success {
+                    script {
+                        notifyBuildStatus("Node Build Success!", "good", '#sedstart-notifications') 
+                    }
+                }
+                failure {
+                    script {
+                        notifyBuildStatus("Node Build failure! Check the console log", "danger", '#sedstart-notifications')
+                    }
+                }
+            }
+        }
+        stage ("Terraform") {
+            steps {
+                script {
+                    echo "<============= Terraform Init ===========>"
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    dir("${currentWorkspace}/ci-cd") {
+                        echo "<=========== Downloading Terraform tfvars file  ======>"
+                        sh 'aws s3 cp $TF_VARS_S3_PATH ${TF_VARS_ENV}.tfvars --profile ${AWS_PROFILE}'
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform init') {
+            steps {
+                script {
+                    echo "<============ Terraform Init to install plugins and module =========>"
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    dir("${currentWorkspace}/ci-cd/") {
+                        sh "terraform init -reconfigure --backend-config=backend-config/${TF_VARS_ENV}.conf"
+                    }
+                }
+            }
+        }
+        stage ('Terraform workspace select') {
+            steps {
+                script {
+                    echo "<========= Workspace ${TF_VARS_ENV} select =======>"
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    dir("${currentWorkspace}/ci-cd") {
+                        // check if the workspace is exists or not if no then create.
+                        def workspaceList = sh(script: "terraform workspace list", returnStdout: true).trim()
+                        if (!workspaceList.contains("${TF_VARS_ENV}")) {
+                            echo "<========= Workspace '${TF_VARS_ENV}' does not exist, Creating a new workspace ======>"
+                            sh "terraform workspace new ${TF_VARS_ENV}"
+                        }
+                        sh "terraform workspace select ${TF_VARS_ENV}"
+                    }
+                }
+            }
+        }
+
+
+        stage('Terraform Action') {
+            steps {
+                script {
+                    echo "<========= Performing Terraform Action =======>"
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    dir("${currentWorkspace}/ci-cd/") {
+                        if (TF_ACTION == 'PLAN') {
+                            sh "terraform plan -var-file=${TF_VARS_ENV}.tfvars -out=${TF_VARS_ENV}.tfplan"
+                        } else if (TF_ACTION == 'APPLY') {
+                            sh "terraform apply -var-file=${TF_VARS_ENV}.tfvars -auto-approve"
+                        } else if (TF_ACTION == 'DESTROY') {
+                            sh "terraform destroy -var-file=${TF_VARS_ENV}.tfvars -auto-approve"
+                        } else {
+                            error "Invalid action: '${TF_ACTION}'"
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        echo "Post notification"
+                    }
+                }
+                success {
+                    script {
+                        notifyBuildStatus("Terraform action Success!", "good", '#sedstart-notifications') 
+                    }
+                }
+                failure {
+                    script {
+                        notifyBuildStatus("Terraform action Failed! Check the console log", "danger", '#sedstart-notifications')
+                    }
+                }
+            }
+        }
+        stage("Deploying Frontend to Target Server") {
+            steps {
+                script {
+                    def currentWorkspace = sh(script: 'pwd', returnStdout: true).trim()
+                    def cloudFrontDistributionId = sh(script: 'cd ci-cd && terraform output -json cloudfront_distribution_id', returnStdout: true).trim()
+                    
+                    dir("${currentWorkspace}") {
+                        sh "aws s3 sync build/ $PROD_SEDSTART_S3_PATH --profile ${AWS_PROFILE}"
+                        sh "aws cloudfront create-invalidation --distribution-id ${cloudFrontDistributionId} --paths /static/*"
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        echo "Post notification"
+                    }
+                }
+                success {
+                    script {
+                        notifyBuildStatus("Static content and Cache Invalidation Success!", "good", '#sedstart-notifications') 
+                    }
+                }
+                failure {
+                    script {
+                        notifyBuildStatus("Static content or Cache Invalidation Failed! Check the console log", "danger", '#sedstart-notifications')
+                    }
+                }
+            }
+
+
+        }
+
+        stage ("WorkSpace Cleanup") {
+            steps {
+                script {
+                    sh 'docker stop ${CONTAINER_ID} && docker stop ${CONTAINER_ID}'
+                    sh 'docker rm $(docker ps -a -f status=exited -q)'
+                }
+            }
+        }
+    }
+}
+
+def notifyBuildStatus(status, messageColor, slackChannel) {
+    script {
+        def jobName = env.JOB_NAME
+        def buildName = env.BUILD_DISPLAY_NAME
+        def appVersion = env.APP_VERSION
+        def gitSource = env.GIT_BRANCH ?: "Not available"
+        def gitCommitID = env.GIT_SHORT_SHA ?: "Not available"
+        def gitCommittedby = env.GIT_AUTHOR
+        def buildUrl = env.BUILD_URL
+        def consoleLog = buildUrl.endsWith("/") ? "${buildUrl}console" : "${buildUrl/console}"
+        def slackMessage = """
+
+*Job Name*: $jobName
+*Build Name*: $buildName
+*App Version*: $appVersion
+*Status*: $status
+*Git Source*: $gitSource
+*Git Commit ID*: $gitCommitID
+*Git Comitted by*: $gitCommittedby
+*View Build Log*: ($consoleLog)
+"""
+        slackSend(message: slackMessage, color: messageColor, tokenCredentialId: 'Slack', channel: slackChannel)
+    }
+}
