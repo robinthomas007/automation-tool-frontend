@@ -34,8 +34,8 @@ const DataProfile = () => {
   }
 
   const onChange = (key: string | string[]) => {
-    const index = key[key.length - 1]
-    dispatch(setSelectedProfile(profle[Number(index)]))
+    const id = key[key.length - 1]
+    dispatch(setSelectedProfile(profle.find(p=>p.id==Number(id))))
   };
 
   return (
@@ -52,18 +52,18 @@ const DataProfile = () => {
           onChange={onChange} accordion
           className="data"
           >
-            {profle.map((profile: any, index: any) => (
+            {profle.map((profile: any) => (
               <Collapse.Panel
                 header={profile.name}
                 className="resource-panel"
-                key={index}
+                key={""+profile.id}
                 extra={<div className="flex items-center">
                   <span className="resource-panel-extra flex">
                     <DeleteTwoTone onClick={(e) => handleDelete(e, profile)} className="delete-icon" style={{ marginRight: 15 }} />
                   </span>
                 </div>}
               >
-                <Variable variables={profile.variables} profileId={profile.id} />
+                <Variable profile={profile} />
               </Collapse.Panel>
             ))}
           </Collapse>

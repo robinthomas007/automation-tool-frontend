@@ -5,9 +5,9 @@ import { addVariableToProfile, createProfileVariable, RemoveVariable } from "./.
 import {
   CloseCircleOutlined
 } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
-const Variable = ({ variables, profileId }: { variables: any, profileId: number }) => {
+const Variable = ({ profile }: { profile:any }) => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
@@ -18,19 +18,21 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
     }
   });
 
-  const onFinish = (values: any) => {
-    const { variables } = values;
-    const formattedVariables = variables.map((item: any) => {
-      const [key, value] = Object.entries(item)[0];
+  useEffect(()=>{
+    console.log(profile)
+  },[profile])
+  const onFinish = useCallback((values: any) => {
+    const formattedVariables = Object.entries(values).map((item: any) => {
+      const [key, value] = item;
       const variable_id = parseInt(key.split('_')[1]);
       return {
         variable_id: variable_id,
         value: value
       };
     });
-    dispatch(createProfileVariable({ variables: { variables: formattedVariables }, profileId }));
+    dispatch(createProfileVariable({ variables: { variables: formattedVariables }, profileId:profile.id }));
 
-  };
+  },[profile]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -39,12 +41,11 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
   const handleRemoveVariable = ({ id }: { id: number }) => {
     dispatch(RemoveVariable({ id }));
   };
-console.log("Variable: ",variables)
   return (
     <Row ref={drop}>
       <Col span={24}>
         <Form
-          name="createProfileVariable"
+          name={"createProfileVariable"+profile.id}
           labelCol={{ span: 5 }}
           wrapperCol={{ span: 18 }}
           onFinish={onFinish}
@@ -56,15 +57,15 @@ console.log("Variable: ",variables)
           <List
             header={<div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Variables</span>
               <Button
-                form="createProfileVariable" key="submit" htmlType="submit" type='primary'>Save</Button></div>}
+                form={"createProfileVariable"+profile.id} key="submit" htmlType="submit" type='primary'>Save</Button></div>}
             bordered
-            dataSource={variables ? variables : []}
+            dataSource={profile.variables ? profile.variables : []}
             renderItem={(item: any, index) => (
               <List.Item className="variable-item">
                 <Form.Item
                   className="w-full"
                   label={item.variable.name}
-                  name={['variables', index, `variable_${item.variable.id}`]}
+                  name={`variable_${item.variable.id}`}
                   rules={[{ required: true, message: 'Please input the variable value!' }]}
                   initialValue={item.value ? item.value : ''}
                 >
