@@ -39,7 +39,7 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
   const handleRemoveVariable = ({ id }: { id: number }) => {
     dispatch(RemoveVariable({ id }));
   };
-
+console.log("Variable: ",variables)
   return (
     <Row ref={drop}>
       <Col span={24}>
@@ -68,7 +68,7 @@ const Variable = ({ variables, profileId }: { variables: any, profileId: number 
                   rules={[{ required: true, message: 'Please input the variable value!' }]}
                   initialValue={item.value ? item.value : ''}
                 >
-                  <Input placeholder="Variable Value" style={{ width: '100%' }} />
+                  <Input placeholder="Variable Value" style={{ width: '100%' }} type={item.variable.data_type=='Secret'?'password':'text'}/>
                 </Form.Item>
                 <CloseCircleOutlined className="close-icon" onClick={() => handleRemoveVariable({ id: item.id })} style={{ marginLeft: 10 }} />
 
