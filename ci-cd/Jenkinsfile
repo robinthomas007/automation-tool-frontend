@@ -169,7 +169,7 @@ pipeline {
                     
                     dir("${currentWorkspace}") {
                         sh "aws s3 sync build/ $PROD_SEDSTART_S3_PATH --profile ${AWS_PROFILE}"
-                        sh "aws cloudfront create-invalidation --distribution-id ${cloudFrontDistributionId} --paths /static/*"
+                        sh 'aws cloudfront create-invalidation --distribution-id ${cloudFrontDistributionId} --paths "/*" "/"'
                     }
                 }
             }
