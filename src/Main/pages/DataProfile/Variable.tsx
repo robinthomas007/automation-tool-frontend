@@ -68,7 +68,7 @@ console.log("Variable: ",variables)
                   rules={[{ required: true, message: 'Please input the variable value!' }]}
                   initialValue={item.value ? item.value : ''}
                 >
-                  <Input placeholder="Variable Value" style={{ width: '100%' }} type={item.variable.data_type=='Secret'?'password':'text'}/>
+                  <Input placeholder="Variable Value" style={{ width: '100%' }} type={item.variable.data_type=='secret'?'password':'text'}/>
                 </Form.Item>
                 <CloseCircleOutlined className="close-icon" onClick={() => handleRemoveVariable({ id: item.id })} style={{ marginLeft: 10 }} />
 

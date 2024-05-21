@@ -13,7 +13,6 @@ const { Option } = Select;
 
 const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-
   const dispatch = useAppDispatch();
   const { selectedProjects } = useAppSelector(projectsSelector);
 
@@ -70,10 +69,10 @@ const CreateModal: React.FC<CreateModalProps> = ({ open, handleCancel }) => {
                 onChange={() => { }}
                 allowClear
               >
-                <Option value="String">String</Option>
-                <Option value="Integer">Integer</Option>
-                <Option value="Boolean">Boolean</Option>
-                <Option value="Secret">Secret</Option>
+                <Option value="string">String</Option>
+                <Option value="integer">Integer</Option>
+                <Option value="boolean">Boolean</Option>
+                <Option value="secret">Secret</Option>
               </Select>
             </Form.Item>
           </Form>

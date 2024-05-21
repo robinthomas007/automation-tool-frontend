@@ -246,6 +246,35 @@ const resourcesSlice = createSlice({
       state.error = action.error.message;
     });
 
+    //update
+
+    builder.addCase(updateResourcesElement.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(updateResourcesElement.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload && payload.data) {
+        const updatedResource = payload.data;
+        const index = state.resources.findIndex(resource => resource.id === updatedResource.resource_id);
+
+        if (index !== -1) {
+          const newels = [...state.resources[index].elements]
+          const eindex=state.resources[index].elements.findIndex(e=>e.id==updatedResource.id)
+          if (eindex!= -1){
+            newels[eindex] = updatedResource
+            state.resources[index].elements = newels
+          }
+        }
+        state.selectedResources = state.resources[index];
+      }
+    });
+
+    builder.addCase(updateResourcesElement.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
     builder.addCase(fetchResElCommands.pending, (state) => {
       state.loading = true;
     });

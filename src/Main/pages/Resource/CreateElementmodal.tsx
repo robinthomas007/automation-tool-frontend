@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Row, Col, Space, Select } from 'antd';
+import { Button, Modal, Form, Input, Row, Col, Space, Select, Checkbox } from 'antd';
 import { useAppDispatch, useAppSelector } from "./../../../redux/hooks";
 import { resourcesSelector, createResourcesElement, updateResourcesElement } from "./../../../redux/Slice/resourcesSlice";
 import {
@@ -21,11 +21,12 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
 
   useEffect(() => {
     if (element && Object.keys(element).length !== 0) {
-      form.setFieldsValue({ id: element.id, name: element.name, description: element.description, locator: element.locator, type: element.type })
+      form.setFieldsValue({ id: element.id, name: element.name, description: element.description, locator: element.locator, type: element.type, mask:element.mask })
     }
   }, [element]);
 
   const onFinish = (values: any) => {
+    console.log(values)
     setConfirmLoading(true);
     setTimeout(() => {
       handleCancel()
@@ -107,6 +108,13 @@ const CreateActionModal: React.FC<CreateModalProps> = ({ open, handleCancel, ele
             >
               <TextArea rows={4} placeholder="Description" />
 
+            </Form.Item>
+            <Form.Item
+              label="Mask"
+              name="mask"
+              valuePropName="checked"
+            >
+              <Checkbox/>
             </Form.Item>
           </Form>
         </Col>
